@@ -1,0 +1,31 @@
+created:
+    - database/factories/Models/ClientFactory.php
+    - database/factories/Models/BranchFactory.php
+    - database/factories/Models/ArticleFactory.php
+    - database/factories/Models/ProviderFactory.php
+    - database/factories/Models/CashFactory.php
+    - database/factories/Models/OperationFactory.php
+    - database/factories/Models/SaleFactory.php
+    - database/migrations/2021_09_29_181957_create_clients_table.php
+    - database/migrations/2021_09_29_181958_create_branches_table.php
+    - database/migrations/2021_09_29_181959_create_articles_table.php
+    - database/migrations/2021_09_29_182000_create_providers_table.php
+    - database/migrations/2021_09_29_182001_create_cashes_table.php
+    - database/migrations/2021_09_29_182002_create_operations_table.php
+    - database/migrations/2021_09_29_182003_create_sales_table.php
+    - database/migrations/2021_09_29_182004_create_article_branch_table.php
+    - app/Models/Models/Client.php
+    - app/Models/Models/Branch.php
+    - app/Models/Models/Article.php
+    - app/Models/Models/Provider.php
+    - app/Models/Models/Cash.php
+    - app/Models/Models/Operation.php
+    - app/Models/Models/Sale.php
+models:
+    Models\Client: { long_name: string, short_name: string, email_contact: string, level: 'integer nullable', logo_src: 'string nullable', timestamps: true, softdeletes: softDeletes }
+    Models\Branch: { client_id: 'id foreign', name: string, contact_text: 'text nullable', type: 'enum:Sucursal,Deposito', timestamps: true, softdeletes: softDeletes, relationships: { belongsToMany: Article } }
+    Models\Article: { name: string, provider_id: 'id foreign', code: 'string nullable', price: integer, timestamps: true, relationships: { belongsToMany: Branch } }
+    Models\Provider: { name: string, timestamps: true }
+    Models\Cash: { branch_id: 'id foreign', opened_user_id: 'id foreign', closed_user_id: 'id foreign', opened_amount: integer, closed_amount: integer, closed_date: date, timestamps: true }
+    Models\Operation: { cash_id: 'id foreign', type: 'enum:Venta,Extraccion,Ingreso', timestamps: true }
+    Models\Sale: { operation_id: 'id foreign', user_id: 'id foreign', timestamps: true }
