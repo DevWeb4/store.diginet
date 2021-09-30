@@ -41,4 +41,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**relations**/
+
+    public function branches()
+    {
+        return $this->belongsToMany(\App\Models\Branch::class, 'model_has_users', 'user_id', 'model_id')->where('model_type', '=', 'branch');;
+    }
+
 }

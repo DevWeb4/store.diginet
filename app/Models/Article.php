@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Models\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Branch extends Model
+class Article extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     /**
      * The attributes that are mass assignable.
@@ -16,10 +15,10 @@ class Branch extends Model
      * @var array
      */
     protected $fillable = [
-        'client_id',
         'name',
-        'contact_text',
-        'type',
+        'provider_id',
+        'code',
+        'price',
     ];
 
     /**
@@ -29,17 +28,17 @@ class Branch extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'client_id' => 'integer',
+        'provider_id' => 'integer',
     ];
 
 
-    public function articles()
+    public function branches()
     {
-        return $this->belongsToMany(\App\Models\Models\Article::class);
+        return $this->belongsToMany(\App\Models\Branch::class);
     }
 
-    public function client()
+    public function provider()
     {
-        return $this->belongsTo(\App\Models\Models\Client::class);
+        return $this->belongsTo(\App\Models\Provider::class);
     }
 }

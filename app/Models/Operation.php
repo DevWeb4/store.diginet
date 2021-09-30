@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Operation extends Model
 {
     use HasFactory;
 
@@ -15,10 +15,8 @@ class Article extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'provider_id',
-        'code',
-        'price',
+        'cash_id',
+        'type',
     ];
 
     /**
@@ -28,17 +26,12 @@ class Article extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'provider_id' => 'integer',
+        'cash_id' => 'integer',
     ];
 
 
-    public function branches()
+    public function cash()
     {
-        return $this->belongsToMany(\App\Models\Models\Branch::class);
-    }
-
-    public function provider()
-    {
-        return $this->belongsTo(\App\Models\Models\Provider::class);
+        return $this->belongsTo(\App\Models\Models\Cash::class);
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Client extends Model
+class Branch extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -16,11 +16,10 @@ class Client extends Model
      * @var array
      */
     protected $fillable = [
-        'long_name',
-        'short_name',
-        'email_contact',
-        'level',
-        'logo_src',
+        'client_id',
+        'name',
+        'contact_text',
+        'type',
     ];
 
     /**
@@ -30,5 +29,17 @@ class Client extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'client_id' => 'integer',
     ];
+
+
+    public function articles()
+    {
+        return $this->belongsToMany(\App\Models\Models\Article::class);
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(\App\Models\Models\Client::class);
+    }
 }

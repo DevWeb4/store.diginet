@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Models\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Operation extends Model
+class Client extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -15,8 +16,11 @@ class Operation extends Model
      * @var array
      */
     protected $fillable = [
-        'cash_id',
-        'type',
+        'long_name',
+        'short_name',
+        'email_contact',
+        'level',
+        'logo_src',
     ];
 
     /**
@@ -26,12 +30,5 @@ class Operation extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'cash_id' => 'integer',
     ];
-
-
-    public function cash()
-    {
-        return $this->belongsTo(\App\Models\Models\Cash::class);
-    }
 }
