@@ -21,7 +21,7 @@ class ProductController extends Controller
         $input['organization_id']= Auth::user()->store->organization->id;
         $input['store_id']= Auth::user()->store->id;
 
-        $condition = ["name" => $input['name'], 'provider_id' => $input['provider_id']];
+        $condition = ["bar_code" => $input['bar_code'], 'provider_id' => $input['provider_id']];
         $product =Product::updateOrCreate($condition,$input);
 
         return response()->json(["statusCode" => 200, "data"=> $product]);

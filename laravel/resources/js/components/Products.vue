@@ -35,6 +35,7 @@
                             <th></th>
                             <th>#</th>
                             <th>Articulo</th>
+                            <th>Codigo</th>
                             <th>Marca</th>
                             <th>Precio Unitario</th>
                             <th></th>
@@ -49,6 +50,8 @@
                             <th v-on:click="selectProduct(i)">{{product.bar_code}}</th>
                             <td v-on:click="selectProduct(i)"><a class="text-danger" :href="'audit_product/'+product.id">#{{product.id}}</a></td>
                             <td v-on:click="selectProduct(i)">{{product.name}}</td>
+
+                            <td v-on:click="selectProduct(i)">{{product.bar_code}}</td>
 
                             <td v-on:click="selectProduct(i)">
                                 <span v-if="product.provider">{{product.provider.name}}</span>
@@ -192,18 +195,6 @@
                                             <i class="fas fa-dollar-sign input-prefix"></i>
                                             <input required v-model="product.unit_price" id="inputUnitPrice" step="1" type="number" class="form-control">
                                             <label for="inputUnitPrice">Precio Unitario</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="md-form md-outline mt-0">
-                                            <input v-model="product.unit_price2" id="inputUnitPrice2" type="number" step="1" class="form-control">
-                                            <label for="inputUnitPrice2">Precio Mayorista 1</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="md-form md-outline mt-0">
-                                            <input v-model="product.unit_price3" id="inputUnitPrice3" type="number" step="1" class="form-control">
-                                            <label for="inputUnitPrice3">Precio Mayorista 2</label>
                                         </div>
                                     </div>
                                 </div>
