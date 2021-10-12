@@ -47,6 +47,8 @@ Route::get('get_store','SaleController@getStore');
 Route::get('productos','ProductController@index');
 Route::get('get_financials','FinancialController@getFinancials');
 
+Route::get('inventario','ProductController@inventory');
+
 Route::put('save_client/{id}','SaleController@saveClient');
 
 
@@ -80,6 +82,8 @@ Route::middleware(['role:administrador'])->group( function () {
     Route::put('productos/{id}','ProductController@update')->middleware('auth');
     Route::delete('delete_productos/{id}','ProductController@destroy')->middleware('auth');
     Route::delete('persons/{id}','PersonController@destroy')->middleware('auth');
+
+
 
     //-------- USERS --------//
     Route::resource('usuarios','UserController')->middleware('auth');

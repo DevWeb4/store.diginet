@@ -155,7 +155,15 @@
                         </b>
                     </h4>
                     <hr class="red accent-4">
-                    
+                    <select v-model="clientSelect" class="custom-select-md form-control" v-on:change="selectClient()">
+                        <option
+                            v-for="(element, i) in clients" :key=i
+                            :value="element"
+                        >
+                            {{element.name}} || DNI {{element.identification}} |
+                        </option>
+                    </select>
+                    <br>
                     <div class="row">
                         <div class="col-6">
                             <label for="basic-url">DNI (*)</label>
@@ -180,7 +188,7 @@
                     </div>
                     <hr class="red accent-4">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-12"> 
                             <button 
                                 v-if="loading_toPay == false"
                                 v-on:click="pay()" 
@@ -793,6 +801,8 @@
 
                 financialBudget:[],
 
+                clientSelect:[],
+
                 payments : [],
                 store:[],
                 clients:[],
@@ -963,9 +973,26 @@
                 })
             },
 
+            selectClient(){
+                this.cleanClient()
+
+                //this.$refs.clientDNI.value = this.clientSelect.identification
+                this.client = Object.assign(this.clientSelect)
+                console.log(this.client.identification)
+            },
+
             shearchClient(){
                 this.cleanClient()
                 let inputDNI = this.$refs.clientDNI.value
+        
+                this.clientSelect = Object.assign({},{
+                    name: '',
+                    identification: '',
+                    phone: '',
+                    address: '',
+                    email: ''
+                })
+            
                 if(inputDNI.length == 7 || inputDNI.length == 8){
                     const c = this.clients.find( element => parseFloat(element.identification) === parseFloat(inputDNI))
                     console.log(c)

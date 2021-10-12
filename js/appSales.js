@@ -4208,6 +4208,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['uri'],
@@ -4229,6 +4237,7 @@ __webpack_require__.r(__webpack_exports__);
         }*/
       ],
       financialBudget: [],
+      clientSelect: [],
       payments: [],
       store: [],
       clients: [],
@@ -4387,9 +4396,22 @@ __webpack_require__.r(__webpack_exports__);
         email: ''
       });
     },
+    selectClient: function selectClient() {
+      this.cleanClient(); //this.$refs.clientDNI.value = this.clientSelect.identification
+
+      this.client = Object.assign(this.clientSelect);
+      console.log(this.client.identification);
+    },
     shearchClient: function shearchClient() {
       this.cleanClient();
       var inputDNI = this.$refs.clientDNI.value;
+      this.clientSelect = Object.assign({}, {
+        name: '',
+        identification: '',
+        phone: '',
+        address: '',
+        email: ''
+      });
 
       if (inputDNI.length == 7 || inputDNI.length == 8) {
         var c = this.clients.find(function (element) {
@@ -101094,6 +101116,55 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("hr", { staticClass: "red accent-4" }),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.clientSelect,
+                    expression: "clientSelect"
+                  }
+                ],
+                staticClass: "custom-select-md form-control",
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.clientSelect = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                    function($event) {
+                      return _vm.selectClient()
+                    }
+                  ]
+                }
+              },
+              _vm._l(_vm.clients, function(element, i) {
+                return _c("option", { key: i, domProps: { value: element } }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(element.name) +
+                      " || DNI " +
+                      _vm._s(element.identification) +
+                      " |\n                    "
+                  )
+                ])
+              }),
+              0
+            ),
+            _vm._v(" "),
+            _c("br"),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-6" }, [
