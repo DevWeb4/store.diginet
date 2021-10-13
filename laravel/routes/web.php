@@ -44,10 +44,10 @@ Route::post('close_cash','SaleController@closeCash');
 
 Route::get('get_store','SaleController@getStore');
 
-Route::get('productos','ProductController@index');
+Route::get('productos','ProductController@index')->middleware('auth');
 Route::get('get_financials','FinancialController@getFinancials');
 
-Route::get('inventario','ProductController@inventory');
+Route::get('inventario','ProductController@inventory')->middleware('auth');
 
 Route::put('save_client/{id}','SaleController@saveClient');
 

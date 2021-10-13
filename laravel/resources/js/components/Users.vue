@@ -154,7 +154,7 @@
 </template>
 
 <script>
-    import 'datatables.net-bs4'
+    import 'datatables.net-bs4'   
 
     export default {
         props: ['uri'],

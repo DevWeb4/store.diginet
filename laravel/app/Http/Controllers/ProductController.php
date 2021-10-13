@@ -17,7 +17,8 @@ class ProductController extends Controller
 
     public function inventory(Request $request)
     {
-        $inventory = Product::with('provider')->orderBy('id', 'desc')->where('store_id', '=', Auth::user()->store->id)->get();
+        //$inventory = Product::with('provider')->orderBy('id', 'desc')->groupBy('customer_id')->where('store_id', '=', Auth::user()->store->id)->get();
+        $inventory = Product::selectRaw('sum(stock) as stock, name')->groupBy('name')->get();
         return view('products.inventory', compact('inventory'));
     }
 
