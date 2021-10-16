@@ -104,6 +104,7 @@
 </template>
 
 <script>
+    import {VueCsvToggleHeaders, VueCsvSubmit, VueCsvMap, VueCsvInput, VueCsvErrors, VueCsvImport} from 'vue-csv-import';
     export default {
         props: ['inventory'],
         data(){
@@ -192,14 +193,9 @@
 
                         //"lengthChange": false,   
 
-                        buttons: [ {
-            extend: 'excelHtml5',
-            customize: function( xlsx ) {
-                var sheet = xlsx.xl.worksheets['sheet1.xml'];
- 
-                $('row c[r^="C"]', sheet).attr( 's', '2' );
-            }
-        } ],
+                        buttons: [
+                            'csv', 'excel',
+                        ],
                         
                         language: {
                             url: 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json'
