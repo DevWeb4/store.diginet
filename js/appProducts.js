@@ -2244,7 +2244,6 @@ __webpack_require__.r(__webpack_exports__);
       for (var i = 1; i < lines.length; i++) {
         var obj = {};
         var currentline = lines[i].split(",");
-        var renoQuotesp = "";
 
         for (var j = 0; j < headers.length; j++) {
           obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
