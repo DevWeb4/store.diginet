@@ -2239,20 +2239,23 @@ __webpack_require__.r(__webpack_exports__);
     csvJSON: function csvJSON(c) {
       var lines = c.split("\n");
       var result = [];
-      var headers = lines[0].split(",");
+      var headers = lines[0].split(','); //console.log(headers.replace(/['"]+/g, ''))
 
       for (var i = 1; i < lines.length; i++) {
         var obj = {};
         var currentline = lines[i].split(",");
+        var renoQuotesp = "";
 
         for (var j = 0; j < headers.length; j++) {
-          obj[headers[j]] = currentline[j];
+          obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
+          console.log(obj);
         }
 
         result.push(obj);
       }
 
-      this.csv = result; //this.csv = JSON.stringify(result)
+      this.csv = result;
+      console.log(result); //this.csv = JSON.stringify(result)
     },
     selectProduct: function selectProduct(index) {
       console.log(index);
