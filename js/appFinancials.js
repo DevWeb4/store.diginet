@@ -66410,7 +66410,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\store-diginet\laravel\resources\js\appFinancials.js */"./laravel/resources/js/appFinancials.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\store.diginet\laravel\resources\js\appFinancials.js */"./laravel/resources/js/appFinancials.js");
 
 
 /***/ })

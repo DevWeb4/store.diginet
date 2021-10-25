@@ -100,11 +100,17 @@
                 </div>
             </div>
         </div>
+        
+        <p>Select local CSV File:</p>
+        <form enctype="multipart/form-data">
+            <input type="file" @change="onFileChange">
+        </form>
+        
+        {{this.csv}}
     </div>
 </template>
 
 <script>
-    import {VueCsvToggleHeaders, VueCsvSubmit, VueCsvMap, VueCsvInput, VueCsvErrors, VueCsvImport} from 'vue-csv-import';
     export default {
         props: ['inventory'],
         data(){
@@ -114,12 +120,48 @@
 
                 b_SelectProduct: null,
 
+                csv : [],
+
             }
         },
         mounted() {
             this.initDataTables()
         },
         methods:{
+
+            onFileChange: function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = e => this.csvJSON( e.target.result);
+                reader.readAsText(file);
+
+            },
+
+            
+            csvJSON(c)
+            {
+                var lines=c.split("\n");
+                var result = [];
+                var headers=lines[0].split(",");
+
+                for(var i=1;i<lines.length;i++){
+                    var obj = {};
+	                var currentline=lines[i].split(",");
+                    
+
+                    for(var j=0;j<headers.length;j++){
+                        obj[headers[j]] = currentline[j];
+                    }
+                    result.push(obj);
+                }
+
+                
+
+                this.csv = result
+                //this.csv = JSON.stringify(result)
+            },
+
+
             selectProduct(index)
             {
                 console.log(index)

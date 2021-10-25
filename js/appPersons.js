@@ -93033,7 +93033,7 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\store-diginet\laravel\resources\js\appPersons.js */"./laravel/resources/js/appPersons.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\store.diginet\laravel\resources\js\appPersons.js */"./laravel/resources/js/appPersons.js");
 
 
 /***/ })

@@ -66842,8 +66842,8 @@ module.exports = function(module) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\xampp\htdocs\store-diginet\laravel\resources\js\appUsers.js */"./laravel/resources/js/appUsers.js");
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\store-diginet\laravel\resources\sass\app.scss */"./laravel/resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\store.diginet\laravel\resources\js\appUsers.js */"./laravel/resources/js/appUsers.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\store.diginet\laravel\resources\sass\app.scss */"./laravel/resources/sass/app.scss");
 
 
 /***/ })
