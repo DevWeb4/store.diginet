@@ -34,6 +34,9 @@
                     <thead>
                         <tr>
                             <th>name</th>
+                            <th>partner</th>
+                            <th>gremio</th>
+                            <th>pmp</th>
                             <th>stock</th>
                         </tr>
 
@@ -44,7 +47,14 @@
                             class="text-center"
                         >
                             <td v-on:click="selectProduct(i)">{{product.name}}</td>
+
+                            <td v-on:click="selectProduct(i)">{{product.partner}}</td>
+                            <td v-on:click="selectProduct(i)">{{product.gremio}}</td>
+                            <td v-on:click="selectProduct(i)">{{product.unit_price}}</td>
+
+
                             <td v-on:click="selectProduct(i)">{{product.stock}}</td>
+
                         </tr>
                     </tbody>
                 </table>
@@ -105,8 +115,9 @@
         <form enctype="multipart/form-data">
             <input type="file" @change="onFileChange">
         </form>
+        <button v-on:click="this.inportCSV" >Guardar</button>
+
         
-        {{this.csv}}
     </div>
 </template>
 
@@ -129,6 +140,30 @@
         },
         methods:{
 
+            inportCSV(){
+                axios.post('import_csv', this.csv).then(res=>{
+                    console.log(res.data.data)
+                    this.$notify({
+                        group: 'warning',
+                        type: 'error',
+                        title: 'Exito!',
+                        text: 'Se Agrego el Proveedor/Marca'
+                    })
+                }).catch(error => {
+                    if(error.response.status == 422){
+                        this.$notify({
+                            group: 'warning',
+                            type: 'error',
+                            title: 'Error!',
+                            text: 'El Proveedor/Marca '+this.provider.name+' ya existe'
+                        })
+                    }else if(error.response.status == 403){
+                        alert("Usted no tiene los permisos suficientes para efectuar esta accion")
+                    }
+                    console.log(error.response)
+                })
+            },
+
             onFileChange: function(e) {
                 const file = e.target.files[0];
                 const reader = new FileReader();
@@ -142,24 +177,30 @@
             {
                 var lines=c.split("\n");
                 var result = [];
-                var headers=lines[0].split(',');
+                var headers=lines[0].split(';');
                     //console.log(headers.replace(/['"]+/g, ''))
 
                 for(var i=1;i<lines.length;i++){
                     var obj = {};
-	                var currentline=lines[i].split(",");
+	                var currentline=lines[i].split(";");
                 
                     for(var j=0;j<headers.length;j++){
 
-                        obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
-                        console.log(obj)
+                        if(){
+                            obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
+
+                        }
+
+
+                        //obj[headers[j]] = currentline[j];
+
                     }
 
                     result.push(obj);
                 }
 
                 this.csv = result
-                console.log(result)
+                console.log(result[0])
 
                 //this.csv = JSON.stringify(result)
             },

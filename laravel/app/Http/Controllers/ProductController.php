@@ -15,6 +15,38 @@ class ProductController extends Controller
         return view('products.index');
     }
 
+    
+    public function importCSV(Request $request){
+
+        $inventory = $request->all();
+
+        $organization_id = Auth::user()->store->organization->id;
+        $organization_id = Auth::user()->store->id;
+
+        foreach ($inventory as $product) {
+            $aux = [];
+
+            $aux['organization_id'] = $organization_id;
+            $aux['store_id'] = $organization_id;
+
+            $aux['name'] = $product['name'];
+            $aux['provider_id'] = $product['pmp'];
+
+            $aux['bar_code'] = 1505;
+            $aux['unit_price'] = 100;
+            $aux['stock'] = 0;
+
+            
+            $condition = ["bar_code" => $aux['bar_code'], 'provider_id' => $aux['provider_id']];
+
+            Product::updateOrCreate($condition,$aux);
+
+        }
+
+        return response()->json(["statusCode" => 200, "data"=> $inventory]);
+    }
+
+
     public function inventory(Request $request)
     {
         //$inventory = Product::with('provider')->orderBy('id', 'desc')->groupBy('customer_id')->where('store_id', '=', Auth::user()->store->id)->get();

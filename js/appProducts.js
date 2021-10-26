@@ -2094,246 +2094,9 @@ module.exports = {
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./laravel/resources/js/components/Inventory.vue?vue&type=script&lang=js& ***!
   \****************************************************************************************************************************************************************************/
 /*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['inventory'],
-  data: function data() {
-    return {
-      products: JSON.parse(this.inventory),
-      product: {},
-      b_SelectProduct: null,
-      csv: []
-    };
-  },
-  mounted: function mounted() {
-    this.initDataTables();
-  },
-  methods: {
-    onFileChange: function onFileChange(e) {
-      var _this = this;
-
-      var file = e.target.files[0];
-      var reader = new FileReader();
-
-      reader.onload = function (e) {
-        return _this.csvJSON(e.target.result);
-      };
-
-      reader.readAsText(file);
-    },
-    csvJSON: function csvJSON(c) {
-      var lines = c.split("\n");
-      var result = [];
-      var headers = lines[0].split(','); //console.log(headers.replace(/['"]+/g, ''))
-
-      for (var i = 1; i < lines.length; i++) {
-        var obj = {};
-        var currentline = lines[i].split(",");
-
-        for (var j = 0; j < headers.length; j++) {
-          obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
-          console.log(obj);
-        }
-
-        result.push(obj);
-      }
-
-      this.csv = result;
-      console.log(result); //this.csv = JSON.stringify(result)
-    },
-    selectProduct: function selectProduct(index) {
-      console.log(index);
-
-      if (this.b_SelectProduct == index) {
-        this.b_SelectProduct = null;
-        return;
-      }
-
-      this.printSelected(index);
-    },
-    printSelected: function printSelected(index) {
-      this.b_SelectProduct = index;
-      this.product = Object.assign({}, this.products[index]);
-    },
-    resetDatatables: function resetDatatables() {
-      $('#_tInventory').dataTable().fnDestroy();
-      this.getGroupInventory();
-      this.$refs.inputName.focus();
-    },
-    modalDeleteAll: function modalDeleteAll() {
-      var _this2 = this;
-
-      var uri = "delete_all_productos/";
-      axios["delete"](uri).then(function (res) {
-        _this2.resetDatatables();
-      })["catch"](function (error) {
-        if (error.response.status == 403) {
-          alert("Usted no tiene los permisos suficientes para efectuar esta accion");
-        }
-      });
-    },
-    getGroupInventory: function getGroupInventory() {
-      console.log("pendiente getGroupInventory");
-      /*axios.post('get_inventory').then(res=>{
-          if(res.data.statusCode == 200){
-              this.products = res.data.data
-              this.initDataTables()
-              this.b_loadingTable = false
-          }else{
-              console.log('error in methods getPersons(): return error in controller')
-              this.err_msg_tableProducts= 'Error al cargar la tabla de Productos'
-          }
-      }).catch(error => {
-          console.log("error getInventory()")
-          console.log(error.response)
-           if(error.response.status == 403){
-              alert("Usted no tiene los permisos suficientes para efectuar esta accion")
-          }
-      });*/
-    },
-    initDataTables: function initDataTables() {
-      $(document).ready(function () {
-        var dataTableInventory = $('#_tInventory').DataTable({
-          "pageLength": 5,
-          "paging": true,
-          "bInfo": false,
-          "order": [[0, "desc"]],
-          dom: 'Bfrtip',
-          //"lengthChange": false,   
-          buttons: ['csv', 'excel'],
-          language: {
-            url: 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json'
-          }
-        });
-        window.addEventListener('keydown', function (e) {
-          if (e.keyCode === 39) {
-            dataTableInventory.page('next').draw('page');
-          } else if (e.keyCode === 37) {
-            dataTableInventory.page('previous').draw('page');
-          }
-        });
-        $('#inputSearch').on('keyup', function (e) {
-          dataTableInventory.search(this.value).draw();
-        });
-      });
-    }
-  }
-});
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: C:\\xampp\\htdocs\\store.diginet\\laravel\\resources\\js\\components\\Inventory.vue: Unexpected token (189:27)\n\n\u001b[0m \u001b[90m 187 | \u001b[39m                    \u001b[36mfor\u001b[39m(\u001b[36mvar\u001b[39m j\u001b[33m=\u001b[39m\u001b[35m0\u001b[39m\u001b[33m;\u001b[39mj\u001b[33m<\u001b[39m\u001b[33mheaders\u001b[39m\u001b[33m.\u001b[39mlength\u001b[33m;\u001b[39mj\u001b[33m++\u001b[39m){\u001b[0m\n\u001b[0m \u001b[90m 188 | \u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 189 | \u001b[39m                        \u001b[36mif\u001b[39m(){\u001b[0m\n\u001b[0m \u001b[90m     | \u001b[39m                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 190 | \u001b[39m                            obj[\u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mparse(headers[j])] \u001b[33m=\u001b[39m \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mparse(currentline[j])\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 191 | \u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 192 | \u001b[39m                        }\u001b[0m\n    at Parser._raise (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:742:17)\n    at Parser.raiseWithData (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:735:17)\n    at Parser.raise (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:729:17)\n    at Parser.unexpected (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:8757:16)\n    at Parser.parseExprAtom (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:10052:20)\n    at Parser.parseExprSubscripts (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:9602:23)\n    at Parser.parseMaybeUnary (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:9582:21)\n    at Parser.parseExprOps (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:9452:23)\n    at Parser.parseMaybeConditional (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:9425:23)\n    at Parser.parseMaybeAssign (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:9380:21)\n    at Parser.parseExpression (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:9332:23)\n    at Parser.parseHeaderExpression (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11350:22)\n    at Parser.parseIfStatement (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11432:22)\n    at Parser.parseStatementContent (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11126:21)\n    at Parser.parseStatement (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11081:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11656:25)\n    at Parser.parseBlockBody (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11642:10)\n    at Parser.parseBlock (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11626:10)\n    at Parser.parseStatementContent (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11157:21)\n    at Parser.parseStatement (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11081:17)\n    at C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11699:60\n    at Parser.withTopicForbiddingContext (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:10956:14)\n    at Parser.parseFor (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11699:22)\n    at Parser.parseForStatement (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11403:19)\n    at Parser.parseStatementContent (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11106:21)\n    at Parser.parseStatement (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11081:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11656:25)\n    at Parser.parseBlockBody (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11642:10)\n    at Parser.parseBlock (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11626:10)\n    at Parser.parseStatementContent (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11157:21)\n    at Parser.parseStatement (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11081:17)\n    at C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11699:60\n    at Parser.withTopicForbiddingContext (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:10956:14)\n    at Parser.parseFor (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11699:22)\n    at Parser.parseForStatement (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11403:19)\n    at Parser.parseStatementContent (C:\\xampp\\htdocs\\store.diginet\\node_modules\\@babel\\parser\\lib\\index.js:11106:21)");
 
 /***/ }),
 
@@ -54294,6 +54057,42 @@ var render = function() {
                         }
                       }
                     },
+                    [_vm._v(_vm._s(product.partner))]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.selectProduct(i)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(product.gremio))]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.selectProduct(i)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(product.unit_price))]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.selectProduct(i)
+                        }
+                      }
+                    },
                     [_vm._v(_vm._s(product.stock))]
                   )
                 ]
@@ -54483,7 +54282,8 @@ var render = function() {
     _c("form", { attrs: { enctype: "multipart/form-data" } }, [
       _c("input", { attrs: { type: "file" }, on: { change: _vm.onFileChange } })
     ]),
-    _vm._v("\n    \n    " + _vm._s(this.csv) + "\n")
+    _vm._v(" "),
+    _c("button", { on: { click: this.inportCSV } }, [_vm._v("Guardar")])
   ])
 }
 var staticRenderFns = [
@@ -54494,6 +54294,12 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("partner")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("gremio")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("pmp")]),
         _vm._v(" "),
         _c("th", [_vm._v("stock")])
       ])

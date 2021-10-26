@@ -10,11 +10,12 @@ class Product extends Model implements Auditable
     use \OwenIt\Auditing\Auditable;
     
     protected $table = 'products';
-    protected $fillable = ['name', 'bar_code', 'unit_price', 'provider_id', 'stock', 'store_id','organization_id', 'unit_price2', 'unit_price3'];
+    protected $fillable = ['name', 'bar_code', 'unit_price', 'provider_id', 'stock', 'store_id','organization_id', 'partner', 'gremio', 'url', ];
 
     protected $casts = [
         'unit_price' => 'integer',
     ];
+    
     public function provider(){
         return $this->belongsTo('App\Provider');
     }

@@ -11,11 +11,11 @@ Route::get('/', function () {
     return view('index');
 })->middleware('auth')->name('home');
 
-
-
 Route::post('get_products','ProductController@getProducts');
 Route::post('get_inventory','ProductController@getInventory');
 Route::post('get_providers','ProductController@getProviders');
+
+Route::post('import_csv','ProductController@importCSV')->middleware('auth');
 
 
 //-------- PERSONS --------//
