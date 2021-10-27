@@ -177,27 +177,37 @@
             {
                 var lines=c.split("\n");
                 var result = [];
-                var headers=lines[0].split(';');
+                
+
+                var pruebas = c.replace(',', ';')
+
+                console.log(pruebas)
+
+                //replace('dog', 'monkey')
+
+                var headers=lines[0].split(',');
+
+                
                     //console.log(headers.replace(/['"]+/g, ''))
 
-                for(var i=1;i<lines.length;i++){
+                /*for(var i=1;i<lines.length;i++){
                     var obj = {};
-	                var currentline=lines[i].split(";");
+	                var currentline=lines[i].split(',');
                 
                     for(var j=0;j<headers.length;j++){
 
-                        if(){
-                            obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
+                        
+                            //obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
 
-                        }
+                        
 
 
-                        //obj[headers[j]] = currentline[j];
+                        obj[headers[j]] = JSON.parse(currentline[j]);
 
                     }
 
                     result.push(obj);
-                }
+                }*/
 
                 this.csv = result
                 console.log(result[0])
