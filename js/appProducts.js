@@ -2233,6 +2233,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.initDataTables();
+    this.prueba();
   },
   methods: {
     inportCSV: function inportCSV() {
@@ -2274,11 +2275,16 @@ __webpack_require__.r(__webpack_exports__);
 
       reader.readAsText(file);
     },
+    prueba: function prueba() {
+      var reg = /\;/g;
+      var str = "dd;ff;sS;dd;";
+      var nuevaStr = str.replace(reg, ",");
+      console.log(nuevaStr);
+    },
     csvJSON: function csvJSON(c) {
       var lines = c.split("\n");
       var result = [];
-      var pruebas = c.replace(',', ';');
-      console.log(pruebas); //replace('dog', 'monkey')
+      var pruebas = lines[0].replace(',', ';'); //replace('dog', 'monkey')
 
       var headers = lines[0].split(','); //console.log(headers.replace(/['"]+/g, ''))
 
@@ -2295,8 +2301,8 @@ __webpack_require__.r(__webpack_exports__);
            result.push(obj);
       }*/
 
-      this.csv = result;
-      console.log(result[0]); //this.csv = JSON.stringify(result)
+      this.csv = result; //console.log(result[0])
+      //this.csv = JSON.stringify(result)
     },
     selectProduct: function selectProduct(index) {
       console.log(index);

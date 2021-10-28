@@ -137,6 +137,7 @@
         },
         mounted() {
             this.initDataTables()
+            this.prueba()
         },
         methods:{
 
@@ -172,21 +173,35 @@
 
             },
 
+            prueba(){
+
+                const reg = /\;/g
+                const str = "dd;ff;sS;dd;";
+                const nuevaStr = str.replace(reg, ",");
+                console.log(nuevaStr);
+
+
+            },
+
             
             csvJSON(c)
             {
+                
+                
+
+                
                 var lines=c.split("\n");
                 var result = [];
                 
 
-                var pruebas = c.replace(',', ';')
+                var pruebas = lines[0].replace(',', ';')
 
-                console.log(pruebas)
+               
 
                 //replace('dog', 'monkey')
 
                 var headers=lines[0].split(',');
-
+                
                 
                     //console.log(headers.replace(/['"]+/g, ''))
 
@@ -210,7 +225,7 @@
                 }*/
 
                 this.csv = result
-                console.log(result[0])
+                //console.log(result[0])
 
                 //this.csv = JSON.stringify(result)
             },
