@@ -141,6 +141,12 @@
         },
         methods:{
 
+            prueba(){
+                var dd = '"\"\""'
+
+                console.log(dd)
+            },
+
             inportCSV(){
                 axios.post('import_csv', this.csv).then(res=>{
                     console.log(res.data.data)
@@ -173,61 +179,38 @@
 
             },
 
-            prueba(){
-
-                const reg = /\;/g
-                const str = "dd;ff;sS;dd;";
-                const nuevaStr = str.replace(reg, ",");
-                console.log(nuevaStr);
-
-
-            },
 
             
-            csvJSON(c)
+            csvJSON(csvDATA)
             {
-                
-                
+                const reg = /\;/g
+                const reg2 = /\"/g
+                const lines= csvDATA.replace(reg, ",").split("\n");
 
-                
-                var lines=c.split("\n");
                 var result = [];
+                var headers = lines[0].split(',');
+
                 
-
-                var pruebas = lines[0].replace(',', ';')
-
-               
-
-                //replace('dog', 'monkey')
-
-                var headers=lines[0].split(',');
-                
-                
-                    //console.log(headers.replace(/['"]+/g, ''))
-
-                /*for(var i=1;i<lines.length;i++){
+                for(var i=1;i<lines.length;i++){
                     var obj = {};
 	                var currentline=lines[i].split(',');
                 
                     for(var j=0;j<headers.length;j++){
 
                         
-                            //obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
-
-                        
+                        //obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
 
 
-                        obj[headers[j]] = JSON.parse(currentline[j]);
+                        //obj[headers[j].replace(reg2, "")] = JSON.parse(currentline[j]);
+                        obj[headers[j].replace(reg2, "")] = currentline[j];
 
                     }
 
                     result.push(obj);
-                }*/
+                }
 
+                console.log(result)
                 this.csv = result
-                //console.log(result[0])
-
-                //this.csv = JSON.stringify(result)
             },
 
 
