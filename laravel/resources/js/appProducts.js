@@ -6,7 +6,7 @@ import VueFilterDateFormat from 'vue-filter-date-format';
 Vue.use(VueFilterDateFormat);
 
 import Notifications from 'vue-notification';
-Vue.use(Notifications)
+Vue.use(Notifications);
 
 
 Vue.component('products-component', require('./components/Products.vue').default);

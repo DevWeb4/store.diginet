@@ -137,15 +137,8 @@
         },
         mounted() {
             this.initDataTables()
-            this.prueba()
         },
         methods:{
-
-            prueba(){
-                var dd = '"\"\""'
-
-                console.log(dd)
-            },
 
             inportCSV(){
                 axios.post('import_csv', this.csv).then(res=>{
@@ -179,40 +172,23 @@
 
             },
 
+            csvJSON(csvDATA){
 
-            
-            csvJSON(csvDATA)
-            {
                 const reg = /\;/g
-                const reg2 = /\"/g
-                const lines= csvDATA.replace(reg, ",").split("\n");
+                var csvSTR= csvDATA.replace(reg, ",");
 
-                var result = [];
-                var headers = lines[0].split(',');
+                const csv=require('csvtojson')
+                csv({
+                    //noheader:true,
+                    //output: "json",
+                    flatKeys: true
+                })
+                .fromString(csvSTR)
+                .then((obj)=>{ 
+                    
+                })
 
-                
-                for(var i=1;i<lines.length;i++){
-                    var obj = {};
-	                var currentline=lines[i].split(',');
-                
-                    for(var j=0;j<headers.length;j++){
-
-                        
-                        //obj[JSON.parse(headers[j])] = JSON.parse(currentline[j]);
-
-
-                        //obj[headers[j].replace(reg2, "")] = JSON.parse(currentline[j]);
-                        obj[headers[j].replace(reg2, "")] = currentline[j];
-
-                    }
-
-                    result.push(obj);
-                }
-
-                console.log(result)
-                this.csv = result
             },
-
 
             selectProduct(index)
             {
