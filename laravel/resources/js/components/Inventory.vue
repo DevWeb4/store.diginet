@@ -22,7 +22,7 @@
                             <button 
                                 class="btn btn-outline-danger btn-md btn-block mt-3 text-white btn-sm" 
                                 v-on:click="b_delete='product'"
-                                :disabled="b_SelectProduct === null" type="button" data-toggle="modal" data-target="#confirmDeleteModal">
+                                :disabled="b_selectRow === null" type="button" data-toggle="modal" data-target="#confirmDeleteModal">
                                 <b>Eliminar Producto</b>
                                 <i class="fas fa-trash-alt"></i>
                             </button>
@@ -33,7 +33,8 @@
                 <table id="_tInventory" class="table">
                     <thead>
                         <tr>
-                            <th>name</th>
+                            <th>enlace</th>
+                            <th>descripcion</th>
                             <th>partner</th>
                             <th>gremio</th>
                             <th>pmp</th>
@@ -43,17 +44,19 @@
                     </thead>
                     <tbody>
                         <tr v-for="(product, i)  in products" :key="i"
-                            :class="{'red accent-1 font-weight-bold': i === b_SelectProduct }"
+                            :class="{'red accent-1 font-weight-bold': i === b_selectRow }"
                             class="text-center"
                         >
-                            <td v-on:click="selectProduct(i)">{{product.name}}</td>
+                            <td v-on:click="selectRow(i)"></td>
 
-                            <td v-on:click="selectProduct(i)">{{product.partner}}</td>
-                            <td v-on:click="selectProduct(i)">{{product.gremio}}</td>
-                            <td v-on:click="selectProduct(i)">{{product.unit_price}}</td>
+                            <td v-on:click="selectRow(i)">{{product.name}}</td>
+
+                            <td v-on:click="selectRow(i)">{{product.partner}}</td>
+                            <td v-on:click="selectRow(i)">{{product}}</td>
+                            <td v-on:click="selectRow(i)">{{product.unit_price}}</td>
 
 
-                            <td v-on:click="selectProduct(i)">{{product.stock}}</td>
+                            <td v-on:click="selectRow(i)">{{product.stock}}</td>
 
                         </tr>
                     </tbody>
@@ -115,7 +118,7 @@
         <form enctype="multipart/form-data">
             <input type="file" @change="onFileChange">
         </form>
-        <button v-on:click="this.inportCSV" >Guardar</button>
+        <button v-on:click="this.inportCSV" >Importar</button>
 
         
     </div>
@@ -129,7 +132,7 @@
                 products:JSON.parse(this.inventory),
                 product:{},
 
-                b_SelectProduct: null,
+                b_selectRow: null,
 
                 csv : [],
 
@@ -141,6 +144,7 @@
         methods:{
 
             inportCSV(){
+                console.log(this.csv)
                 axios.post('import_csv', this.csv).then(res=>{
                     console.log(res.data.data)
                     this.$notify({
@@ -185,26 +189,26 @@
                 })
                 .fromString(csvSTR)
                 .then((obj)=>{ 
-                    
+                    this.csv = obj;
                 })
 
             },
 
-            selectProduct(index)
+            selectRow(index)
             {
                 console.log(index)
-                if(this.b_SelectProduct == index)
+                if(this.b_selectRow == index)
                 {
-                    this.b_SelectProduct = null
+                    this.b_selectRow = null
                     return
                 }
 
-                this.printSelected(index)
+                this.printSelectedRow(index)
             
             },
 
-            printSelected(index){
-                this.b_SelectProduct = index
+            printSelectedRow(index){
+                this.b_selectRow = index
                 this.product = Object.assign({}, this.products[index])
    
             },

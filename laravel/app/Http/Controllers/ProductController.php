@@ -29,11 +29,13 @@ class ProductController extends Controller
             $aux['organization_id'] = $organization_id;
             $aux['store_id'] = $organization_id;
 
-            $aux['name'] = $product['name'];
-            $aux['provider_id'] = $product['pmp'];
+            $aux['name'] = $product['descripcion'];
+            $aux['provider_id'] = 1;
 
-            $aux['bar_code'] = 1505;
-            $aux['unit_price'] = 100;
+            $aux['bar_code'] = $product['codigo'];
+            $aux['partner'] = $product['partner'];
+            $aux['gremio'] = $product['gremio'];
+            $aux['unit_price'] = $product['pmp'];
             $aux['stock'] = 0;
 
             
@@ -50,7 +52,7 @@ class ProductController extends Controller
     public function inventory(Request $request)
     {
         //$inventory = Product::with('provider')->orderBy('id', 'desc')->groupBy('customer_id')->where('store_id', '=', Auth::user()->store->id)->get();
-        $inventory = Product::selectRaw('sum(stock) as stock, name')->groupBy('name')->get();
+        $inventory = Product::selectRaw('sum(stock) as stock, name')->AVG('unit_price')->groupBy('name')->get();
         return view('products.inventory', compact('inventory'));
     }
 

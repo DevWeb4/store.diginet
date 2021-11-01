@@ -2220,13 +2220,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['inventory'],
   data: function data() {
     return {
       products: JSON.parse(this.inventory),
       product: {},
-      b_SelectProduct: null,
+      b_selectRow: null,
       csv: []
     };
   },
@@ -2237,6 +2240,7 @@ __webpack_require__.r(__webpack_exports__);
     inportCSV: function inportCSV() {
       var _this = this;
 
+      console.log(this.csv);
       axios.post('import_csv', this.csv).then(function (res) {
         console.log(res.data.data);
 
@@ -2274,6 +2278,8 @@ __webpack_require__.r(__webpack_exports__);
       reader.readAsText(file);
     },
     csvJSON: function csvJSON(csvDATA) {
+      var _this3 = this;
+
       var reg = /\;/g;
       var csvSTR = csvDATA.replace(reg, ",");
 
@@ -2283,20 +2289,22 @@ __webpack_require__.r(__webpack_exports__);
         //noheader:true,
         //output: "json",
         flatKeys: true
-      }).fromString(csvSTR).then(function (obj) {});
+      }).fromString(csvSTR).then(function (obj) {
+        _this3.csv = obj;
+      });
     },
-    selectProduct: function selectProduct(index) {
+    selectRow: function selectRow(index) {
       console.log(index);
 
-      if (this.b_SelectProduct == index) {
-        this.b_SelectProduct = null;
+      if (this.b_selectRow == index) {
+        this.b_selectRow = null;
         return;
       }
 
-      this.printSelected(index);
+      this.printSelectedRow(index);
     },
-    printSelected: function printSelected(index) {
-      this.b_SelectProduct = index;
+    printSelectedRow: function printSelectedRow(index) {
+      this.b_selectRow = index;
       this.product = Object.assign({}, this.products[index]);
     },
     resetDatatables: function resetDatatables() {
@@ -2305,11 +2313,11 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.inputName.focus();
     },
     modalDeleteAll: function modalDeleteAll() {
-      var _this3 = this;
+      var _this4 = this;
 
       var uri = "delete_all_productos/";
       axios["delete"](uri).then(function (res) {
-        _this3.resetDatatables();
+        _this4.resetDatatables();
       })["catch"](function (error) {
         if (error.response.status == 403) {
           alert("Usted no tiene los permisos suficientes para efectuar esta accion");
@@ -54283,7 +54291,7 @@ var render = function() {
                   staticClass:
                     "btn btn-outline-danger btn-md btn-block mt-3 text-white btn-sm",
                   attrs: {
-                    disabled: _vm.b_SelectProduct === null,
+                    disabled: _vm.b_selectRow === null,
                     type: "button",
                     "data-toggle": "modal",
                     "data-target": "#confirmDeleteModal"
@@ -54316,16 +54324,24 @@ var render = function() {
                   key: i,
                   staticClass: "text-center",
                   class: {
-                    "red accent-1 font-weight-bold": i === _vm.b_SelectProduct
+                    "red accent-1 font-weight-bold": i === _vm.b_selectRow
                   }
                 },
                 [
+                  _c("td", {
+                    on: {
+                      click: function($event) {
+                        return _vm.selectRow(i)
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
                   _c(
                     "td",
                     {
                       on: {
                         click: function($event) {
-                          return _vm.selectProduct(i)
+                          return _vm.selectRow(i)
                         }
                       }
                     },
@@ -54337,7 +54353,7 @@ var render = function() {
                     {
                       on: {
                         click: function($event) {
-                          return _vm.selectProduct(i)
+                          return _vm.selectRow(i)
                         }
                       }
                     },
@@ -54349,11 +54365,11 @@ var render = function() {
                     {
                       on: {
                         click: function($event) {
-                          return _vm.selectProduct(i)
+                          return _vm.selectRow(i)
                         }
                       }
                     },
-                    [_vm._v(_vm._s(product.gremio))]
+                    [_vm._v(_vm._s(product))]
                   ),
                   _vm._v(" "),
                   _c(
@@ -54361,7 +54377,7 @@ var render = function() {
                     {
                       on: {
                         click: function($event) {
-                          return _vm.selectProduct(i)
+                          return _vm.selectRow(i)
                         }
                       }
                     },
@@ -54373,7 +54389,7 @@ var render = function() {
                     {
                       on: {
                         click: function($event) {
-                          return _vm.selectProduct(i)
+                          return _vm.selectRow(i)
                         }
                       }
                     },
@@ -54567,7 +54583,7 @@ var render = function() {
       _c("input", { attrs: { type: "file" }, on: { change: _vm.onFileChange } })
     ]),
     _vm._v(" "),
-    _c("button", { on: { click: this.inportCSV } }, [_vm._v("Guardar")])
+    _c("button", { on: { click: this.inportCSV } }, [_vm._v("Importar")])
   ])
 }
 var staticRenderFns = [
@@ -54577,7 +54593,9 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("name")]),
+        _c("th", [_vm._v("enlace")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("descripcion")]),
         _vm._v(" "),
         _c("th", [_vm._v("partner")]),
         _vm._v(" "),
