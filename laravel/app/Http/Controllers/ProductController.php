@@ -23,7 +23,7 @@ class ProductController extends Controller
         $organization_id = Auth::user()->store->organization->id;
         $organization_id = Auth::user()->store->id;
 
-        foreach ($inventory as $product) {
+        /*foreach ($inventory as $product) {
             $aux = [];
 
             $aux['organization_id'] = $organization_id;
@@ -43,7 +43,7 @@ class ProductController extends Controller
 
             Product::updateOrCreate($condition,$aux);
 
-        }
+        }*/
 
         return response()->json(["statusCode" => 200, "data"=> $inventory]);
     }

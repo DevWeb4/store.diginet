@@ -2237,13 +2237,12 @@ __webpack_require__.r(__webpack_exports__);
     this.initDataTables();
   },
   methods: {
-    inportCSV: function inportCSV() {
+    importCSV: function importCSV() {
       var _this = this;
 
       console.log(this.csv);
       axios.post('import_csv', this.csv).then(function (res) {
-        console.log(res.data.data);
-
+        //console.log(res.data.data)
         _this.$notify({
           group: 'warning',
           type: 'error',
@@ -54583,7 +54582,7 @@ var render = function() {
       _c("input", { attrs: { type: "file" }, on: { change: _vm.onFileChange } })
     ]),
     _vm._v(" "),
-    _c("button", { on: { click: this.inportCSV } }, [_vm._v("Importar")])
+    _c("button", { on: { click: this.importCSV } }, [_vm._v("Importar")])
   ])
 }
 var staticRenderFns = [

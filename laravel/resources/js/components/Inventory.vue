@@ -118,7 +118,7 @@
         <form enctype="multipart/form-data">
             <input type="file" @change="onFileChange">
         </form>
-        <button v-on:click="this.inportCSV" >Importar</button>
+        <button v-on:click="this.importCSV" >Importar</button>
 
         
     </div>
@@ -143,10 +143,10 @@
         },
         methods:{
 
-            inportCSV(){
+            importCSV(){
                 console.log(this.csv)
                 axios.post('import_csv', this.csv).then(res=>{
-                    console.log(res.data.data)
+                    //console.log(res.data.data)
                     this.$notify({
                         group: 'warning',
                         type: 'error',
