@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Product;
 use App\Provider;
-
+use DB;
 
 class ProductController extends Controller
 {
@@ -23,7 +23,7 @@ class ProductController extends Controller
         $organization_id = Auth::user()->store->organization->id;
         $organization_id = Auth::user()->store->id;
 
-        /*foreach ($inventory as $product) {
+        foreach ($inventory as $product) {
             $aux = [];
 
             $aux['organization_id'] = $organization_id;
@@ -32,18 +32,18 @@ class ProductController extends Controller
             $aux['name'] = $product['descripcion'];
             $aux['provider_id'] = 1;
 
-            $aux['bar_code'] = $product['codigo'];
-            $aux['partner'] = $product['partner'];
-            $aux['gremio'] = $product['gremio'];
+            $aux['bar_code'] =  $product['codigo'];
+            $aux['partner'] =  $product['partner'];
+            $aux['gremio'] =  $product['gremio'];
             $aux['unit_price'] = $product['pmp'];
-            $aux['stock'] = 0;
+            $aux['stock'] = 10;
 
             
             $condition = ["bar_code" => $aux['bar_code'], 'provider_id' => $aux['provider_id']];
 
             Product::updateOrCreate($condition,$aux);
 
-        }*/
+        }
 
         return response()->json(["statusCode" => 200, "data"=> $inventory]);
     }
@@ -51,8 +51,22 @@ class ProductController extends Controller
 
     public function inventory(Request $request)
     {
-        //$inventory = Product::with('provider')->orderBy('id', 'desc')->groupBy('customer_id')->where('store_id', '=', Auth::user()->store->id)->get();
-        $inventory = Product::selectRaw('sum(stock) as stock, name')->AVG('unit_price')->groupBy('name')->get();
+        //$inventory = Product::with('provider')->orderBy('id', 'desc')->groupBy('id')->where('store_id', '=', Auth::user()->store->id)->get();
+        //$inventory = Product::selectRaw('sum(stock) as stock, name')->AVG('unit_price')->groupBy('name')->get();
+
+        $inventory = Product::selectRaw('sum(stock) as sum, name')
+            //->AVG('unit_price')
+            ->groupBy('name')
+            //->pluck('sum','name');
+            ->get();
+        
+
+        /*$inventory = Product::select("*")
+        ->select('*', DB::raw('stock as products'))
+        ->groupBy('name')
+        ->get();*/
+
+
         return view('products.inventory', compact('inventory'));
     }
 

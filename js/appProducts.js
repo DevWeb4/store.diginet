@@ -2223,6 +2223,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['inventory'],
   data: function data() {
@@ -54344,6 +54346,18 @@ var render = function() {
                         }
                       }
                     },
+                    [_vm._v(_vm._s(product.bar_code))]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.selectRow(i)
+                        }
+                      }
+                    },
                     [_vm._v(_vm._s(product.name))]
                   ),
                   _vm._v(" "),
@@ -54593,6 +54607,8 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("enlace")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("codigo")]),
         _vm._v(" "),
         _c("th", [_vm._v("descripcion")]),
         _vm._v(" "),

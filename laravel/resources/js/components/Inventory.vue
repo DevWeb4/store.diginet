@@ -34,6 +34,7 @@
                     <thead>
                         <tr>
                             <th>enlace</th>
+                            <th>codigo</th>
                             <th>descripcion</th>
                             <th>partner</th>
                             <th>gremio</th>
@@ -48,6 +49,7 @@
                             class="text-center"
                         >
                             <td v-on:click="selectRow(i)"></td>
+                            <td v-on:click="selectRow(i)">{{product.bar_code}}</td>
 
                             <td v-on:click="selectRow(i)">{{product.name}}</td>
 
