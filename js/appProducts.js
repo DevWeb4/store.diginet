@@ -2220,11 +2220,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['inventory'],
   data: function data() {
@@ -2239,6 +2234,22 @@ __webpack_require__.r(__webpack_exports__);
     this.initDataTables();
   },
   methods: {
+    /*getTotales(){
+        axios.get('get_totales').then(res=>{
+         }).catch(error => {
+            if(error.response.status == 422){
+                this.$notify({
+                    group: 'warning',
+                    type: 'error',
+                    title: 'Error!',
+                    text: 'El Proveedor/Marca '+this.provider.name+' ya existe'
+                })
+            }else if(error.response.status == 403){
+                alert("Usted no tiene los permisos suficientes para efectuar esta accion")
+            }
+            console.log(error.response)
+        })
+    },*/
     importCSV: function importCSV() {
       var _this = this;
 
@@ -54329,14 +54340,6 @@ var render = function() {
                   }
                 },
                 [
-                  _c("td", {
-                    on: {
-                      click: function($event) {
-                        return _vm.selectRow(i)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
                   _c(
                     "td",
                     {
@@ -54346,7 +54349,21 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v(_vm._s(product.bar_code))]
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "text-primary",
+                          attrs: {
+                            target: "_blank",
+                            href:
+                              "https://www.bigdipper.com.ar/File/hojas-de-datos/" +
+                              product.url
+                          }
+                        },
+                        [_vm._v(_vm._s(product.url))]
+                      )
+                    ]
                   ),
                   _vm._v(" "),
                   _c(
@@ -54382,7 +54399,7 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v(_vm._s(product))]
+                    [_vm._v(_vm._s(product.gremio))]
                   ),
                   _vm._v(" "),
                   _c(
@@ -54607,8 +54624,6 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("enlace")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("codigo")]),
         _vm._v(" "),
         _c("th", [_vm._v("descripcion")]),
         _vm._v(" "),

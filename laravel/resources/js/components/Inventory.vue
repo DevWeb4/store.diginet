@@ -34,7 +34,6 @@
                     <thead>
                         <tr>
                             <th>enlace</th>
-                            <th>codigo</th>
                             <th>descripcion</th>
                             <th>partner</th>
                             <th>gremio</th>
@@ -48,18 +47,14 @@
                             :class="{'red accent-1 font-weight-bold': i === b_selectRow }"
                             class="text-center"
                         >
-                            <td v-on:click="selectRow(i)"></td>
-                            <td v-on:click="selectRow(i)">{{product.bar_code}}</td>
-
+                            <td v-on:click="selectRow(i)">
+                                <a class="text-primary" target="_blank" v-bind:href="'https://www.bigdipper.com.ar/File/hojas-de-datos/'+ product.url" >{{product.url}}</a>
+                            </td>
                             <td v-on:click="selectRow(i)">{{product.name}}</td>
-
                             <td v-on:click="selectRow(i)">{{product.partner}}</td>
-                            <td v-on:click="selectRow(i)">{{product}}</td>
+                            <td v-on:click="selectRow(i)">{{product.gremio}}</td>
                             <td v-on:click="selectRow(i)">{{product.unit_price}}</td>
-
-
                             <td v-on:click="selectRow(i)">{{product.stock}}</td>
-
                         </tr>
                     </tbody>
                 </table>
@@ -145,6 +140,23 @@
         },
         methods:{
 
+            /*getTotales(){
+                axios.get('get_totales').then(res=>{
+
+                }).catch(error => {
+                    if(error.response.status == 422){
+                        this.$notify({
+                            group: 'warning',
+                            type: 'error',
+                            title: 'Error!',
+                            text: 'El Proveedor/Marca '+this.provider.name+' ya existe'
+                        })
+                    }else if(error.response.status == 403){
+                        alert("Usted no tiene los permisos suficientes para efectuar esta accion")
+                    }
+                    console.log(error.response)
+                })
+            },*/
             importCSV(){
                 console.log(this.csv)
                 axios.post('import_csv', this.csv).then(res=>{

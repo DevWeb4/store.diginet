@@ -54,18 +54,15 @@ class ProductController extends Controller
         //$inventory = Product::with('provider')->orderBy('id', 'desc')->groupBy('id')->where('store_id', '=', Auth::user()->store->id)->get();
         //$inventory = Product::selectRaw('sum(stock) as stock, name')->AVG('unit_price')->groupBy('name')->get();
 
-        $inventory = Product::selectRaw('sum(stock) as sum, name')
-            //->AVG('unit_price')
+        $inventory = Product::selectRaw('sum(stock) as stock, 
+                name,
+                max(url) as url,
+                max(unit_price) as unit_price, 
+                max(partner) as partner, 
+                max(gremio) as gremio')
             ->groupBy('name')
-            //->pluck('sum','name');
+            ->where('store_id', '=', Auth::user()->store->id)
             ->get();
-        
-
-        /*$inventory = Product::select("*")
-        ->select('*', DB::raw('stock as products'))
-        ->groupBy('name')
-        ->get();*/
-
 
         return view('products.inventory', compact('inventory'));
     }
