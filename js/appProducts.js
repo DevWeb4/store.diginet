@@ -2220,6 +2220,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['inventory'],
   data: function data() {
@@ -2234,22 +2241,13 @@ __webpack_require__.r(__webpack_exports__);
     this.initDataTables();
   },
   methods: {
-    /*getTotales(){
-        axios.get('get_totales').then(res=>{
-         }).catch(error => {
-            if(error.response.status == 422){
-                this.$notify({
-                    group: 'warning',
-                    type: 'error',
-                    title: 'Error!',
-                    text: 'El Proveedor/Marca '+this.provider.name+' ya existe'
-                })
-            }else if(error.response.status == 403){
-                alert("Usted no tiene los permisos suficientes para efectuar esta accion")
-            }
-            console.log(error.response)
-        })
-    },*/
+    calculatePartner: function calculatePartner() {
+      var partner = 0;
+      this.products.forEach(function (product) {
+        partner += product.partner * product.stock;
+      });
+      return partner;
+    },
     importCSV: function importCSV() {
       var _this = this;
 
@@ -54607,13 +54605,32 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c("p", [_vm._v("Select local CSV File:")]),
-    _vm._v(" "),
-    _c("form", { attrs: { enctype: "multipart/form-data" } }, [
-      _c("input", { attrs: { type: "file" }, on: { change: _vm.onFileChange } })
-    ]),
-    _vm._v(" "),
-    _c("button", { on: { click: this.importCSV } }, [_vm._v("Importar")])
+    _c("div", { staticClass: "col-12" }, [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-6" }, [
+          _c("p", [_vm._v("Select local CSV File:")]),
+          _vm._v(" "),
+          _c("form", { attrs: { enctype: "multipart/form-data" } }, [
+            _c("input", {
+              attrs: { type: "file" },
+              on: { change: _vm.onFileChange }
+            })
+          ]),
+          _vm._v(" "),
+          _c("button", { on: { click: this.importCSV } }, [
+            _vm._v(" Importar ")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-6" }, [
+          _vm._v(
+            "\n                " +
+              _vm._s(_vm.calculatePartner()) +
+              "\n            "
+          )
+        ])
+      ])
+    ])
   ])
 }
 var staticRenderFns = [

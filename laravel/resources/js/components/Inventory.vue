@@ -110,14 +110,21 @@
                 </div>
             </div>
         </div>
-        
-        <p>Select local CSV File:</p>
-        <form enctype="multipart/form-data">
-            <input type="file" @change="onFileChange">
-        </form>
-        <button v-on:click="this.importCSV" >Importar</button>
 
-        
+        <div class="col-12">
+            <div class="row">
+                <div class="col-6">
+                    <p>Select local CSV File:</p>
+                    <form enctype="multipart/form-data">
+                        <input type="file" @change="onFileChange">
+                    </form>
+                    <button v-on:click="this.importCSV"> Importar </button>
+                </div>
+                <div class="col-6">
+                    {{calculatePartner()}}
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -140,23 +147,13 @@
         },
         methods:{
 
-            /*getTotales(){
-                axios.get('get_totales').then(res=>{
-
-                }).catch(error => {
-                    if(error.response.status == 422){
-                        this.$notify({
-                            group: 'warning',
-                            type: 'error',
-                            title: 'Error!',
-                            text: 'El Proveedor/Marca '+this.provider.name+' ya existe'
-                        })
-                    }else if(error.response.status == 403){
-                        alert("Usted no tiene los permisos suficientes para efectuar esta accion")
-                    }
-                    console.log(error.response)
-                })
-            },*/
+            calculatePartner(){
+                var partner = 0
+                this.products.forEach(product => {
+                    partner += product.partner * product.stock;
+                });
+                return partner;
+            },
             importCSV(){
                 console.log(this.csv)
                 axios.post('import_csv', this.csv).then(res=>{
