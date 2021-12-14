@@ -2242,16 +2242,15 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     calculatePartner: function calculatePartner() {
-      var partner = 0;
+      var valuePartner = 0;
       this.products.forEach(function (product) {
-        partner += product.partner * product.stock;
+        valuePartner += product.partner * product.stock;
       });
-      return partner;
+      return valuePartner;
     },
     importCSV: function importCSV() {
       var _this = this;
 
-      console.log(this.csv);
       axios.post('import_csv', this.csv).then(function (res) {
         //console.log(res.data.data)
         _this.$notify({
@@ -2297,10 +2296,11 @@ __webpack_require__.r(__webpack_exports__);
 
       csv({
         //noheader:true,
-        //output: "json",
+        output: "json",
         flatKeys: true
       }).fromString(csvSTR).then(function (obj) {
         _this3.csv = obj;
+        console.log(_this3.csv);
       });
     },
     selectRow: function selectRow(index) {
@@ -2362,7 +2362,8 @@ __webpack_require__.r(__webpack_exports__);
           "order": [[0, "desc"]],
           dom: 'Bfrtip',
           //"lengthChange": false,   
-          buttons: ['csv', 'excel'],
+          buttons: [//'csv', 'excel',
+          ],
           language: {
             url: 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json'
           }
@@ -54608,7 +54609,7 @@ var render = function() {
     _c("div", { staticClass: "col-12" }, [
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-6" }, [
-          _c("p", [_vm._v("Select local CSV File:")]),
+          _c("p", [_vm._v("Seleccione Archivo Local CSV:")]),
           _vm._v(" "),
           _c("form", { attrs: { enctype: "multipart/form-data" } }, [
             _c("input", {
@@ -54623,11 +54624,9 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-6" }, [
-          _vm._v(
-            "\n                " +
-              _vm._s(_vm.calculatePartner()) +
-              "\n            "
-          )
+          _c("p", { staticClass: "text-right" }, [
+            _vm._v("Total Partner: $" + _vm._s(_vm.calculatePartner()))
+          ])
         ])
       ])
     ])

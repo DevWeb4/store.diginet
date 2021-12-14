@@ -21,22 +21,42 @@ class ProductController extends Controller
         $inventory = $request->all();
 
         $organization_id = Auth::user()->store->organization->id;
-        $organization_id = Auth::user()->store->id;
+        $store_id = Auth::user()->store->id;
 
         foreach ($inventory as $product) {
             $aux = [];
 
             $aux['organization_id'] = $organization_id;
-            $aux['store_id'] = $organization_id;
+            $aux['store_id'] = $store_id;
 
-            $aux['name'] = $product['descripcion'];
-            $aux['provider_id'] = 1;
+            $productNameKey = 'descripcion';
+            if (!array_key_exists($productNameKey,$product)) {
+                $productNameKey = 'descripcion';
+            }
 
-            $aux['bar_code'] =  $product['codigo'];
-            $aux['partner'] =  $product['partner'];
-            $aux['gremio'] =  $product['gremio'];
-            $aux['unit_price'] = $product['pmp'];
-            $aux['stock'] = 10;
+            $productBarCodeKey = 'Codigo';
+            if (isset($product['codigo'])) {
+                $productBarCodeKey = 'codigo';
+            }
+
+            $productPartnerKey = 'Partner';
+            if (isset($product['partner'])) {
+                $productPartnerKey = 'partner';
+            }
+            
+            $productGremioKey = 'Gremio';
+            if (isset($product['gremio'])) {
+                $productGremioKey = 'gremio';
+            }
+
+
+            $aux['name'] = $product[$productNameKey];
+            $aux['provider_id'] = 0;
+            $aux['bar_code'] =  $product[$productBarCodeKey];
+            $aux['partner'] =  $product[$productPartnerKey];
+            $aux['gremio'] =  $product[$productGremioKey];
+            $aux['unit_price'] = $product['PMP'];
+            $aux['stock'] = 1;
 
             
             $condition = ["bar_code" => $aux['bar_code'], 'provider_id' => $aux['provider_id']];
@@ -45,7 +65,7 @@ class ProductController extends Controller
 
         }
 
-        return response()->json(["statusCode" => 200, "data"=> $inventory]);
+        return response()->json(["statusCode" => 200, "data"=> $request]);
     }
 
 

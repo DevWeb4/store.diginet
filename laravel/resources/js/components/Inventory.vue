@@ -114,14 +114,14 @@
         <div class="col-12">
             <div class="row">
                 <div class="col-6">
-                    <p>Select local CSV File:</p>
+                    <p>Seleccione Archivo Local CSV:</p>
                     <form enctype="multipart/form-data">
                         <input type="file" @change="onFileChange">
                     </form>
                     <button v-on:click="this.importCSV"> Importar </button>
                 </div>
                 <div class="col-6">
-                    {{calculatePartner()}}
+                    <p class="text-right">Total Partner: ${{calculatePartner()}}</p>
                 </div>
             </div>
         </div>
@@ -139,7 +139,6 @@
                 b_selectRow: null,
 
                 csv : [],
-
             }
         },
         mounted() {
@@ -148,14 +147,15 @@
         methods:{
 
             calculatePartner(){
-                var partner = 0
+                var valuePartner = 0
                 this.products.forEach(product => {
-                    partner += product.partner * product.stock;
+                    valuePartner += product.partner * product.stock;
                 });
-                return partner;
+
+                return valuePartner;
             },
+
             importCSV(){
-                console.log(this.csv)
                 axios.post('import_csv', this.csv).then(res=>{
                     //console.log(res.data.data)
                     this.$notify({
@@ -195,14 +195,15 @@
                 const csv=require('csvtojson')
                 csv({
                     //noheader:true,
-                    //output: "json",
+                    output: "json",
                     flatKeys: true
                 })
                 .fromString(csvSTR)
                 .then((obj)=>{ 
                     this.csv = obj;
-                })
 
+                    console.log(this.csv)
+                })
             },
 
             selectRow(index)
@@ -279,7 +280,7 @@
                         //"lengthChange": false,   
 
                         buttons: [
-                            'csv', 'excel',
+                            //'csv', 'excel',
                         ],
                         
                         language: {
