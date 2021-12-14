@@ -2788,6 +2788,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['array', 'origin', 'organization', 'uri'],
   data: function data() {
@@ -98371,25 +98375,27 @@ var render = function() {
         _c("div", { staticClass: "card col-9 px-0" }, [
           _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-6 v-aling-text-c text-left" }, [
-              _c("b", { staticClass: "ml-1" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-sm btn-outline-danger btn-block",
-                    attrs: {
-                      id: "pruebaFocus",
-                      disabled: this.myBilling.invoiced == 1,
-                      "data-toggle": "modal",
-                      "data-target": "#modalAddClient"
-                    }
-                  },
-                  [
-                    _vm._v(
-                      "\n                                Agregar Cliente\n                            "
+              this.myBilling.client == null
+                ? _c("b", { staticClass: "ml-1" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-sm btn-outline-danger btn-block",
+                        attrs: {
+                          id: "pruebaFocus",
+                          disabled: this.myBilling.invoiced == 1,
+                          "data-toggle": "modal",
+                          "data-target": "#modalAddClient"
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                Agregar Cliente\n                            "
+                        )
+                      ]
                     )
-                  ]
-                )
-              ])
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-6 text-md-right" }, [
@@ -98449,6 +98455,17 @@ var render = function() {
               ])
             ])
           ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12 pt-3" }, [
+        _c("b", [
+          _vm._v(
+            " Cliente: " +
+              _vm._s(this.myBilling.client.name) +
+              ", DNI:" +
+              _vm._s(this.myBilling.client.identification)
+          )
         ])
       ])
     ]),

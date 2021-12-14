@@ -59,7 +59,8 @@
                 <div class="card col-9 px-0">
                     <div class="row">
                         <div class="col-6 v-aling-text-c text-left">
-                            <b class="ml-1">
+                            
+                            <b class="ml-1" v-if="this.myBilling.client == null">
                                 <button id="pruebaFocus" :disabled="this.myBilling.invoiced == 1" class="btn btn-sm btn-outline-danger btn-block" data-toggle="modal" data-target="#modalAddClient">
                                     Agregar Cliente
                                 </button>
@@ -79,6 +80,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-12 pt-3">
+                <b> Cliente: {{this.myBilling.client.name}}, DNI:{{this.myBilling.client.identification}}</b>
             </div>
         </div>
         <div class="container card" style="min-height: 600px;">
