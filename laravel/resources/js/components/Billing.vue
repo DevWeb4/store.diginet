@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 pt-3">
+            <div class="col-12 pt-3" v-if="this.myBilling.client != null">
                 <b> Cliente: {{this.myBilling.client.name}}, DNI:{{this.myBilling.client.identification}}</b>
             </div>
         </div>
