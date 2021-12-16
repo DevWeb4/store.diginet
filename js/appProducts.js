@@ -2252,13 +2252,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.post('import_csv', this.csv).then(function (res) {
-        //console.log(res.data.data)
-        _this.$notify({
-          group: 'warning',
-          type: 'error',
-          title: 'Exito!',
-          text: 'Se Agrego el Proveedor/Marca'
-        });
+        console.log(res.data.data);
+        /*this.$notify({
+            group: 'warning',
+            type: 'error',
+            title: 'Exito!',
+            text: 'Se Agrego el Proveedor/Marca'
+        })*/
       })["catch"](function (error) {
         if (error.response.status == 422) {
           _this.$notify({
@@ -2299,8 +2299,7 @@ __webpack_require__.r(__webpack_exports__);
         output: "json",
         flatKeys: true
       }).fromString(csvSTR).then(function (obj) {
-        _this3.csv = obj;
-        console.log(_this3.csv);
+        _this3.csv = obj; //console.log(this.csv)
       });
     },
     selectRow: function selectRow(index) {

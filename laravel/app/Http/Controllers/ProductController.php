@@ -23,49 +23,67 @@ class ProductController extends Controller
         $organization_id = Auth::user()->store->organization->id;
         $store_id = Auth::user()->store->id;
 
-        foreach ($inventory as $product) {
+        foreach ($inventory as $key => $product) {
             $aux = [];
 
             $aux['organization_id'] = $organization_id;
             $aux['store_id'] = $store_id;
 
-            $productNameKey = 'descripcion';
-            if (!array_key_exists($productNameKey,$product)) {
-                $productNameKey = 'descripcion';
-            }
+            
+            $auxKeyName = $this->detectKeyInArray($product,'Descripcion','descripcion');
+            /*if ($auxKeyName != 'Undefined') {
+                $aux['name'] = $product[$auxKeyName];
+            }*/
 
-            $productBarCodeKey = 'Codigo';
-            if (isset($product['codigo'])) {
-                $productBarCodeKey = 'codigo';
-            }
+            return response()->json(["statusCode" => 200, "data"=> $auxKeyName]);
+            
 
-            $productPartnerKey = 'Partner';
-            if (isset($product['partner'])) {
-                $productPartnerKey = 'partner';
+            $auxKeyName = $this->detectKeyInArray($product,'Gremio','gremio');
+
+            if ($auxKeyName != 'Undefined') {
+                $aux['gremio'] = $product[$auxKeyName];
             }
             
-            $productGremioKey = 'Gremio';
-            if (isset($product['gremio'])) {
-                $productGremioKey = 'gremio';
+            $auxKeyName = $this->detectKeyInArray($product,'Partner','partner');
+            if ($auxKeyName != 'Undefined') {
+                $aux['partner'] = $product[$auxKeyName];
+            }
+            
+
+
+            $auxKeyName = $this->detectKeyInArray($product,'PMP','pmp');
+            if ($auxKeyName != 'Undefined') {
+                $aux['unit_price'] = $product[$auxKeyName];
             }
 
-
-            $aux['name'] = $product[$productNameKey];
             $aux['provider_id'] = 0;
-            $aux['bar_code'] =  $product[$productBarCodeKey];
-            $aux['partner'] =  $product[$productPartnerKey];
-            $aux['gremio'] =  $product[$productGremioKey];
-            $aux['unit_price'] = $product['PMP'];
             $aux['stock'] = 1;
 
+            $auxKeyName = $this->detectKeyInArray($product,'Codigo','codigo');
+
+            if ($auxKeyName != 'Undefined') {
+                $aux['bar_code'] = $product[$auxKeyName];
+                $condition = ["bar_code" => $aux['bar_code'], 'provider_id' => $aux['provider_id']];
+
+                Product::updateOrCreate($condition,$aux);
+            }
             
-            $condition = ["bar_code" => $aux['bar_code'], 'provider_id' => $aux['provider_id']];
-
-            Product::updateOrCreate($condition,$aux);
-
         }
 
-        return response()->json(["statusCode" => 200, "data"=> $request]);
+        return response()->json(["statusCode" => 200, "data"=> $inventory]);
+    }
+
+
+    public function detectKeyInArray($array,$var1,$var2){
+        if (array_key_exists($var1,$array)) {
+            $keyName = $var1;
+        }elseif (array_key_exists($var2,$array)){
+            $keyName = $var2;
+        }{
+            $keyName = 'Undefined';
+        }
+
+        return $keyName;//pendiente
     }
 
 

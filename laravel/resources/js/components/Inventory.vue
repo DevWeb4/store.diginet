@@ -157,13 +157,13 @@
 
             importCSV(){
                 axios.post('import_csv', this.csv).then(res=>{
-                    //console.log(res.data.data)
-                    this.$notify({
+                    console.log(res.data.data)
+                    /*this.$notify({
                         group: 'warning',
                         type: 'error',
                         title: 'Exito!',
                         text: 'Se Agrego el Proveedor/Marca'
-                    })
+                    })*/
                 }).catch(error => {
                     if(error.response.status == 422){
                         this.$notify({
@@ -202,7 +202,7 @@
                 .then((obj)=>{ 
                     this.csv = obj;
 
-                    console.log(this.csv)
+                    //console.log(this.csv)
                 })
             },
 

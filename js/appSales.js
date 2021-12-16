@@ -98458,16 +98458,18 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-12 pt-3" }, [
-        _c("b", [
-          _vm._v(
-            " Cliente: " +
-              _vm._s(this.myBilling.client.name) +
-              ", DNI:" +
-              _vm._s(this.myBilling.client.identification)
-          )
-        ])
-      ])
+      this.myBilling.client != null
+        ? _c("div", { staticClass: "col-12 pt-3" }, [
+            _c("b", [
+              _vm._v(
+                " Cliente: " +
+                  _vm._s(this.myBilling.client.name) +
+                  ", DNI:" +
+                  _vm._s(this.myBilling.client.identification)
+              )
+            ])
+          ])
+        : _vm._e()
     ]),
     _vm._v(" "),
     _c(
