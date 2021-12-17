@@ -2202,31 +2202,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['inventory'],
   data: function data() {
@@ -2252,25 +2227,18 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.post('import_csv', this.csv).then(function (res) {
-        console.log(res.data.data);
-        /*this.$notify({
-            group: 'warning',
-            type: 'error',
-            title: 'Exito!',
-            text: 'Se Agrego el Proveedor/Marca'
-        })*/
-      })["catch"](function (error) {
-        if (error.response.status == 422) {
+        //console.log(res.data.data)
+        if (res.data.statusCode == 200) {
           _this.$notify({
             group: 'warning',
             type: 'error',
-            title: 'Error!',
-            text: 'El Proveedor/Marca ' + _this.provider.name + ' ya existe'
+            title: 'Exito!',
+            text: 'Importacion completada'
           });
-        } else if (error.response.status == 403) {
-          alert("Usted no tiene los permisos suficientes para efectuar esta accion");
-        }
 
+          _this.resetDatatables();
+        }
+      })["catch"](function (error) {
         console.log(error.response);
       });
     },
@@ -2303,8 +2271,6 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     selectRow: function selectRow(index) {
-      console.log(index);
-
       if (this.b_selectRow == index) {
         this.b_selectRow = null;
         return;
@@ -2318,14 +2284,23 @@ __webpack_require__.r(__webpack_exports__);
     },
     resetDatatables: function resetDatatables() {
       $('#_tInventory').dataTable().fnDestroy();
-      this.getGroupInventory();
-      this.$refs.inputName.focus();
+      this.getInventoryGrouped();
     },
-    modalDeleteAll: function modalDeleteAll() {
+    confirmDelete: function confirmDelete() {
       var _this4 = this;
 
-      var uri = "delete_all_productos/";
-      axios["delete"](uri).then(function (res) {
+      axios["delete"]("delete_inventory_grouped/".concat(this.product['bar_code'])).then(function (res) {
+        console.log(res.data.data);
+
+        if (res.data.statusCode == 200) {
+          _this4.$notify({
+            group: 'warning',
+            type: 'error',
+            title: 'Exito!',
+            text: 'Eliminado Correctamente'
+          });
+        }
+
         _this4.resetDatatables();
       })["catch"](function (error) {
         if (error.response.status == 403) {
@@ -2333,24 +2308,27 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    getGroupInventory: function getGroupInventory() {
-      console.log("pendiente getGroupInventory");
-      /*axios.post('get_inventory').then(res=>{
-          if(res.data.statusCode == 200){
-              this.products = res.data.data
-              this.initDataTables()
-              this.b_loadingTable = false
-          }else{
-              console.log('error in methods getPersons(): return error in controller')
-              this.err_msg_tableProducts= 'Error al cargar la tabla de Productos'
-          }
-      }).catch(error => {
-          console.log("error getInventory()")
-          console.log(error.response)
-           if(error.response.status == 403){
-              alert("Usted no tiene los permisos suficientes para efectuar esta accion")
-          }
-      });*/
+    getInventoryGrouped: function getInventoryGrouped() {
+      var _this5 = this;
+
+      axios.get('get_inventory_grouped').then(function (res) {
+        if (res.data.statusCode == 200) {
+          _this5.products = res.data.data;
+
+          _this5.initDataTables(); //this.b_loadingTable = false
+
+        } else {
+          console.log('error in methods getPersons(): return error in controller');
+          _this5.err_msg_tableProducts = 'Error al cargar la tabla de Productos';
+        }
+      })["catch"](function (error) {
+        console.log("error getInventoryGrouped()");
+        console.log(error.response);
+
+        if (error.response.status == 403) {
+          alert("Usted no tiene los permisos suficientes para efectuar esta accion");
+        }
+      });
     },
     initDataTables: function initDataTables() {
       $(document).ready(function () {
@@ -54266,370 +54244,314 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "card p-1 mb-4" }, [
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _c("div", { staticClass: "card p-1 mb-4" }, [
+        _c(
+          "div",
+          {
+            staticClass: "md-form md-outline input-with-post-icon form-sm m-0"
+          },
+          [
+            _c("i", {
+              staticClass: "fas fa-search red-store-text input-prefix"
+            }),
+            _vm._v(" "),
+            _c("input", {
+              ref: "inputSearch",
+              staticClass: "form-control m-0",
+              attrs: {
+                id: "inputSearch",
+                value: "",
+                type: "text",
+                placeholder: "Buscar"
+              }
+            })
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card" }, [
+        _c("div", { staticClass: "card-body pt-0" }, [
+          _c("div", { staticClass: "col-12" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-6" }),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-6" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass:
+                      "btn btn-outline-danger btn-md btn-block mt-3 text-white btn-sm",
+                    attrs: {
+                      disabled: _vm.b_selectRow === null,
+                      type: "button",
+                      "data-toggle": "modal",
+                      "data-target": "#confirmDeleteModal"
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.b_delete = "product"
+                      }
+                    }
+                  },
+                  [
+                    _c("b", [_vm._v("Eliminar Producto")]),
+                    _vm._v(" "),
+                    _c("i", { staticClass: "fas fa-trash-alt" })
+                  ]
+                )
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("table", { staticClass: "table", attrs: { id: "_tInventory" } }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.products, function(product, i) {
+                return _c(
+                  "tr",
+                  {
+                    key: i,
+                    staticClass: "text-center",
+                    class: {
+                      "red accent-1 font-weight-bold": i === _vm.b_selectRow
+                    }
+                  },
+                  [
+                    _c(
+                      "td",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.selectRow(i)
+                          }
+                        }
+                      },
+                      [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "text-primary",
+                            attrs: {
+                              target: "_blank",
+                              href:
+                                "https://www.bigdipper.com.ar/File/hojas-de-datos/" +
+                                product.bar_code +
+                                ".pdf"
+                            }
+                          },
+                          [
+                            _c(
+                              "svg",
+                              {
+                                staticClass: "bi bi-link-45deg",
+                                attrs: {
+                                  xmlns: "http://www.w3.org/2000/svg",
+                                  width: "16",
+                                  height: "16",
+                                  fill: "currentColor",
+                                  viewBox: "0 0 16 16"
+                                }
+                              },
+                              [
+                                _c("path", {
+                                  attrs: {
+                                    d:
+                                      "M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("path", {
+                                  attrs: {
+                                    d:
+                                      "M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"
+                                  }
+                                })
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.selectRow(i)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(product.name))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.selectRow(i)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(product.partner))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.selectRow(i)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(product.gremio))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.selectRow(i)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(product.unit_price))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.selectRow(i)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(product.stock))]
+                    )
+                  ]
+                )
+              }),
+              0
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
       _c(
         "div",
-        { staticClass: "md-form md-outline input-with-post-icon form-sm m-0" },
+        {
+          staticClass: "modal fade top",
+          attrs: {
+            id: "confirmDeleteModal",
+            tabindex: "-1",
+            role: "dialog",
+            "aria-labelledby": "myModalLabel",
+            "aria-hidden": "true",
+            "data-backdrop": "true"
+          }
+        },
         [
-          _c("i", { staticClass: "fas fa-search red-store-text input-prefix" }),
-          _vm._v(" "),
-          _c("input", {
-            ref: "inputSearch",
-            staticClass: "form-control m-0",
-            attrs: {
-              id: "inputSearch",
-              value: "",
-              type: "text",
-              placeholder: "Buscar"
-            }
-          })
-        ]
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-body pt-0" }, [
-        _c("div", { staticClass: "col-12" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-6" }),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-6" }, [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn btn-outline-danger btn-md btn-block mt-3 text-white btn-sm",
-                  attrs: {
-                    disabled: _vm.b_selectRow === null,
-                    type: "button",
-                    "data-toggle": "modal",
-                    "data-target": "#confirmDeleteModal"
-                  },
-                  on: {
-                    click: function($event) {
-                      _vm.b_delete = "product"
-                    }
-                  }
-                },
-                [
-                  _c("b", [_vm._v("Eliminar Producto")]),
-                  _vm._v(" "),
-                  _c("i", { staticClass: "fas fa-trash-alt" })
-                ]
-              )
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("table", { staticClass: "table", attrs: { id: "_tInventory" } }, [
-          _vm._m(0),
-          _vm._v(" "),
           _c(
-            "tbody",
-            _vm._l(_vm.products, function(product, i) {
-              return _c(
-                "tr",
-                {
-                  key: i,
-                  staticClass: "text-center",
-                  class: {
-                    "red accent-1 font-weight-bold": i === _vm.b_selectRow
-                  }
-                },
-                [
+            "div",
+            {
+              staticClass:
+                "modal-dialog modal-frame modal-top modal-notify modal-info",
+              attrs: { role: "document" }
+            },
+            [
+              _c("div", { staticClass: "modal-content" }, [
+                _c("div", { staticClass: "modal-body" }, [
                   _c(
-                    "td",
+                    "div",
                     {
-                      on: {
-                        click: function($event) {
-                          return _vm.selectRow(i)
-                        }
-                      }
+                      staticClass:
+                        "row d-flex justify-content-center align-items-center"
                     },
                     [
+                      _c("p", { staticClass: "pt-3 pr-2" }, [
+                        _vm._v(
+                          "Confirma que realmente quiere eliminar el Producto "
+                        ),
+                        _c("b", [_vm._v(_vm._s(_vm.product.name))]),
+                        _vm._v("?")
+                      ]),
+                      _vm._v(" "),
                       _c(
                         "a",
                         {
-                          staticClass: "text-primary",
-                          attrs: {
-                            target: "_blank",
-                            href:
-                              "https://www.bigdipper.com.ar/File/hojas-de-datos/" +
-                              product.url
+                          staticClass:
+                            "btn btn-outline-danger btn-sm waves-effect",
+                          attrs: { type: "button", "data-dismiss": "modal" }
+                        },
+                        [_vm._v("Mejor no")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn red accent-4 btn-sm",
+                          attrs: { type: "button", "data-dismiss": "modal" },
+                          on: {
+                            click: function($event) {
+                              return _vm.confirmDelete(_vm.b_delete)
+                            }
                           }
                         },
-                        [_vm._v(_vm._s(product.url))]
+                        [
+                          _vm._v("Si, Eliminar "),
+                          _c("i", { staticClass: "fas fa-check-double" })
+                        ]
                       )
                     ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.selectRow(i)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(product.name))]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.selectRow(i)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(product.partner))]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.selectRow(i)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(product.gremio))]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.selectRow(i)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(product.unit_price))]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.selectRow(i)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(product.stock))]
                   )
-                ]
-              )
-            }),
-            0
+                ])
+              ])
+            ]
           )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-12" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-6" }),
+        ]
+      ),
+      _vm._v(" "),
+      _c("notifications", {
+        attrs: { group: "warning", position: "top left" }
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12" }, [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-6" }, [
+            _c("p", [_vm._v("Seleccione Archivo Local CSV:")]),
             _vm._v(" "),
-            _c("div", { staticClass: "col-6" }, [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "btn btn-outline-danger btn-md btn-block mt-3 text-white btn-sm",
-                  attrs: {
-                    type: "button",
-                    "data-toggle": "modal",
-                    "data-target": "#confirmDeleteAllModal"
-                  },
-                  on: {
-                    click: function($event) {
-                      _vm.b_delete = "product"
-                    }
-                  }
-                },
-                [
-                  _c("b", [_vm._v("Eliminar Inventario")]),
-                  _vm._v(" "),
-                  _c("i", { staticClass: "fas fa-trash-alt" })
-                ]
-              )
+            _c("form", { attrs: { enctype: "multipart/form-data" } }, [
+              _c("input", {
+                attrs: { type: "file" },
+                on: { change: _vm.onFileChange }
+              })
+            ]),
+            _vm._v(" "),
+            _c("button", { on: { click: this.importCSV } }, [
+              _vm._v(" Importar ")
             ])
-          ])
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "modal fade top",
-        attrs: {
-          id: "confirmDeleteModal",
-          tabindex: "-1",
-          role: "dialog",
-          "aria-labelledby": "myModalLabel",
-          "aria-hidden": "true",
-          "data-backdrop": "true"
-        }
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass:
-              "modal-dialog modal-frame modal-top modal-notify modal-info",
-            attrs: { role: "document" }
-          },
-          [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-body" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "row d-flex justify-content-center align-items-center"
-                  },
-                  [
-                    _c("p", { staticClass: "pt-3 pr-2" }, [
-                      _vm._v(
-                        "Confirma que realmente quiere eliminar el Producto "
-                      ),
-                      _c("b", [_vm._v(_vm._s(_vm.product.name))]),
-                      _vm._v("?")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        staticClass:
-                          "btn btn-outline-danger btn-sm waves-effect",
-                        attrs: { type: "button", "data-dismiss": "modal" }
-                      },
-                      [_vm._v("Mejor no")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        staticClass: "btn red accent-4 btn-sm",
-                        attrs: { type: "button", "data-dismiss": "modal" },
-                        on: {
-                          click: function($event) {
-                            return _vm.modalDelete(_vm.b_delete)
-                          }
-                        }
-                      },
-                      [
-                        _vm._v("Si, Eliminar "),
-                        _c("i", { staticClass: "fas fa-check-double" })
-                      ]
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "modal fade top",
-        attrs: {
-          id: "confirmDeleteAllModal",
-          tabindex: "-1",
-          role: "dialog",
-          "aria-labelledby": "myModalLabel",
-          "aria-hidden": "true",
-          "data-backdrop": "true"
-        }
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass:
-              "modal-dialog modal-frame modal-top modal-notify modal-info",
-            attrs: { role: "document" }
-          },
-          [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-body" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "row d-flex justify-content-center align-items-center"
-                  },
-                  [
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        staticClass:
-                          "btn btn-outline-danger btn-sm waves-effect",
-                        attrs: { type: "button", "data-dismiss": "modal" }
-                      },
-                      [_vm._v("Mejor no")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        staticClass: "btn red accent-4 btn-sm",
-                        attrs: { type: "button", "data-dismiss": "modal" },
-                        on: {
-                          click: function($event) {
-                            return _vm.modalDeleteAll()
-                          }
-                        }
-                      },
-                      [
-                        _vm._v("Si, Eliminar "),
-                        _c("i", { staticClass: "fas fa-check-double" })
-                      ]
-                    )
-                  ]
-                )
-              ])
-            ])
-          ]
-        )
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "col-12" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-6" }, [
-          _c("p", [_vm._v("Seleccione Archivo Local CSV:")]),
-          _vm._v(" "),
-          _c("form", { attrs: { enctype: "multipart/form-data" } }, [
-            _c("input", {
-              attrs: { type: "file" },
-              on: { change: _vm.onFileChange }
-            })
           ]),
           _vm._v(" "),
-          _c("button", { on: { click: this.importCSV } }, [
-            _vm._v(" Importar ")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-6" }, [
-          _c("p", { staticClass: "text-right" }, [
-            _vm._v("Total Partner: $" + _vm._s(_vm.calculatePartner()))
+          _c("div", { staticClass: "col-6" }, [
+            _c("p", { staticClass: "text-right" }, [
+              _vm._v("Total Partner: $" + _vm._s(_vm.calculatePartner()))
+            ])
           ])
         ])
       ])
-    ])
-  ])
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -54650,16 +54572,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("stock")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", { staticClass: "pt-3 pr-2" }, [
-      _vm._v("Confirma que realmente quiere eliminar el "),
-      _c("b", [_vm._v(" inventario ")]),
-      _vm._v(" por completo?")
     ])
   }
 ]

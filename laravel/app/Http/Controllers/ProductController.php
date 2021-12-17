@@ -15,7 +15,6 @@ class ProductController extends Controller
         return view('products.index');
     }
 
-    
     public function importCSV(Request $request){
 
         $inventory = $request->all();
@@ -25,46 +24,51 @@ class ProductController extends Controller
 
         foreach ($inventory as $key => $product) {
             $aux = [];
-
+            $save = true;
             $aux['organization_id'] = $organization_id;
             $aux['store_id'] = $store_id;
 
             
             $auxKeyName = $this->detectKeyInArray($product,'Descripcion','descripcion');
-            /*if ($auxKeyName != 'Undefined') {
+            if ($auxKeyName != 'Undefined') {
                 $aux['name'] = $product[$auxKeyName];
-            }*/
-
-            return response()->json(["statusCode" => 200, "data"=> $auxKeyName]);
-            
+            }else {
+                $save = false;
+            } 
 
             $auxKeyName = $this->detectKeyInArray($product,'Gremio','gremio');
-
             if ($auxKeyName != 'Undefined') {
                 $aux['gremio'] = $product[$auxKeyName];
-            }
+            }else {
+                $save = false;
+            } 
             
             $auxKeyName = $this->detectKeyInArray($product,'Partner','partner');
             if ($auxKeyName != 'Undefined') {
                 $aux['partner'] = $product[$auxKeyName];
-            }
+            }else {
+                $save = false;
+            } 
             
-
-
             $auxKeyName = $this->detectKeyInArray($product,'PMP','pmp');
             if ($auxKeyName != 'Undefined') {
                 $aux['unit_price'] = $product[$auxKeyName];
-            }
+            }else {
+                $save = false;
+            } 
 
             $aux['provider_id'] = 0;
             $aux['stock'] = 1;
 
             $auxKeyName = $this->detectKeyInArray($product,'Codigo','codigo');
-
             if ($auxKeyName != 'Undefined') {
                 $aux['bar_code'] = $product[$auxKeyName];
-                $condition = ["bar_code" => $aux['bar_code'], 'provider_id' => $aux['provider_id']];
+            }else {
+                $save = false;
+            }
 
+            if ($save) {
+                $condition = ["bar_code" => $aux['bar_code'], 'provider_id' => $aux['provider_id']];
                 Product::updateOrCreate($condition,$aux);
             }
             
@@ -75,34 +79,45 @@ class ProductController extends Controller
 
 
     public function detectKeyInArray($array,$var1,$var2){
+
         if (array_key_exists($var1,$array)) {
             $keyName = $var1;
         }elseif (array_key_exists($var2,$array)){
             $keyName = $var2;
-        }{
+        }else{
             $keyName = 'Undefined';
         }
 
-        return $keyName;//pendiente
+        return $keyName;
     }
 
 
     public function inventory(Request $request)
     {
-        //$inventory = Product::with('provider')->orderBy('id', 'desc')->groupBy('id')->where('store_id', '=', Auth::user()->store->id)->get();
-        //$inventory = Product::selectRaw('sum(stock) as stock, name')->AVG('unit_price')->groupBy('name')->get();
-
-        $inventory = Product::selectRaw('sum(stock) as stock, 
-                name,
-                max(url) as url,
-                max(unit_price) as unit_price, 
-                max(partner) as partner, 
-                max(gremio) as gremio')
-            ->groupBy('name')
-            ->where('store_id', '=', Auth::user()->store->id)
-            ->get();
+        $inventory = $this->inventoryGrouped();
 
         return view('products.inventory', compact('inventory'));
+    }
+
+    public function inventoryGrouped(){
+        return Product::selectRaw('sum(stock) as stock, 
+            name,
+            max(bar_code) as bar_code,
+            max(unit_price) as unit_price, 
+            max(partner) as partner, 
+            max(gremio) as gremio')
+        ->groupBy('name')
+        ->where('store_id', '=', Auth::user()->store->id)
+        ->get();        
+    }
+
+    public function getInventoryGrouped(){
+        return response()->json(['statusCode' => 200, 'data' => $this->inventoryGrouped()]);
+    }
+
+    public function destroyInventoryGrouped($barCode){
+        Product::where('bar_code', '=', $barCode)->delete();
+        return response()->json(['statusCode' => 200 ]);
     }
 
     public function store(Request $request)
