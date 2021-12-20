@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Role;
+use Illuminate\Support\Facades\Auth;
+
 //use OwenIt\Auditing\Contracts\Auditable;
 
 use Hash;
@@ -21,6 +23,15 @@ class UserController extends Controller
         $users = User::orderBy('id', 'DESC')->with('roles')->get();
         return response()->json(['statusCode' => 200, 'data' => $users]);
     }
+
+    public function getRol()
+    {        
+        $user = Auth::user();
+
+        //$users = User::orderBy('id', 'DESC')->with('roles')->get();
+        return response()->json(['statusCode' => 200, 'data' => $user->roles[0]]);
+    }
+
 
     public function getRoles()
     {        

@@ -97,6 +97,9 @@ Route::middleware(['role:administrador'])->group( function () {
     Route::get('auditoria', function () {return view('users.audit');})->middleware('auth');
     Route::get('get_audits','UserController@getAudits');
 
+    Route::get('get_rol','UserController@getRol');
+
+
     //-------- PRODUCTS --------//
     Route::post('add_provider','ProductController@addProvider');
     Route::delete('delete_provider/{id}','ProductController@deleteProvider');

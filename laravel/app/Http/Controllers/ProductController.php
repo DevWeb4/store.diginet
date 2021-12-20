@@ -57,8 +57,15 @@ class ProductController extends Controller
                 $save = false;
             } 
 
+            $auxKeyName = $this->detectKeyInArray($product,'IVA','iva');
+            if ($auxKeyName != 'Undefined') {
+                $aux['iva'] = $product[$auxKeyName];
+            }else {
+                $save = false;
+            } 
+
             $aux['provider_id'] = 0;
-            $aux['stock'] = 1;
+            //$aux['stock'] = 0;
 
             $auxKeyName = $this->detectKeyInArray($product,'Codigo','codigo');
             if ($auxKeyName != 'Undefined') {
@@ -87,7 +94,6 @@ class ProductController extends Controller
         }else{
             $keyName = 'Undefined';
         }
-
         return $keyName;
     }
 
@@ -105,6 +111,7 @@ class ProductController extends Controller
             max(bar_code) as bar_code,
             max(unit_price) as unit_price, 
             max(partner) as partner, 
+            max(iva) as iva, 
             max(gremio) as gremio')
         ->groupBy('name')
         ->where('store_id', '=', Auth::user()->store->id)

@@ -2202,6 +2202,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['inventory'],
   data: function data() {
@@ -2209,19 +2224,24 @@ __webpack_require__.r(__webpack_exports__);
       products: JSON.parse(this.inventory),
       product: {},
       b_selectRow: null,
-      csv: []
+      csv: [],
+      myRol: {
+        id: 0,
+        name: ''
+      }
     };
   },
   mounted: function mounted() {
     this.initDataTables();
+    this.getRol();
   },
   methods: {
-    calculatePartner: function calculatePartner() {
-      var valuePartner = 0;
+    calculateValInStock: function calculateValInStock(type) {
+      var val = 0;
       this.products.forEach(function (product) {
-        valuePartner += product.partner * product.stock;
+        val += product[type] * product.stock;
       });
-      return valuePartner;
+      return val;
     },
     importCSV: function importCSV() {
       var _this = this;
@@ -2259,6 +2279,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var reg = /\;/g;
       var csvSTR = csvDATA.replace(reg, ",");
+      console.log(csvSTR);
 
       var csv = __webpack_require__(/*! csvtojson */ "./node_modules/csvtojson/browser/browser.js");
 
@@ -2286,14 +2307,24 @@ __webpack_require__.r(__webpack_exports__);
       $('#_tInventory').dataTable().fnDestroy();
       this.getInventoryGrouped();
     },
-    confirmDelete: function confirmDelete() {
+    getRol: function getRol() {
       var _this4 = this;
+
+      axios.get('get_rol').then(function (res) {
+        _this4.myRol = res.data.data;
+      })["catch"](function (error) {
+        console.log("error getRol");
+        console.log(error);
+      });
+    },
+    confirmDelete: function confirmDelete() {
+      var _this5 = this;
 
       axios["delete"]("delete_inventory_grouped/".concat(this.product['bar_code'])).then(function (res) {
         console.log(res.data.data);
 
         if (res.data.statusCode == 200) {
-          _this4.$notify({
+          _this5.$notify({
             group: 'warning',
             type: 'error',
             title: 'Exito!',
@@ -2301,7 +2332,7 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
 
-        _this4.resetDatatables();
+        _this5.resetDatatables();
       })["catch"](function (error) {
         if (error.response.status == 403) {
           alert("Usted no tiene los permisos suficientes para efectuar esta accion");
@@ -2309,17 +2340,17 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     getInventoryGrouped: function getInventoryGrouped() {
-      var _this5 = this;
+      var _this6 = this;
 
       axios.get('get_inventory_grouped').then(function (res) {
         if (res.data.statusCode == 200) {
-          _this5.products = res.data.data;
+          _this6.products = res.data.data;
 
-          _this5.initDataTables(); //this.b_loadingTable = false
+          _this6.initDataTables(); //this.b_loadingTable = false
 
         } else {
           console.log('error in methods getPersons(): return error in controller');
-          _this5.err_msg_tableProducts = 'Error al cargar la tabla de Productos';
+          _this6.err_msg_tableProducts = 'Error al cargar la tabla de Productos';
         }
       })["catch"](function (error) {
         console.log("error getInventoryGrouped()");
@@ -54436,6 +54467,18 @@ var render = function() {
                           }
                         }
                       },
+                      [_vm._v(_vm._s(product.iva))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.selectRow(i)
+                          }
+                        }
+                      },
                       [_vm._v(_vm._s(product.stock))]
                     )
                   ]
@@ -54542,11 +54585,43 @@ var render = function() {
             ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-6" }, [
-            _c("p", { staticClass: "text-right" }, [
-              _vm._v("Total Partner: $" + _vm._s(_vm.calculatePartner()))
-            ])
-          ])
+          this.myRol.id == 2
+            ? _c("div", { staticClass: "col-6" }, [
+                _c("table", { staticClass: "col-12" }, [
+                  _c("tr", [
+                    _c("td", { staticClass: "text-right" }, [
+                      _vm._v("Total Partner:")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-right border-bottom" }, [
+                      _vm._v("$" + _vm._s(_vm.calculateValInStock("partner")))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", { staticClass: "text-right" }, [
+                      _vm._v("Total Gremio:")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-right border-bottom" }, [
+                      _vm._v("$" + _vm._s(_vm.calculateValInStock("gremio")))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr", [
+                    _c("td", { staticClass: "text-right" }, [
+                      _vm._v("Total PMP:")
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "text-right border-bottom" }, [
+                      _vm._v(
+                        "$" + _vm._s(_vm.calculateValInStock("unit_price"))
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            : _vm._e()
         ])
       ])
     ],
@@ -54569,6 +54644,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("gremio")]),
         _vm._v(" "),
         _c("th", [_vm._v("pmp")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("iva%")]),
         _vm._v(" "),
         _c("th", [_vm._v("stock")])
       ])

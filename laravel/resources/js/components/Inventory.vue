@@ -38,6 +38,7 @@
                             <th>partner</th>
                             <th>gremio</th>
                             <th>pmp</th>
+                            <th>iva%</th>
                             <th>stock</th>
                         </tr>
 
@@ -59,6 +60,7 @@
                             <td v-on:click="selectRow(i)">{{product.partner}}</td>
                             <td v-on:click="selectRow(i)">{{product.gremio}}</td>
                             <td v-on:click="selectRow(i)">{{product.unit_price}}</td>
+                            <td v-on:click="selectRow(i)">{{product.iva}}</td>
                             <td v-on:click="selectRow(i)">{{product.stock}}</td>
                         </tr>
                     </tbody>
@@ -95,8 +97,21 @@
                     </form>
                     <button v-on:click="this.importCSV"> Importar </button>
                 </div>
-                <div class="col-6">
-                    <p class="text-right">Total Partner: ${{calculatePartner()}}</p>
+                <div class="col-6" v-if="this.myRol.id == 2" >
+                    <table class="col-12">
+                        <tr>
+                            <td class="text-right">Total Partner:</td>
+                            <td class="text-right border-bottom">${{calculateValInStock('partner')}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Total Gremio:</td>
+                            <td class="text-right border-bottom">${{calculateValInStock('gremio')}}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">Total PMP:</td>
+                            <td class="text-right border-bottom">${{calculateValInStock('unit_price')}}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -114,20 +129,25 @@
                 b_selectRow: null,
 
                 csv : [],
+                myRol:{id:0, name:''},
+
             }
         },
         mounted() {
             this.initDataTables()
+            this.getRol()
         },
         methods:{
 
-            calculatePartner(){
-                var valuePartner = 0
+            
+
+            calculateValInStock(type){
+                var val = 0
                 this.products.forEach(product => {
-                    valuePartner += product.partner * product.stock;
+                    val += product[type] * product.stock;
                 });
 
-                return valuePartner;
+                return val;
             },
 
             importCSV(){
@@ -158,6 +178,8 @@
             csvJSON(csvDATA){
                 const reg = /\;/g
                 var csvSTR= csvDATA.replace(reg, ",");
+
+                console.log(csvSTR)
 
                 const csv=require('csvtojson')
                 csv({
@@ -192,6 +214,15 @@
             {
                 $('#_tInventory').dataTable().fnDestroy()
                 this.getInventoryGrouped()
+            },
+
+            getRol(){
+                axios.get('get_rol').then(res=>{
+                    this.myRol = res.data.data
+                }).catch(error => {
+                    console.log("error getRol")
+                    console.log(error)
+                });
             },
             
             confirmDelete(){        
