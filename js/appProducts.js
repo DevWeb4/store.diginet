@@ -2217,6 +2217,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['inventory'],
   data: function data() {
@@ -2402,6 +2408,12 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -54308,7 +54320,7 @@ var render = function() {
         _c("div", { staticClass: "card-body pt-0" }, [
           _c("div", { staticClass: "col-12" }, [
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-6" }),
+              _vm._m(0),
               _vm._v(" "),
               _c("div", { staticClass: "col-6" }, [
                 _c(
@@ -54339,7 +54351,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("table", { staticClass: "table", attrs: { id: "_tInventory" } }, [
-            _vm._m(0),
+            _vm._m(1),
             _vm._v(" "),
             _c(
               "tbody",
@@ -54633,6 +54645,21 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6" }, [
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-outline-danger btn-md mt-3 text-white btn-sm",
+          attrs: { type: "button", href: "productos" }
+        },
+        [_c("b", [_vm._v("Carga de Inventario")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("enlace")]),
@@ -54706,7 +54733,7 @@ var render = function() {
         _c("div", { staticClass: "card-body pt-0" }, [
           _c("div", { staticClass: "col-12" }, [
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-6" }),
+              _vm._m(0),
               _vm._v(" "),
               _c("div", { staticClass: "col-6" }, [
                 _c(
@@ -54737,7 +54764,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("table", { staticClass: "table", attrs: { id: "_tInventory" } }, [
-            _vm._m(0),
+            _vm._m(1),
             _vm._v(" "),
             _c(
               "tbody",
@@ -55179,7 +55206,7 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _c("div", { staticClass: "row" }, [
-                        _vm._m(1),
+                        _vm._m(2),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-6 mt-2" }, [
                           _c(
@@ -55562,6 +55589,21 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-6" }, [
+      _c(
+        "a",
+        {
+          staticClass: "btn btn-outline-danger btn-md mt-3 text-white btn-sm",
+          attrs: { type: "button", href: "productos" }
+        },
+        [_c("b", [_vm._v("Carga de Inventario")])]
+      )
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

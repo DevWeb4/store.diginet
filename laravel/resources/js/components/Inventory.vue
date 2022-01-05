@@ -17,7 +17,13 @@
             <div class="card-body pt-0">
                 <div class="col-12">
                     <div class="row">
-                        <div class="col-6"></div>
+                        <div class="col-6">
+                            <a 
+                                class="btn btn-outline-danger btn-md mt-3 text-white btn-sm" 
+                                type="button" href="productos" >
+                                <b>Carga de Inventario</b>
+                            </a>
+                        </div>
                         <div class="col-6">
                             <button 
                                 class="btn btn-outline-danger btn-md btn-block mt-3 text-white btn-sm" 
