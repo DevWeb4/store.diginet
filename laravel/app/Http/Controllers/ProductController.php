@@ -185,7 +185,13 @@ class ProductController extends Controller
 
     public function multiProduct(Request $request){
         $input = $request->all();
-        Product::whereIn('id', $input['ids'])->update(['unit_price' => $input['unit_price']]);
+        Product::whereIn('id', $input['ids'])->update([
+            'unit_price' => $input['unit_price'],
+            'gremio' => $input['gremio'],
+            'partner' => $input['partner'],
+            'iva' => $input['iva'],
+            'v_added' => $input['v_added']
+        ]);
 
         return response()->json(['statusCode' => 200]);
     }

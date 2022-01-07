@@ -19,10 +19,17 @@
                                 <th width="1px">#</th>
                                 <th></th>
                                 <th>Nombre</th>
-                                <th width="1px">Proveedor</th>
+                                <th width="1px">Impuesto</th>
                                 <th>Código</th>
                                 <th width="1px">Stock</th>
-                                <th width="1px">Precio</th>
+                                <th width="1px">
+                                    <span v-if="gremio == 'true'"> 
+                                        Gremio
+                                    </span>
+                                    <span v-else> 
+                                        PMP
+                                    </span>
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -34,10 +41,14 @@
                                 <td class="text-center">{{i+1}}</td>
                                 <td>{{product.id}}</td>
                                 <td>{{product.name}}</td>
-                                <td v-if="product.provider">{{product.provider.name}}</td><td v-else>Inexistente</td>
+                                <td>%{{product.iva}}</td>
                                 <td>{{product.bar_code}}</td>
                                 <td class="text-center">{{product.stock}}</td>
-                                <td class="text-right">${{Number(product.unit_price)}}</td>
+                                <td class="text-right">
+                                    $
+                                    <span v-if="gremio == 'true' ">{{Number(product.gremio)}}</span>
+                                    <span v-else>{{Number(product.unit_price)}}</span>
+                                </td>
                                 <td class="text-center">
                                     <a v-on:click="addItem(product.id)" title="Añadir a la lista de compra."  >
                                         <i class="red-store-text fas fa-shopping-basket"></i>
@@ -64,7 +75,7 @@
                                 <td>{{ item.name | truncate(30) }}</td>
                                 <td class="text-right">${{item.price}}</td>
                                 <td><a v-on:click="showModalDiscount(item, i)">
-                                    <span class="badge red accent-4 accent-4 text-white w-100 py-1">
+                                    <span class="badge red accent-4 accent-4 text-white w-100 py-1" :title="'%'+item.iva+' de IVA + %'+item.v_added+' de Valor Añadido'" >
                                         ${{item.discount}}
                                     </span>
                                 </a></td>
@@ -778,7 +789,7 @@
 <script>
     import financial_ from "../jsons/financial";
     export default {
-        props: ['uri'],
+        props: ['uri', 'gremio'],
         data(){
             return{
                 radioType: 'Efectivo',
@@ -869,6 +880,8 @@
                 console.log(event)
             });*/
 
+            console.log(this.gremio)
+
         },
         methods:{
             refreshPurchase(){
@@ -879,6 +892,7 @@
                 this.purchase.toPay = this.purchase.totalFinal - _.sumBy(this.payments,  item => Number(item.mount)) + this.purchase.toPayExtra
 
                 this.amount = this.purchase.toPay
+
             },
             
             getFinancials(){
@@ -1126,13 +1140,21 @@
                 if(rowSelect.provider){
                     privder = rowSelect.provider.name
                 }
-                
+                var pivotPrice = 0;
+                if(this.gremio == 'true'){
+                    pivotPrice = rowSelect.gremio
+                }else{
+                    pivotPrice = rowSelect.unit_price
+                }
+
                 row = Object.assign({
                     productId : rowSelect.id,
                     name : rowSelect.name,
-                    price : rowSelect.unit_price,
+                    price : pivotPrice,
                     provider : privder,
-                    discount : 0,
+                    discount : (pivotPrice / 100) * (rowSelect.v_added + rowSelect.iva),
+                    iva : rowSelect.iva,
+                    v_added : rowSelect.v_added,                    
                 })
 
                 this.shoppingCart.push(row)             

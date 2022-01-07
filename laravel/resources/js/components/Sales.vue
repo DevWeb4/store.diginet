@@ -58,9 +58,14 @@
                                 :data="[['Efectivo', summation.cash_payment], ['Financiado', summation.credit_payment], ['Cuenta P.', summation.personal_account_payment]]" height="100px"
                             ></pie-chart>
                         </div>
-                        <div class="col-2"></div>
+                        <div class="col-2">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" v-model="ifGremio">
+                                <span class="custom-control-label">Gremio</span>
+                            </label>
+                        </div>
                         <div class="col-4 p-2">
-                            <a class="btn btn-sm red accent-4 white-text btn-block" href="venta" v-if="cash.status">
+                            <a class="btn btn-sm red accent-4 white-text btn-block" :href="'venta/?gremio='+ifGremio" v-if="cash.status">
                                 Nueva Venta
                             </a>
                         </div>
@@ -217,6 +222,7 @@
         props: ['uri'],
         data(){
             return{
+                ifGremio: false,
                 cash:{
                     status:0,
                     initial_cash:0

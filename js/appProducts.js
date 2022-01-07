@@ -2656,6 +2656,42 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2800,7 +2836,11 @@ __webpack_require__.r(__webpack_exports__);
       if (this.multiUpdate.length > 0) {
         axios.post('multi_update', {
           'ids': this.multiUpdate,
-          'unit_price': this.product.unit_price
+          'unit_price': this.product.unit_price,
+          'gremio': this.product.gremio,
+          'partner': this.product.partner,
+          'v_added': this.product.v_added,
+          'iva': this.product.iva
         }).then(function (res) {
           _this4.resetDatatables();
 
@@ -2960,8 +3000,10 @@ __webpack_require__.r(__webpack_exports__);
       $('#inputBarCode').siblings('label').addClass('active');
       $('#inputUnitPrice').siblings('label').addClass('active');
       $('#inputStock').siblings('label').addClass('active');
-      $('#inputUnitPrice2').siblings('label').addClass('active');
-      $('#inputUnitPrice3').siblings('label').addClass('active');
+      $('#inputGremio').siblings('label').addClass('active');
+      $('#inputPartner').siblings('label').addClass('active');
+      $('#inputVAdded').siblings('label').addClass('active');
+      $('#inputIVA').siblings('label').addClass('active');
     },
     selectProduct: function selectProduct(index) {
       console.log(index);
@@ -2984,8 +3026,10 @@ __webpack_require__.r(__webpack_exports__);
       $('#inputBarCode').siblings('label').removeClass('active');
       $('#inputUnitPrice').siblings('label').removeClass('active');
       $('#inputStock').siblings('label').removeClass('active');
-      $('#inputUnitPrice2').siblings('label').removeClass('active');
-      $('#inputUnitPrice3').siblings('label').removeClass('active');
+      $('#inputGremio').siblings('label').removeClass('active');
+      $('#inputPartner').siblings('label').removeClass('active');
+      $('#inputVAdded').siblings('label').addClass('active');
+      $('#inputIVA').siblings('label').addClass('active');
     }
   }
 });
@@ -54652,7 +54696,7 @@ var staticRenderFns = [
           staticClass: "btn btn-outline-danger btn-md mt-3 text-white btn-sm",
           attrs: { type: "button", href: "productos" }
         },
-        [_c("b", [_vm._v("Carga de Inventario")])]
+        [_c("b", [_vm._v("Ir a productos")])]
       )
     ])
   },
@@ -55460,7 +55504,7 @@ var render = function() {
                             }),
                             _vm._v(" "),
                             _c("label", { attrs: { for: "inputUnitPrice" } }, [
-                              _vm._v("Precio Unitario")
+                              _vm._v("PMP")
                             ])
                           ]
                         )
@@ -55471,6 +55515,214 @@ var render = function() {
                   _c("div", { staticClass: "col-12" }, [
                     _c("div", { staticClass: "row" }, [
                       _c("div", { staticClass: "col-6" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "md-form md-outline input-with-post-icon mt-0"
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "fas fa-dollar-sign input-prefix"
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.product.gremio,
+                                  expression: "product.gremio"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                required: "",
+                                id: "inputGremio",
+                                step: "1",
+                                type: "number"
+                              },
+                              domProps: { value: _vm.product.gremio },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.product,
+                                    "gremio",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: "inputGremio" } }, [
+                              _vm._v("Gremio")
+                            ])
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-6" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "md-form md-outline input-with-post-icon mt-0"
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "fas fa-dollar-sign input-prefix"
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.product.v_added,
+                                  expression: "product.v_added"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                required: "",
+                                id: "inputVAdded",
+                                step: "1",
+                                type: "number"
+                              },
+                              domProps: { value: _vm.product.v_added },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.product,
+                                    "v_added",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: "inputVAdded" } }, [
+                              _vm._v("Valor Agregado %")
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-12" }, [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-6" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "md-form md-outline input-with-post-icon mt-0"
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "fas fa-dollar-sign input-prefix"
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.product.partner,
+                                  expression: "product.partner"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                required: "",
+                                id: "inputPartner",
+                                step: "1",
+                                type: "number"
+                              },
+                              domProps: { value: _vm.product.partner },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.product,
+                                    "partner",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: "inputPartner" } }, [
+                              _vm._v("Partner")
+                            ])
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-6" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "md-form md-outline input-with-post-icon mt-0"
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "fas fa-dollar-sign input-prefix"
+                            }),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.product.iva,
+                                  expression: "product.iva"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                required: "",
+                                id: "inputIVA",
+                                step: "1",
+                                type: "number"
+                              },
+                              domProps: { value: _vm.product.iva },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.product,
+                                    "iva",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("label", { attrs: { for: "inputIVA" } }, [
+                              _vm._v("IVA %")
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-12" }, [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-12" }, [
                         _c(
                           "button",
                           {
@@ -55598,9 +55850,9 @@ var staticRenderFns = [
         "a",
         {
           staticClass: "btn btn-outline-danger btn-md mt-3 text-white btn-sm",
-          attrs: { type: "button", href: "productos" }
+          attrs: { type: "button", href: "inventario" }
         },
-        [_c("b", [_vm._v("Carga de Inventario")])]
+        [_c("b", [_vm._v("Ir a Inventario")])]
       )
     ])
   },
@@ -55620,9 +55872,9 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Marca")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Precio Unitario")]),
+        _c("th", [_vm._v("PMP")]),
         _vm._v(" "),
-        _c("th"),
+        _c("th", [_vm._v("Multi Edit")]),
         _vm._v(" "),
         _c("th", [_vm._v("Stock")])
       ])

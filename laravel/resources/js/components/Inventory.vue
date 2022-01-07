@@ -21,7 +21,7 @@
                             <a 
                                 class="btn btn-outline-danger btn-md mt-3 text-white btn-sm" 
                                 type="button" href="productos" >
-                                <b>Carga de Inventario</b>
+                                <b>Ir a productos</b>
                             </a>
                         </div>
                         <div class="col-6">

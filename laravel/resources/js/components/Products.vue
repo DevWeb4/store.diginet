@@ -19,8 +19,8 @@
                         <div class="col-6">
                             <a 
                                 class="btn btn-outline-danger btn-md mt-3 text-white btn-sm" 
-                                type="button" href="productos" >
-                                <b>Carga de Inventario</b>
+                                type="button" href="inventario" >
+                                <b>Ir a Inventario</b>
                             </a>
                         </div>
                         <div class="col-6">
@@ -43,8 +43,8 @@
                             <th>Articulo</th>
                             <th>Codigo</th>
                             <th>Marca</th>
-                            <th>Precio Unitario</th>
-                            <th></th>
+                            <th>PMP</th>
+                            <th>Multi Edit</th>
                             <th>Stock</th>
                         </tr>
                     </thead>
@@ -200,7 +200,7 @@
                                         <div class="md-form md-outline input-with-post-icon mt-0">
                                             <i class="fas fa-dollar-sign input-prefix"></i>
                                             <input required v-model="product.unit_price" id="inputUnitPrice" step="1" type="number" class="form-control">
-                                            <label for="inputUnitPrice">Precio Unitario</label>
+                                            <label for="inputUnitPrice">PMP</label>
                                         </div>
                                     </div>
                                 </div>
@@ -208,6 +208,42 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-6">
+                                        <div class="md-form md-outline input-with-post-icon mt-0">
+                                            <i class="fas fa-dollar-sign input-prefix"></i>
+                                            <input required v-model="product.gremio" id="inputGremio" step="1" type="number" class="form-control">
+                                            <label for="inputGremio">Gremio</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="md-form md-outline input-with-post-icon mt-0">
+                                            <i class="fas fa-dollar-sign input-prefix"></i>
+                                            <input required v-model="product.v_added" id="inputVAdded" step="1" type="number" class="form-control">
+                                            <label for="inputVAdded">Valor Agregado %</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="md-form md-outline input-with-post-icon mt-0">
+                                            <i class="fas fa-dollar-sign input-prefix"></i>
+                                            <input required v-model="product.partner" id="inputPartner" step="1" type="number" class="form-control">
+                                            <label for="inputPartner">Partner</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="md-form md-outline input-with-post-icon mt-0">
+                                            <i class="fas fa-dollar-sign input-prefix"></i>
+                                            <input required v-model="product.iva" id="inputIVA" step="1" type="number" class="form-control">
+                                            <label for="inputIVA">IVA %</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12">
                                         <button class="btn red accent-4 btn-md btn-block mb-3 text-white btn-sm" type="submit">
                                             <div v-if="b_LoadingSubmit">
                                                 <span class="spinner-border fast spinner-border-sm"></span> 
@@ -363,8 +399,15 @@
             submitProduct(){
                 this.b_LoadingSubmit = true
                 if(this.multiUpdate.length > 0){
-                    
-                    axios.post('multi_update', {'ids':this.multiUpdate, 'unit_price': this.product.unit_price}).then(res=>{
+                    axios.post('multi_update', 
+                        {
+                            'ids':this.multiUpdate, 
+                            'unit_price': this.product.unit_price, 
+                            'gremio': this.product.gremio,
+                            'partner': this.product.partner,
+                            'v_added': this.product.v_added,
+                            'iva': this.product.iva,
+                        }).then(res=>{
                         this.resetDatatables()
                         this.emptyForm()
 
@@ -520,8 +563,10 @@
                 $('#inputBarCode').siblings('label').addClass('active');
                 $('#inputUnitPrice').siblings('label').addClass('active');
                 $('#inputStock').siblings('label').addClass('active');
-                $('#inputUnitPrice2').siblings('label').addClass('active');                
-                $('#inputUnitPrice3').siblings('label').addClass('active');    
+                $('#inputGremio').siblings('label').addClass('active');                
+                $('#inputPartner').siblings('label').addClass('active');    
+                $('#inputVAdded').siblings('label').addClass('active');                    
+                $('#inputIVA').siblings('label').addClass('active');  
             },
 
             selectProduct(index)
@@ -547,8 +592,10 @@
                 $('#inputBarCode').siblings('label').removeClass('active');
                 $('#inputUnitPrice').siblings('label').removeClass('active');
                 $('#inputStock').siblings('label').removeClass('active');
-                $('#inputUnitPrice2').siblings('label').removeClass('active');
-                $('#inputUnitPrice3').siblings('label').removeClass('active');   
+                $('#inputGremio').siblings('label').removeClass('active');
+                $('#inputPartner').siblings('label').removeClass('active');
+                $('#inputVAdded').siblings('label').addClass('active');                    
+                $('#inputIVA').siblings('label').addClass('active');                    
             },
         }
     }
