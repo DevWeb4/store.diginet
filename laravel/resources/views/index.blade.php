@@ -36,10 +36,17 @@
                     <a href="usuarios" class="stretched-link"></a>
                 </div>
             </div>
-            <div class="view zoom col-3 px-0">
-                <img class="card-img-top" src="images/home/auditory.jpg" height="116" alt="Card image cap">
-                <div class="mask rgba-red-light"></div>
+
+            <div class="view overlay col-3 border py-2">
+                <div class="img-fluid text-center">
+                    <i class="fas fa-align-justify red-store-text fa-3x m-2"></i> 
+                    <p>Historial</p>
+                </div>
+                <div class="mask flex-center rgba-red-light">
+                    <a href="historial" class="stretched-link"></a>
+                </div>
             </div>
+            
         </div>
     </div>
     <h5 class="mt-5">Cajero</h5>

@@ -64,6 +64,10 @@ Route::put('edit_account/{id}','PersonController@editAccount');
 
 Route::middleware(['role:administrador'])->group( function () {
 
+    Route::get('historial', function () {
+        return view('record.index');
+    })->middleware('auth')->name('historial');
+
     Route::get('get_permission_distil_edit_acount', function () {
         return 200;
     })->middleware('auth');

@@ -4231,6 +4231,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['uri', 'gremio'],
@@ -4459,10 +4462,8 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.inputPay.focus();
     },
     selectPaymontType: function selectPaymontType(type) {
-      this.radioType = type; //if(){
-
-      this.addPayment(); //}
-
+      this.radioType = type;
+      this.addPayment();
       this.$refs.inputPay.focus();
     },
     getSumPayment: function getSumPayment(wayToPay) {
@@ -4569,7 +4570,6 @@ __webpack_require__.r(__webpack_exports__);
         return product.id === id;
       });
       var row = [];
-      console.log(rowSelect);
       var privder = null;
 
       if (rowSelect.provider) {
@@ -4591,8 +4591,10 @@ __webpack_require__.r(__webpack_exports__);
         provider: privder,
         discount: pivotPrice / 100 * (rowSelect.v_added + rowSelect.iva),
         iva: rowSelect.iva,
-        v_added: rowSelect.v_added
+        v_added: rowSelect.v_added,
+        barCode: rowSelect.bar_code
       });
+      console.log(row);
       this.shoppingCart.push(row);
     },
     initDataTables: function initDataTables() {
@@ -4608,7 +4610,7 @@ __webpack_require__.r(__webpack_exports__);
             "orderable": false,
             "searchable": false
           }, {
-            "targets": [1, 4],
+            "targets": [1, 2, 6],
             "visible": false,
             "orderable": false
           }],
@@ -4641,14 +4643,17 @@ __webpack_require__.r(__webpack_exports__);
           dataTableInventory.rows({
             page: 'current'
           }).every(function () {
-            var price = this.data()[6].replace("$", "");
+            var price = this.data()[7].replace("$", "");
+            var iva = this.data()[4].replace("%", "");
             row = Object.assign({
               productId: parseFloat(this.data()[1]),
-              name: this.data()[2],
+              barCode: this.data()[5],
+              name: this.data()[3],
               price: parseFloat(price),
-              provider: this.data()[3],
-              discount: 0
+              provider: 0,
+              discount: parseFloat(price) / 100 * (parseFloat(this.data()[2]) + parseFloat(iva))
             });
+            console.log(row);
           });
           return row;
         }
@@ -100881,6 +100886,8 @@ var render = function() {
                     _vm._v(" "),
                     _c("th"),
                     _vm._v(" "),
+                    _c("th"),
+                    _vm._v(" "),
                     _c("th", [_vm._v("Nombre")]),
                     _vm._v(" "),
                     _c("th", { attrs: { width: "1px" } }, [_vm._v("Impuesto")]),
@@ -100918,6 +100925,8 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(product.id))]),
                       _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(product.v_added))]),
+                      _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(product.name))]),
                       _vm._v(" "),
                       _c("td", [_vm._v("%" + _vm._s(product.iva))]),
@@ -100928,16 +100937,21 @@ var render = function() {
                         _vm._v(_vm._s(product.stock))
                       ]),
                       _vm._v(" "),
-                      _c("td", { staticClass: "text-right" }, [
-                        _vm._v(
-                          "\n                                $\n                                "
-                        ),
-                        _vm.gremio == "true"
-                          ? _c("span", [_vm._v(_vm._s(Number(product.gremio)))])
-                          : _c("span", [
-                              _vm._v(_vm._s(Number(product.unit_price)))
-                            ])
-                      ]),
+                      _vm.gremio == "true"
+                        ? _c("td", { staticClass: "text-right" }, [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(Number(product.gremio)) +
+                                "\n                            "
+                            )
+                          ])
+                        : _c("td", [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(Number(product.unit_price)) +
+                                "\n                            "
+                            )
+                          ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "text-center" }, [
                         _c(
@@ -101007,7 +101021,7 @@ var render = function() {
                                     item.iva +
                                     " de IVA + %" +
                                     item.v_added +
-                                    " de Valor Añadido"
+                                    " de Valor agregado"
                                 }
                               },
                               [

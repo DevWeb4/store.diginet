@@ -18,6 +18,7 @@
                             <tr>
                                 <th width="1px">#</th>
                                 <th></th>
+                                <th></th>
                                 <th>Nombre</th>
                                 <th width="1px">Impuesto</th>
                                 <th>Código</th>
@@ -40,14 +41,16 @@
                             >
                                 <td class="text-center">{{i+1}}</td>
                                 <td>{{product.id}}</td>
+                                <td>{{product.v_added}}</td>
                                 <td>{{product.name}}</td>
                                 <td>%{{product.iva}}</td>
                                 <td>{{product.bar_code}}</td>
                                 <td class="text-center">{{product.stock}}</td>
-                                <td class="text-right">
-                                    $
-                                    <span v-if="gremio == 'true' ">{{Number(product.gremio)}}</span>
-                                    <span v-else>{{Number(product.unit_price)}}</span>
+                                <td class="text-right" v-if="gremio == 'true' ">
+                                    {{Number(product.gremio)}}
+                                </td>
+                                <td v-else>
+                                    {{Number(product.unit_price)}}
                                 </td>
                                 <td class="text-center">
                                     <a v-on:click="addItem(product.id)" title="Añadir a la lista de compra."  >
@@ -75,7 +78,7 @@
                                 <td>{{ item.name | truncate(30) }}</td>
                                 <td class="text-right">${{item.price}}</td>
                                 <td><a v-on:click="showModalDiscount(item, i)">
-                                    <span class="badge red accent-4 accent-4 text-white w-100 py-1" :title="'%'+item.iva+' de IVA + %'+item.v_added+' de Valor Añadido'" >
+                                    <span class="badge red accent-4 accent-4 text-white w-100 py-1" :title="'%'+item.iva+' de IVA + %'+item.v_added+' de Valor agregado'" >
                                         ${{item.discount}}
                                     </span>
                                 </a></td>
@@ -1033,12 +1036,8 @@
 
             selectPaymontType(type){
                 this.radioType = type
-                //if(){
-                    this.addPayment()
-                //}
-
+                this.addPayment()
                 this.$refs.inputPay.focus()
-                
             },
 
             getSumPayment(wayToPay){
@@ -1134,7 +1133,6 @@
                 const rowSelect = this.inventory.find( product => product.id === id );
                 let row = [];
 
-                console.log(rowSelect)
 
                 var privder = null
                 if(rowSelect.provider){
@@ -1146,7 +1144,6 @@
                 }else{
                     pivotPrice = rowSelect.unit_price
                 }
-
                 row = Object.assign({
                     productId : rowSelect.id,
                     name : rowSelect.name,
@@ -1154,8 +1151,12 @@
                     provider : privder,
                     discount : (pivotPrice / 100) * (rowSelect.v_added + rowSelect.iva),
                     iva : rowSelect.iva,
-                    v_added : rowSelect.v_added,                    
+                    v_added : rowSelect.v_added,
+                    barCode : rowSelect.bar_code               
                 })
+
+                console.log(row)
+
 
                 this.shoppingCart.push(row)             
             },
@@ -1176,7 +1177,7 @@
                                 "searchable": false
                             },
                             {
-                                "targets": [1,4],
+                                "targets": [1,2,6],
                                 "visible": false,
                                 "orderable": false,
                             }
@@ -1210,14 +1211,20 @@
 
                     function getRow(row){
                         dataTableInventory.rows({page:'current'}).every(function () { 
-                            var price = this.data()[6].replace("$", "");
+                            var price = this.data()[7].replace("$", "");
+                            var iva = this.data()[4].replace("%", "");
+
                             row = Object.assign({
                                 productId : parseFloat(this.data()[1]),
-                                name : this.data()[2],
+                                barCode : this.data()[5],
+                                name : this.data()[3],
                                 price : parseFloat(price),
-                                provider : this.data()[3],
-                                discount : 0,
+                                provider : 0,
+                                discount : (parseFloat(price)/100)*(parseFloat(this.data()[2]) + parseFloat(iva)),
                             })
+
+                            console.log(row)
+
                         })
                         return row;
                     }
