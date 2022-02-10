@@ -4234,6 +4234,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['uri', 'gremio'],
@@ -4607,7 +4619,10 @@ __webpack_require__.r(__webpack_exports__);
           "lengthChange": false,
           "columnDefs": [{
             "targets": [5, 7],
-            "orderable": false,
+            "orderable": false //"searchable": false
+
+          }, {
+            "targets": [7],
             "searchable": false
           }, {
             "targets": [1, 2, 6],
@@ -4670,12 +4685,19 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     showModalDiscount: function showModalDiscount(item, i) {
+      if (item.iva == undefined) {
+        _iva = 21;
+      } else {
+        _iva = item.iva;
+      }
+
       this.discountItem = Object.assign({
         index: i,
         name: item.name,
         price: item.price,
         discount: item.discount,
-        porcentage: 0
+        porcentage: 0,
+        iva: _iva
       });
       this.$modal.show('modal-discount');
     },
@@ -100905,7 +100927,7 @@ var render = function() {
                           ])
                         : _c("span", [
                             _vm._v(
-                              " \n                                    PMP\n                                "
+                              " \n                                    Publico\n                                "
                             )
                           ])
                     ]),
@@ -101943,7 +101965,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "modal",
-        { attrs: { name: "modal-discount", height: 295, width: 600 } },
+        { attrs: { name: "modal-discount", height: 350, width: 600 } },
         [
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }, [
@@ -101955,6 +101977,69 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body pt-0 row" }, [
+              _c("div", { staticClass: "col-12" }, [
+                _vm._v("\n                    IVA: \n                    "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.discountItem.iva,
+                      expression: "discountItem.iva"
+                    }
+                  ],
+                  attrs: { type: "radio", id: "iva_21", value: "21" },
+                  domProps: { checked: _vm._q(_vm.discountItem.iva, "21") },
+                  on: {
+                    change: function($event) {
+                      return _vm.$set(_vm.discountItem, "iva", "21")
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "huey" } }, [_vm._v("%21")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.discountItem.iva,
+                      expression: "discountItem.iva"
+                    }
+                  ],
+                  attrs: { type: "radio", id: "iva_10.5", value: "10.5" },
+                  domProps: { checked: _vm._q(_vm.discountItem.iva, "10.5") },
+                  on: {
+                    change: function($event) {
+                      return _vm.$set(_vm.discountItem, "iva", "10.5")
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "dewey" } }, [_vm._v("%10.5")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.discountItem.iva,
+                      expression: "discountItem.iva"
+                    }
+                  ],
+                  attrs: { type: "radio", id: "iva_0", value: "0" },
+                  domProps: { checked: _vm._q(_vm.discountItem.iva, "0") },
+                  on: {
+                    change: function($event) {
+                      return _vm.$set(_vm.discountItem, "iva", "0")
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "dewey" } }, [_vm._v("%0")])
+              ]),
+              _vm._v(" "),
               _c("div", { staticClass: "col-6" }, [
                 _c("div", { staticClass: "md-form md-outline" }, [
                   _c("input", {

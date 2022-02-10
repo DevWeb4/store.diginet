@@ -43,7 +43,7 @@
                             <th>Articulo</th>
                             <th>Codigo</th>
                             <th>Marca</th>
-                            <th>PMP</th>
+                            <th>Publico</th>
                             <th>Multi Edit</th>
                             <th>Stock</th>
                         </tr>
@@ -200,7 +200,7 @@
                                         <div class="md-form md-outline input-with-post-icon mt-0">
                                             <i class="fas fa-dollar-sign input-prefix"></i>
                                             <input required v-model="product.unit_price" id="inputUnitPrice" step="1" type="number" class="form-control">
-                                            <label for="inputUnitPrice">PMP</label>
+                                            <label for="inputUnitPrice">Publico</label>
                                         </div>
                                     </div>
                                 </div>
@@ -233,10 +233,12 @@
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <div class="md-form md-outline input-with-post-icon mt-0">
-                                            <i class="fas fa-dollar-sign input-prefix"></i>
-                                            <input required v-model="product.iva" id="inputIVA" step="1" type="number" class="form-control">
-                                            <label for="inputIVA">IVA %</label>
+                                        <div>
+                                            <input type="radio" id="iva_21" v-model="product.iva" value="21">
+                                            <label for="huey">%21</label>
+                                      
+                                            <input type="radio" id="iva_10.5" v-model="product.iva" value="10.5">
+                                            <label for="dewey">%10.5</label>
                                         </div>
                                     </div>
                                 </div>
@@ -299,7 +301,7 @@
                 b_SelectProduct: null,
                 b_delete: null,
 
-                multiUpdate: []
+                multiUpdate: [],
             }
         },
         mounted(){

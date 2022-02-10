@@ -2692,6 +2692,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -55504,7 +55506,7 @@ var render = function() {
                             }),
                             _vm._v(" "),
                             _c("label", { attrs: { for: "inputUnitPrice" } }, [
-                              _vm._v("PMP")
+                              _vm._v("Publico")
                             ])
                           ]
                         )
@@ -55669,53 +55671,59 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-6" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass:
-                              "md-form md-outline input-with-post-icon mt-0"
-                          },
-                          [
-                            _c("i", {
-                              staticClass: "fas fa-dollar-sign input-prefix"
-                            }),
-                            _vm._v(" "),
-                            _c("input", {
-                              directives: [
-                                {
-                                  name: "model",
-                                  rawName: "v-model",
-                                  value: _vm.product.iva,
-                                  expression: "product.iva"
-                                }
-                              ],
-                              staticClass: "form-control",
-                              attrs: {
-                                required: "",
-                                id: "inputIVA",
-                                step: "1",
-                                type: "number"
-                              },
-                              domProps: { value: _vm.product.iva },
-                              on: {
-                                input: function($event) {
-                                  if ($event.target.composing) {
-                                    return
-                                  }
-                                  _vm.$set(
-                                    _vm.product,
-                                    "iva",
-                                    $event.target.value
-                                  )
-                                }
+                        _c("div", [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.product.iva,
+                                expression: "product.iva"
                               }
-                            }),
-                            _vm._v(" "),
-                            _c("label", { attrs: { for: "inputIVA" } }, [
-                              _vm._v("IVA %")
-                            ])
-                          ]
-                        )
+                            ],
+                            attrs: { type: "radio", id: "iva_21", value: "21" },
+                            domProps: {
+                              checked: _vm._q(_vm.product.iva, "21")
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(_vm.product, "iva", "21")
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("label", { attrs: { for: "huey" } }, [
+                            _vm._v("%21")
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.product.iva,
+                                expression: "product.iva"
+                              }
+                            ],
+                            attrs: {
+                              type: "radio",
+                              id: "iva_10.5",
+                              value: "10.5"
+                            },
+                            domProps: {
+                              checked: _vm._q(_vm.product.iva, "10.5")
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.$set(_vm.product, "iva", "10.5")
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("label", { attrs: { for: "dewey" } }, [
+                            _vm._v("%10.5")
+                          ])
+                        ])
                       ])
                     ])
                   ]),
@@ -55872,7 +55880,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Marca")]),
         _vm._v(" "),
-        _c("th", [_vm._v("PMP")]),
+        _c("th", [_vm._v("Publico")]),
         _vm._v(" "),
         _c("th", [_vm._v("Multi Edit")]),
         _vm._v(" "),

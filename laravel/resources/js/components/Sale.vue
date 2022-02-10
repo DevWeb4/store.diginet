@@ -28,7 +28,7 @@
                                         Gremio
                                     </span>
                                     <span v-else> 
-                                        PMP
+                                        Publico
                                     </span>
                                 </th>
                                 <th></th>
@@ -358,12 +358,24 @@
             </div>
         </modal>
 
-        <modal name="modal-discount" :height="295" :width="600">
+        <modal name="modal-discount" :height="350" :width="600">
             <div class="card">
                 <div class="card-header">
                     <h4> {{ discountItem.name | truncate(50) }}</h4> 
                 </div>
                 <div class="card-body pt-0 row">
+
+                    <div class="col-12">
+                        IVA: 
+                        <input type="radio" id="iva_21" v-model="discountItem.iva" value="21">
+                        <label for="huey">%21</label>
+                    
+                        <input type="radio" id="iva_10.5" v-model="discountItem.iva" value="10.5">
+                        <label for="dewey">%10.5</label>
+
+                        <input type="radio" id="iva_0" v-model="discountItem.iva" value="0">
+                        <label for="dewey">%0</label>
+                    </div>
                     <div class="col-6">
                         <div class="md-form md-outline">
                             <input @change="calculatePorcentage()" v-on:keyup="calculatePorcentage()" v-model.number="discountItem.discount"  type="number" class="form-control text-center">
@@ -1174,6 +1186,10 @@
                             { 
                                 "targets": [5, 7],
                                 "orderable": false,
+                                //"searchable": false
+                            },
+                            { 
+                                "targets": [ 7],
                                 "searchable": false
                             },
                             {
@@ -1241,12 +1257,19 @@
                 })
             },
             showModalDiscount(item, i) {
+
+                if(item.iva == undefined){
+                    _iva = 21
+                }else{
+                    _iva = item.iva
+                }
                 this.discountItem = Object.assign({
                     index: i,
                     name: item.name,
                     price: item.price,
                     discount: item.discount,
                     porcentage: 0,
+                    iva: _iva
                 });
 
                 this.$modal.show('modal-discount')
