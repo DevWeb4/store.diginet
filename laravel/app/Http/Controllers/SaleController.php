@@ -383,6 +383,7 @@ class SaleController extends Controller
             'initial_user_id' => Auth::user()->id,
             'final_user_id' => 0,
             'store_id' => Auth::user()->store_id,
+            'dolar' => $request->dolar,
         ]);
         return response()->json(['statusCode' => 200, 'data' => $cash]);
     }

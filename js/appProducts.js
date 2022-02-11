@@ -2719,6 +2719,12 @@ __webpack_require__.r(__webpack_exports__);
     this.getProviders();
   },
   methods: {
+    calculatePorcentage: function calculatePorcentage() {
+      this.product.v_added = 100 * this.product.unit_price / this.product.gremio - 100;
+    },
+    calculateUnitPrice: function calculateUnitPrice() {
+      this.product.unit_price = this.product.gremio + this.product.gremio / 100 * this.product.v_added;
+    },
     enterProvider: function enterProvider() {
       if (this.provider.id == 0) {
         this.addProvider();
@@ -55492,6 +55498,9 @@ var render = function() {
                               },
                               domProps: { value: _vm.product.unit_price },
                               on: {
+                                keyup: function($event) {
+                                  return _vm.calculatePorcentage()
+                                },
                                 input: function($event) {
                                   if ($event.target.composing) {
                                     return
@@ -55596,6 +55605,9 @@ var render = function() {
                               },
                               domProps: { value: _vm.product.v_added },
                               on: {
+                                keyup: function($event) {
+                                  return _vm.calculateUnitPrice()
+                                },
                                 input: function($event) {
                                   if ($event.target.composing) {
                                     return

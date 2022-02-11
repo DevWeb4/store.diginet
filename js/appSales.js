@@ -4246,6 +4246,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['uri', 'gremio'],
@@ -4295,7 +4297,10 @@ __webpack_require__.r(__webpack_exports__);
       financial: _jsons_financial__WEBPACK_IMPORTED_MODULE_0__["default"],
       indexFinancialTarget: 0,
       amount: '',
-      picked: '24 hs'
+      picked: '24 hs',
+      cash: {
+        dolar: 100
+      }
     };
   },
   watch: {
@@ -4324,9 +4329,21 @@ __webpack_require__.r(__webpack_exports__);
         console.log(event)
     });*/
 
-    console.log(this.gremio);
+    this.lastCash();
   },
   methods: {
+    lastCash: function lastCash() {
+      var _this = this;
+
+      axios.get('get_last_cash').then(function (res) {
+        if (res.data.statusCode == 200) {
+          _this.cash = res.data.data[0];
+          console.log(_this.cash);
+        }
+      })["catch"](function (error) {
+        console.log("error");
+      });
+    },
     refreshPurchase: function refreshPurchase() {
       this.purchase.total = _.sumBy(this.shoppingCart, function (item) {
         return Number(item.price);
@@ -4341,20 +4358,20 @@ __webpack_require__.r(__webpack_exports__);
       this.amount = this.purchase.toPay;
     },
     getFinancials: function getFinancials() {
-      var _this = this;
+      var _this2 = this;
 
       axios.get('get_financials').then(function (res) {
         if (res.data.data == '') {
-          _.map(_this.financial, function (element) {
+          _.map(_this2.financial, function (element) {
             _.each(element.fee, function (fee) {
               return fee.b_selected = 0;
             });
           });
         } else {
-          _this.financial = res.data.data;
+          _this2.financial = res.data.data;
         }
 
-        console.log(_this.financials);
+        console.log(_this2.financials);
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -4406,11 +4423,11 @@ __webpack_require__.r(__webpack_exports__);
       this.purchase.toPayExtra = this.purchase.toPay / 100 * this.purchase.toPayPorcentageExtra;
     },
     getStore: function getStore() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get('get_store').then(function (res) {
         if (res.data.statusCode == 200) {
-          _this2.store = res.data.data;
+          _this3.store = res.data.data;
         } else {
           console.log("error get store"); //pendiente notificable y redirect
         }
@@ -4492,7 +4509,7 @@ __webpack_require__.r(__webpack_exports__);
       return toPay;
     },
     pay: function pay() {
-      var _this3 = this;
+      var _this4 = this;
 
       var products = [];
       this.shoppingCart.forEach(function (element) {
@@ -4513,7 +4530,7 @@ __webpack_require__.r(__webpack_exports__);
         products: products
       }).then(function (res) {
         if (res.data.statusCode == 200) {
-          window.location.href = _this3.uri + '/facturacion/' + res.data.id + '-ventas';
+          window.location.href = _this4.uri + '/facturacion/' + res.data.id + '-ventas';
         } else {
           console.log("La caja ya fue cerrada por otro usuario"); //pendiente notificable y redirect
         }
@@ -4550,18 +4567,18 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     getInventory: function getInventory() {
-      var _this4 = this;
+      var _this5 = this;
 
       axios.post('get_products').then(function (res) {
         if (res.data.statusCode == 200) {
-          _this4.inventory = res.data.data;
+          _this5.inventory = res.data.data;
 
-          _this4.initDataTables();
+          _this5.initDataTables();
 
-          _this4.b_loadingTable = false;
+          _this5.b_loadingTable = false;
         } else {
           console.log('error in methods getInventory');
-          _this4.err_msg_tableInventory = 'Error al cargar la tabla de Inventario';
+          _this5.err_msg_tableInventory = 'Error al cargar la tabla de Inventario';
         }
       })["catch"](function (error) {
         console.log("error getInventory");
@@ -4591,9 +4608,9 @@ __webpack_require__.r(__webpack_exports__);
       var pivotPrice = 0;
 
       if (this.gremio == 'true') {
-        pivotPrice = rowSelect.gremio;
+        pivotPrice = rowSelect.gremio * this.cash.dolar;
       } else {
-        pivotPrice = rowSelect.unit_price;
+        pivotPrice = rowSelect.unit_price * this.cash.dolar;
       }
 
       row = Object.assign({
@@ -4601,9 +4618,9 @@ __webpack_require__.r(__webpack_exports__);
         name: rowSelect.name,
         price: pivotPrice,
         provider: privder,
-        discount: pivotPrice / 100 * (rowSelect.v_added + rowSelect.iva),
+        discount: 0,
         iva: rowSelect.iva,
-        v_added: rowSelect.v_added,
+        v_added: 0,
         barCode: rowSelect.bar_code
       });
       console.log(row);
@@ -4666,7 +4683,8 @@ __webpack_require__.r(__webpack_exports__);
               name: this.data()[3],
               price: parseFloat(price),
               provider: 0,
-              discount: parseFloat(price) / 100 * (parseFloat(this.data()[2]) + parseFloat(iva))
+              discount: 0 //(parseFloat(price)/100)*(parseFloat(this.data()[2]) + parseFloat(iva)),
+
             });
             console.log(row);
           });
@@ -4685,6 +4703,8 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     showModalDiscount: function showModalDiscount(item, i) {
+      var _iva;
+
       if (item.iva == undefined) {
         _iva = 21;
       } else {
@@ -4739,27 +4759,27 @@ __webpack_require__.r(__webpack_exports__);
       this.refreshPurchase();
     },
     applyModalDiscount: function applyModalDiscount() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.discountItem.discount == '') {
         this.discountItem.discount = 0;
       }
 
       var itemShoppingCart = this.shoppingCart.find(function (element, index) {
-        return index == _this5.discountItem.index;
+        return index == _this6.discountItem.index;
       });
       itemShoppingCart.discount = parseFloat(this.discountItem.discount);
       this.hideModal('modal-discount');
       this.refreshPurchase();
     },
     getCustomers: function getCustomers() {
-      var _this6 = this;
+      var _this7 = this;
 
       axios.post('get_persons', {
         'category': 1
       }).then(function (res) {
         if (res.data.statusCode == 200) {
-          _this6.clients = res.data.data;
+          _this7.clients = res.data.data;
         } else {
           console.log('error in methods getCustomers(): return error in controller');
         }
@@ -5001,6 +5021,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['uri'],
   data: function data() {
@@ -5021,11 +5045,13 @@ __webpack_require__.r(__webpack_exports__);
       },
       b_Loading: true,
       b_extra: null,
-      b_disabledButton: false
+      b_disabledButton: false,
+      dolar: 0
     };
   },
   mounted: function mounted() {
     this.lastCash();
+    this.getDolarValue();
   },
   methods: {
     getSumExtras: function getSumExtras() {
@@ -5039,6 +5065,16 @@ __webpack_require__.r(__webpack_exports__);
 
       return toPay;
     },
+    getDolarValue: function getDolarValue() {
+      var _this = this;
+
+      axios.get("https://www.dolarsi.com/api/api.php?type=valoresprincipales").then(function (res) {
+        _this.dolar = Number(res.data[0].casa.compra.replace(",", "."));
+        console.log(_this.dolar);
+      })["catch"](function (error) {
+        console.log(error.response);
+      });
+    },
     enterInputCash: function enterInputCash() {
       if (this.cash.status == 1) {
         this.closeCash();
@@ -5047,16 +5083,16 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     addExtra: function addExtra() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.extra.description != undefined && this.extra.amount != undefined) {
         axios.post(this.uri + '/extra', this.extra).then(function (res) {
           if (res.data.statusCode == 200) {
-            _this.cash.extras.push(res.data.data);
+            _this2.cash.extras.push(res.data.data);
 
-            _this.getBillings(_this.cash.id);
+            _this2.getBillings(_this2.cash.id);
 
-            _this.extra = Object.assign({});
+            _this2.extra = Object.assign({});
           }
         })["catch"](function (error) {
           console.log(error.response);
@@ -5071,22 +5107,22 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     deleteExtra: function deleteExtra() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios["delete"]("extra/".concat(this.b_extra)).then(function (res) {
         if (res.data.statusCode == 200) {
-          var index = _.findIndex(_this2.cash.extras, {
-            'id': _this2.b_extra
+          var index = _.findIndex(_this3.cash.extras, {
+            'id': _this3.b_extra
           }); //busqueda suprema
 
 
           if (index > -1) {
-            _this2.cash.extras.splice(index, 1);
+            _this3.cash.extras.splice(index, 1);
 
-            _this2.getBillings(_this2.cash.id);
+            _this3.getBillings(_this3.cash.id);
           }
 
-          _this2.b_extra = null;
+          _this3.b_extra = null;
         }
       })["catch"](function (error) {
         if (error.response.status == 403) {
@@ -5122,51 +5158,52 @@ __webpack_require__.r(__webpack_exports__);
       return true;
     },
     getBillings: function getBillings(cashId) {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.get("get_billings/".concat(cashId)).then(function (res) {
         if (res.data.statusCode == 200) {
-          _this3.billings = res.data.data;
-          console.log(_this3.billings); //this.summation.cash_payment = _.sumBy(this.billings, 'cash_payment') /*+ this.getSumExtras()*/;
+          _this4.billings = res.data.data;
+          console.log(_this4.billings); //this.summation.cash_payment = _.sumBy(this.billings, 'cash_payment') /*+ this.getSumExtras()*/;
 
-          _this3.summation.cash_payment = _.sumBy(_this3.billings, function (item) {
+          _this4.summation.cash_payment = _.sumBy(_this4.billings, function (item) {
             return Number(item.cash_payment);
           });
-          _this3.summation.personal_account_payment = _.sumBy(_this3.billings, 'personal_account_payment');
-          _this3.summation.credit_payment = _.sumBy(_this3.billings, 'credit_payment');
-          console.log(_this3.summation);
+          _this4.summation.personal_account_payment = _.sumBy(_this4.billings, 'personal_account_payment');
+          _this4.summation.credit_payment = _.sumBy(_this4.billings, 'credit_payment');
+          console.log(_this4.summation);
         }
       })["catch"](function (error) {
         console.log(error.response);
       });
     },
     lastCash: function lastCash() {
-      var _this4 = this;
+      var _this5 = this;
 
       axios.get('get_last_cash').then(function (res) {
         if (res.data.statusCode == 200) {
-          _this4.cash = res.data.data[0];
+          _this5.cash = res.data.data[0];
 
-          _this4.getBillings(_this4.cash.id);
+          _this5.getBillings(_this5.cash.id);
         }
 
-        _this4.b_Loading = false;
+        _this5.b_Loading = false;
       })["catch"](function (error) {
         console.log(error.response);
       });
     },
     openCash: function openCash() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.control()) {
         this.b_disabledButton = true;
         axios.post('open_cash', {
-          'cash_value': this.valueCash
+          'cash_value': this.valueCash,
+          'dolar': this.dolar
         }).then(function (res) {
           if (res.data.statusCode == 200) {
-            _this5.cash = res.data.data;
-            _this5.valueCash = '';
-            _this5.b_disabledButton = false;
+            _this6.cash = res.data.data;
+            _this6.valueCash = '';
+            _this6.b_disabledButton = false;
           }
         })["catch"](function (error) {
           console.log(error.response);
@@ -5174,7 +5211,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     closeCash: function closeCash() {
-      var _this6 = this;
+      var _this7 = this;
 
       if (this.control()) {
         this.b_disabledButton = true;
@@ -5183,11 +5220,11 @@ __webpack_require__.r(__webpack_exports__);
           'id': this.cash.id
         }).then(function (res) {
           if (res.data.statusCode == 200) {
-            _this6.cash = res.data.data;
+            _this7.cash = res.data.data;
 
-            _this6.restart();
+            _this7.restart();
 
-            _this6.b_disabledButton = false;
+            _this7.b_disabledButton = false;
           }
         })["catch"](function (error) {
           console.log(error.response);
@@ -100897,7 +100934,11 @@ var render = function() {
                 })
               ]
             ),
-            _vm._v(" "),
+            _vm._v(
+              "\n                " +
+                _vm._s(this.cash.dolar) +
+                "\n\n                "
+            ),
             _c(
               "table",
               { staticClass: "table table-sm ", attrs: { id: "_tInventory" } },
@@ -100963,14 +101004,18 @@ var render = function() {
                         ? _c("td", { staticClass: "text-right" }, [
                             _vm._v(
                               "\n                                " +
-                                _vm._s(Number(product.gremio)) +
+                                _vm._s(
+                                  Number(product.gremio * _vm.cash.dolar)
+                                ) +
                                 "\n                            "
                             )
                           ])
                         : _c("td", [
                             _vm._v(
                               "\n                                " +
-                                _vm._s(Number(product.unit_price)) +
+                                _vm._s(
+                                  Number(product.unit_price * _vm.cash.dolar)
+                                ) +
                                 "\n                            "
                             )
                           ]),
@@ -101039,11 +101084,7 @@ var render = function() {
                                   "badge red accent-4 accent-4 text-white w-100 py-1",
                                 attrs: {
                                   title:
-                                    "%" +
-                                    item.iva +
-                                    " de IVA + %" +
-                                    item.v_added +
-                                    " de Valor agregado"
+                                    "%" + item.iva + " de IVA de Valor agregado"
                                 }
                               },
                               [
@@ -103961,41 +104002,91 @@ var render = function() {
     [
       _c("div", { staticClass: "container" }, [
         _c("div", { staticClass: "card-deck" }, [
-          _c("div", { staticClass: "card " }, [
-            _c("div", { staticClass: "md-form md-outline mt-2 mb-0 mx-2" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.valueCash,
-                    expression: "valueCash"
-                  }
-                ],
-                ref: "inputCash",
-                staticClass: "form-control form-control-sm",
-                attrs: {
-                  placeholder: "Efectivo a Declarar en La Caja",
-                  id: "form-sm",
-                  type: "number"
-                },
-                domProps: { value: _vm.valueCash },
-                on: {
-                  keyup: function($event) {
-                    if (!$event.type.indexOf("key") && $event.keyCode !== 13) {
-                      return null
+          _c("div", { staticClass: "card" }, [
+            _c(
+              "div",
+              { staticClass: "md-form md-outline mt-2 mb-0 mx-2 row" },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.valueCash,
+                      expression: "valueCash"
                     }
-                    return _vm.enterInputCash()
+                  ],
+                  ref: "inputCash",
+                  staticClass: "col-6 form-control form-control-sm",
+                  attrs: {
+                    placeholder: "Efectivo a Declarar en La Caja",
+                    id: "form-sm",
+                    type: "number"
                   },
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                  domProps: { value: _vm.valueCash },
+                  on: {
+                    keyup: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        $event.keyCode !== 13
+                      ) {
+                        return null
+                      }
+                      return _vm.enterInputCash()
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.valueCash = $event.target.value
                     }
-                    _vm.valueCash = $event.target.value
                   }
-                }
-              })
-            ])
+                }),
+                _vm._v(" "),
+                _vm.cash.status == 0
+                  ? _c("div", { staticClass: "col-6" }, [
+                      _c("label", { attrs: { for: "dolar" } }, [
+                        _vm._v("Precio Dolar")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.dolar,
+                            expression: "dolar"
+                          }
+                        ],
+                        staticClass: "form-control form-control-sm text-right",
+                        attrs: {
+                          placeholder: "Precio dolar",
+                          id: "dolar",
+                          type: "number"
+                        },
+                        domProps: { value: _vm.dolar },
+                        on: {
+                          keyup: function($event) {
+                            if (
+                              !$event.type.indexOf("key") &&
+                              $event.keyCode !== 13
+                            ) {
+                              return null
+                            }
+                            return _vm.enterInputCash()
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.dolar = $event.target.value
+                          }
+                        }
+                      })
+                    ])
+                  : _vm._e()
+              ]
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card col-4 px-0" }, [

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cash extends Model
 {
     protected $table = 'cashs';
-    protected $fillable = ['status', 'initial_cash', 'final_cash', 'initial_user_id','final_user_id', 'store_id'];
+    protected $fillable = ['status', 'initial_cash', 'final_cash', 'initial_user_id','final_user_id', 'store_id', 'dolar'];
 
     protected $casts = [
         'initial_cash' => 'integer',

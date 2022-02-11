@@ -2,9 +2,13 @@
     <div>
         <div class="container">
             <div class="card-deck">
-                <div class="card ">
-                    <div class="md-form md-outline mt-2 mb-0 mx-2">
-                        <input placeholder="Efectivo a Declarar en La Caja" v-on:keyup.13="enterInputCash()" id="form-sm" ref="inputCash" class="form-control form-control-sm" v-model="valueCash" type="number">
+                <div class="card">
+                    <div class="md-form md-outline mt-2 mb-0 mx-2 row">
+                        <input placeholder="Efectivo a Declarar en La Caja" v-on:keyup.13="enterInputCash()" id="form-sm" ref="inputCash" class="col-6 form-control form-control-sm" v-model="valueCash" type="number">
+                        <div v-if="cash.status == 0" class="col-6">
+                            <label for="dolar">Precio Dolar</label>
+                            <input placeholder="Precio dolar" v-on:keyup.13="enterInputCash()" id="dolar" class="form-control form-control-sm text-right" v-model="dolar" type="number">
+                        </div>
                     </div>
                 </div>
                 <div class="card col-4 px-0">
@@ -236,10 +240,13 @@
                 b_Loading: true,
                 b_extra: null,
                 b_disabledButton: false,
+
+                dolar: 0
             }
         },
         mounted() {
             this.lastCash() 
+            this.getDolarValue()
         },
         methods:{
 
@@ -251,6 +258,16 @@
                 if( toPay == undefined){ toPay = 0 }
 
                 return toPay ;
+            },
+
+            getDolarValue(){
+                axios.get(`https://www.dolarsi.com/api/api.php?type=valoresprincipales`).then(res =>{
+                    this.dolar= Number(res.data[0].casa.compra.replace(",", "."))
+
+                    console.log(this.dolar)
+                }).catch(error => {
+                    console.log(error.response)
+                })
             },
             
             enterInputCash(){
@@ -364,7 +381,7 @@
             openCash(){
                 if(this.control()){
                     this.b_disabledButton = true;
-                    axios.post('open_cash', {'cash_value': this.valueCash }).then(res =>{
+                    axios.post('open_cash', {'cash_value': this.valueCash, 'dolar': this.dolar }).then(res =>{
                         if(res.data.statusCode == 200){
                             this.cash = res.data.data
                             this.valueCash=''

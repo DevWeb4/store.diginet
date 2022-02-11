@@ -13,6 +13,8 @@
                             placeholder="Codigo, Nombre del articulo o use el lector de barras"
                         >
                     </div>
+                    {{this.cash.dolar}}
+
                     <table class="table table-sm " id="_tInventory">
                         <thead>
                             <tr>
@@ -47,10 +49,10 @@
                                 <td>{{product.bar_code}}</td>
                                 <td class="text-center">{{product.stock}}</td>
                                 <td class="text-right" v-if="gremio == 'true' ">
-                                    {{Number(product.gremio)}}
+                                    {{Number(product.gremio * cash.dolar)}}
                                 </td>
                                 <td v-else>
-                                    {{Number(product.unit_price)}}
+                                    {{Number(product.unit_price *  cash.dolar)}}
                                 </td>
                                 <td class="text-center">
                                     <a v-on:click="addItem(product.id)" title="Añadir a la lista de compra."  >
@@ -78,7 +80,7 @@
                                 <td>{{ item.name | truncate(30) }}</td>
                                 <td class="text-right">${{item.price}}</td>
                                 <td><a v-on:click="showModalDiscount(item, i)">
-                                    <span class="badge red accent-4 accent-4 text-white w-100 py-1" :title="'%'+item.iva+' de IVA + %'+item.v_added+' de Valor agregado'" >
+                                    <span class="badge red accent-4 accent-4 text-white w-100 py-1" :title="'%'+item.iva+' de IVA de Valor agregado'" >
                                         ${{item.discount}}
                                     </span>
                                 </a></td>
@@ -862,6 +864,9 @@
                 amount: '',
 
                 picked: '24 hs',
+                cash:{
+                    dolar:100
+                },
             }
         },
 
@@ -895,10 +900,21 @@
                 console.log(event)
             });*/
 
-            console.log(this.gremio)
-
+            this.lastCash()
         },
         methods:{
+
+            lastCash(){
+                axios.get('get_last_cash').then(res =>{
+                    if(res.data.statusCode == 200){
+                        this.cash = res.data.data[0]                       
+                        console.log(this.cash)
+                    }
+                }).catch(error => {
+                    console.log("error")
+                })
+            },
+
             refreshPurchase(){
                 this.purchase.total = _.sumBy(this.shoppingCart, item => Number(item.price));
                 this.purchase.totalDiscount = _.sumBy(this.shoppingCart, item => Number(item.discount)) + this.purchase.generalExtra;
@@ -1152,18 +1168,18 @@
                 }
                 var pivotPrice = 0;
                 if(this.gremio == 'true'){
-                    pivotPrice = rowSelect.gremio
+                    pivotPrice = rowSelect.gremio * this.cash.dolar
                 }else{
-                    pivotPrice = rowSelect.unit_price
+                    pivotPrice = rowSelect.unit_price * this.cash.dolar
                 }
                 row = Object.assign({
                     productId : rowSelect.id,
                     name : rowSelect.name,
                     price : pivotPrice,
                     provider : privder,
-                    discount : (pivotPrice / 100) * (rowSelect.v_added + rowSelect.iva),
+                    discount : 0,
                     iva : rowSelect.iva,
-                    v_added : rowSelect.v_added,
+                    v_added : 0,
                     barCode : rowSelect.bar_code               
                 })
 
@@ -1236,7 +1252,7 @@
                                 name : this.data()[3],
                                 price : parseFloat(price),
                                 provider : 0,
-                                discount : (parseFloat(price)/100)*(parseFloat(this.data()[2]) + parseFloat(iva)),
+                                discount : 0,//(parseFloat(price)/100)*(parseFloat(this.data()[2]) + parseFloat(iva)),
                             })
 
                             console.log(row)
@@ -1257,7 +1273,7 @@
                 })
             },
             showModalDiscount(item, i) {
-
+                let _iva
                 if(item.iva == undefined){
                     _iva = 21
                 }else{
