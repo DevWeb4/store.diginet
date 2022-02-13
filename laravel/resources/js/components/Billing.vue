@@ -311,6 +311,7 @@
                                                 <th scope="col" class="text-left" >Descripción</th>
                                                 <th scope="col">Cantidad</th>
                                                 <th scope="col">Precio Unitario</th>
+                                                <th scope="col">IVA</th>
                                                 <th scope="col">Extra</th>
                                                 <th scope="col">Precio Final</th>
                                             </tr>
@@ -320,23 +321,28 @@
                                                 <th class="grey lighten-3 text-center">{{i+1}}</th>
                                                 <td>{{item.name}}</td>
                                                 <td class="text-center">1</td>
-                                                <td class="text-center">${{parseFloat(item.price).toFixed(2)}}</td>
+                                                <td class="text-center">${{parseFloat(item.price - item.ivaAmount).toFixed(2)}}</td>
+                                                <td class="text-center">%{{parseFloat(item.iva).toFixed(2)}} (${{parseFloat(item.ivaAmount).toFixed(2)}})</td>
                                                 <td class="text-center">${{parseFloat(item.discount).toFixed(2)}}</td>
                                                 <td class="text-center">${{parseFloat((item.price)+item.discount).toFixed(2)}}</td>
                                             </tr>
                                             <tr class="table-borderless">
-                                                <td colspan="6"></td>
+                                                <td colspan="7"></td>
                                             </tr>
                                             <tr class="table-borderless">
-                                                <th colspan="5" class="text-right">subTotal:</th>
+                                                <th colspan="6" class="text-right">subTotal:</th>
                                                 <th class="text-center">${{parseFloat(purchase.total).toFixed(2)}}</th>
                                             </tr>
+                                            <tr class="table-borderless">
+                                                <th colspan="6" class="text-right">ivaTotal:</th>
+                                                <th class="text-center">${{parseFloat(purchase.iva).toFixed(2)}}</th>
+                                            </tr>
                                             <tr class="table-borderless m-0">
-                                                <th colspan="5" class="text-right">extraTotal:</th>
+                                                <th colspan="6" class="text-right">extraTotal(Individualmente y General ):</th>
                                                 <th class="text-center">${{parseFloat(purchase.totalDiscount).toFixed(2)}}</th>
                                             </tr>
                                             <tr>
-                                                <th colspan="5" class="text-left"><b class="h5">TOTAL FINAL:</b></th>
+                                                <th colspan="6" class="text-left"><b class="h5">TOTAL FINAL:</b></th>
                                                 <th class="text-center grey lighten-3"><b class="h5">${{parseFloat(purchase.totalFinal).toFixed(2)}}</b></th>
                                             </tr>
                                         </tbody>
@@ -592,10 +598,20 @@
             init(){
                 this.items = JSON.parse(this.myBilling.description)
 
-                this.purchase.totalFinal = this.myBilling.cash_payment + this.myBilling.credit_payment + this.myBilling.personal_account_payment
+                this.purchase.totalFinal = Number(this.myBilling.cash_payment) + Number(this.myBilling.credit_payment) + Number(this.myBilling.personal_account_payment)
                 this.purchase.totalDiscount = this.myBilling.discount
 
-                this.purchase.total = this.purchase.totalFinal -this.purchase.totalDiscount     
+                this.purchase.iva = 0
+                //console.log(this.items)
+
+                this.items.forEach(element => {
+
+                    element.ivaAmount = element.price -(element.price / (element.iva /100 + 1))
+                    this.purchase.iva += element.ivaAmount
+                    
+                });
+
+                this.purchase.total = (this.purchase.totalFinal - this.purchase.totalDiscount)  - this.purchase.iva
             },
 
             getCustomers(){

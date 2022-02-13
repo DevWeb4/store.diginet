@@ -12,7 +12,6 @@
                 >
             </div>
         </div>
-
         <div class="card fade" id="datatablesBody" style="min-height: 350px">
             <div class="card-body" >
                 <table class="table table-sm" id="_tInventory">
@@ -68,7 +67,7 @@
                                         </span>
 
                                         <b class="text-right col-6">
-                                            <span class="float-left">${{cash.final_cash - cash.initial_cash}}</span>
+                                            <span class="float-left">${{ (cash.final_cash - cash.initial_cash).toFixed(2) }}</span>
                                             <i class="fas fa-long-arrow-alt-up" v-if="cash.final_cash - cash.initial_cash > 0"></i>
                                             <i class="fas fa-long-arrow-alt-down" v-else-if="cash.final_cash - cash.initial_cash < 0"></i>
                                             <i class="fas fa-exchange-alt" v-else></i>
@@ -96,16 +95,16 @@
                         <div class="row text-center">
                             <div class="col-4 mt-3">
                                 <b><p class="mb-0">Total Efectivo:</p></b>
-                                <h5><b>${{summation.cash}}</b></h5>
+                                <h5><b>${{summation.cash.toFixed(2)}}</b></h5>
                             </div>
                             <div class="col-4 mt-3">
                                 <b><p class="mb-0">Total Credito:</p></b>
-                                <h5><b>${{summation.credit}}</b></h5>
+                                <h5><b>${{summation.credit.toFixed(2)}}</b></h5>
 
                             </div>
                             <div class="col-4 mt-3">
                                 <b><p class="mb-0">Total Cuenta P.:</p></b>
-                                <h5><b>${{summation.debit}}</b></h5>
+                                <h5><b>${{summation.debit.toFixed(2)}}</b></h5>
                             </div>
                         </div>
                         <pie-chart 
@@ -127,13 +126,13 @@
                     <div class="col-6 text-center">
                         <h6 v-if="inconsistencyAlert(cash)">
                             <i class="red-store-text border-bottom border-danger">
-                                APERTURA DE CAJA + Ventas en Efectivo + Extras= <b>${{this.cash.initial_cash + this.summation.cash + getSumExtras(cash.extras)}}</b>
+                                APERTURA DE CAJA + Ventas en Efectivo + Extras= <b>${{(Number(this.cash.initial_cash) + Number(this.summation.cash) + Number(getSumExtras(cash.extras))).toFixed(2)}}</b>
                             </i>
                             <br>
                             <span>//vs//</span>
                             <br>
                             <i class="red-store-text border-bottom border-danger">
-                                CIERRE DE CAJA = <b>${{this.cash.final_cash }}</b>
+                                CIERRE DE CAJA = <b>${{ Number(this.cash.final_cash).toFixed(2) }}</b>
                             </i>
                         </h6>
                     </div>
@@ -142,7 +141,7 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="col-12 mt-3 text-right">
-                        <b>APERTURA DE CAJA</b> por <b>{{cash.initial_user.name}}</b> con <b>${{cash.initial_cash}}</b>, el dia {{new Date(cash.created_at) | dateFormat('dddd D MMMM, HH:mm')}} Hs
+                        <b>APERTURA DE CAJA</b> por <b>{{cash.initial_user.name}}</b> con <b>${{cash.initial_cash.toFixed(2)}}</b>, el dia {{new Date(cash.created_at) | dateFormat('dddd D MMMM, HH:mm')}} Hs
                     </div>
                     <div class="table-responsive" v-if="cash.sales.length > 0" >
                         <table class="table table-sm">
@@ -162,10 +161,10 @@
                                         </h5>
                                     </td>
                                     <td class="text-center">
-                                        <h5>$ {{item.credit_payment + item.cash_payment + item.personal_account_payment - item.discount}} </h5>
+                                        <h5>$ {{(Number(item.credit_payment) + Number(item.cash_payment) + Number(item.personal_account_payment) - Number(item.discount)).toFixed(2)}} </h5>
                                     </td>
                                     <td class="text-center">
-                                        <h5>$ {{item.discount}}</h5>
+                                        <h5>$ {{Number(item.discount).toFixed(2)}}</h5>
                                     </td>
                                     <td class="text-left">
                                         <h5>
@@ -173,22 +172,22 @@
                                                 :class="{'fade': item.cash_payment == 0 }"
                                                 class="badge badge-light w-25"
                                             >
-                                                Efectivo ${{item.cash_payment}}
+                                                Efectivo ${{ Number(item.cash_payment).toFixed(2)}}
                                             </span>
 
                                             <span :class="{'fade': item.credit_payment == 0 }"
                                                 class="badge special-color-dark w-25"
                                             >
-                                                Credito ${{item.credit_payment}}
+                                                Credito ${{Number(item.credit_payment).toFixed(2)}}
                                             </span>
                                             <span 
                                                 :class="{'fade': item.personal_account_payment == 0 }"
                                                 class="badge grey darken-2 w-25"
                                             >
-                                                Cuenta P. ${{item.personal_account_payment}}
+                                                Cuenta P. ${{Number(item.personal_account_payment).toFixed(2)}}
                                             </span>
                                             <img v-if="item.invoiced == 1" class="m-1" width="50" :src="uri+'/images/logos/afip.png'" >
-                                            <span class="float-right">$ {{item.credit_payment + item.cash_payment + item.personal_account_payment}}</span>
+                                            <span class="float-right">$ {{(Number(item.credit_payment) + Number(item.cash_payment) + Number(item.personal_account_payment)).toFixed(2)}}</span>
                                         </h5>
                                     </td>
                                 </tr>
@@ -199,16 +198,19 @@
                         <h5 class="red-store-text border-bottom border-top my-4">SIN MOVIMIENTOS</h5>
                     </div>
                     <div class="col-12 mb-2 text-right" v-if="cash.status == 0">
-                        <b>CIERRE DE CAJA</b> por <b>{{cash.final_user.name}}</b> con <b>${{cash.final_cash}}</b>, el {{new Date(cash.updated_at) | dateFormat('dddd D MMMM, HH:mm')}} Hs
+                        <b>CIERRE DE CAJA</b> por <b>{{cash.final_user.name}}</b> con <b>${{Number(cash.final_cash).toFixed(2)}}</b>, el {{new Date(cash.updated_at) | dateFormat('dddd D MMMM, HH:mm')}} Hs
                     </div>
                 </div>
             </div>
+            <p class="red-store-text">
+                Precio dolar al momento de abrir la caja: ${{cash.dolar}}
+            </p>
         </div>
 
         
         <div class="container mt-4 px-5">
             <div class="row"> 
-                <h4 class="col-12 red-store-text">Extras: Total ${{getSumExtras(cash.extras)}}</h4>
+                <h4 class="col-12 red-store-text">Total Extras: ${{getSumExtras(cash.extras)}}</h4>
 
                 <table class="table">
                     <thead>
@@ -308,7 +310,8 @@
 
                 if( toPay == undefined){ toPay = 0 }
 
-                return toPay ;
+                return toPay.toFixed(2) ;
+
             },
             deleteExtra(){              
                 axios.delete(`extra/${this.b_extra}`).then(res=>{
@@ -369,9 +372,12 @@
 
                 this.updatedCash = Object.assign({initial_cash:this.cash.initial_cash, final_cash:this.cash.final_cash})
               
-                this.summation.cash = _.sumBy(this.cash.sales, 'cash_payment') /*+  this.getSumExtras(this.cash.extras)*/
-                this.summation.debit = _.sumBy(this.cash.sales, 'personal_account_payment')
-                this.summation.credit = _.sumBy(this.cash.sales, 'credit_payment')
+
+                this.summation.cash = _.sumBy(this.cash.sales, item => Number(item.cash_payment));
+                this.summation.debit = _.sumBy(this.cash.sales, item => Number(item.personal_account_payment));
+                this.summation.credit = _.sumBy(this.cash.sales, item => Number(item.credit_payment));
+
+                //console.log(this.cash)
             },
             emptyCash(){
                 this.cash = Object.assign({})

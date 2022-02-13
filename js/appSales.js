@@ -2792,6 +2792,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['array', 'origin', 'organization', 'uri'],
   data: function data() {
@@ -2973,19 +2979,27 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     init: function init() {
+      var _this4 = this;
+
       this.items = JSON.parse(this.myBilling.description);
-      this.purchase.totalFinal = this.myBilling.cash_payment + this.myBilling.credit_payment + this.myBilling.personal_account_payment;
+      this.purchase.totalFinal = Number(this.myBilling.cash_payment) + Number(this.myBilling.credit_payment) + Number(this.myBilling.personal_account_payment);
       this.purchase.totalDiscount = this.myBilling.discount;
-      this.purchase.total = this.purchase.totalFinal - this.purchase.totalDiscount;
+      this.purchase.iva = 0; //console.log(this.items)
+
+      this.items.forEach(function (element) {
+        element.ivaAmount = element.price - element.price / (element.iva / 100 + 1);
+        _this4.purchase.iva += element.ivaAmount;
+      });
+      this.purchase.total = this.purchase.totalFinal - this.purchase.totalDiscount - this.purchase.iva;
     },
     getCustomers: function getCustomers() {
-      var _this4 = this;
+      var _this5 = this;
 
       axios.post(this.uri + '/get_persons', {
         'category': 1
       }).then(function (res) {
         if (res.data.statusCode == 200) {
-          _this4.clients = res.data.data;
+          _this5.clients = res.data.data;
         } else {
           console.log('error in methods getCustomers(): return error in controller');
         }
@@ -3007,6 +3021,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -3322,7 +3338,7 @@ __webpack_require__.r(__webpack_exports__);
         toPay = 0;
       }
 
-      return toPay;
+      return toPay.toFixed(2);
     },
     deleteExtra: function deleteExtra() {
       var _this = this;
@@ -3389,11 +3405,15 @@ __webpack_require__.r(__webpack_exports__);
         initial_cash: this.cash.initial_cash,
         final_cash: this.cash.final_cash
       });
-      this.summation.cash = _.sumBy(this.cash.sales, 'cash_payment');
-      /*+  this.getSumExtras(this.cash.extras)*/
-
-      this.summation.debit = _.sumBy(this.cash.sales, 'personal_account_payment');
-      this.summation.credit = _.sumBy(this.cash.sales, 'credit_payment');
+      this.summation.cash = _.sumBy(this.cash.sales, function (item) {
+        return Number(item.cash_payment);
+      });
+      this.summation.debit = _.sumBy(this.cash.sales, function (item) {
+        return Number(item.personal_account_payment);
+      });
+      this.summation.credit = _.sumBy(this.cash.sales, function (item) {
+        return Number(item.credit_payment);
+      }); //console.log(this.cash)
     },
     emptyCash: function emptyCash() {
       this.cash = Object.assign({});
@@ -4248,9 +4268,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['uri', 'gremio'],
+  props: ['uri', 'gremio', 'dolar'],
   data: function data() {
     return {
       radioType: 'Efectivo',
@@ -4282,7 +4308,9 @@ __webpack_require__.r(__webpack_exports__);
       },
       discountItem: {
         name: '',
-        porcentage: 0
+        porcentage: 0,
+        discount: 0,
+        price: 0
       },
       purchase: {
         total: 0,
@@ -4297,10 +4325,8 @@ __webpack_require__.r(__webpack_exports__);
       financial: _jsons_financial__WEBPACK_IMPORTED_MODULE_0__["default"],
       indexFinancialTarget: 0,
       amount: '',
-      picked: '24 hs',
-      cash: {
-        dolar: 100
-      }
+      picked: '24 hs' //cash:cash,
+
     };
   },
   watch: {
@@ -4328,21 +4354,15 @@ __webpack_require__.r(__webpack_exports__);
     /*window.addEventListener('keyup', function(event) {
         console.log(event)
     });*/
-
-    this.lastCash();
   },
   methods: {
-    lastCash: function lastCash() {
-      var _this = this;
-
-      axios.get('get_last_cash').then(function (res) {
-        if (res.data.statusCode == 200) {
-          _this.cash = res.data.data[0];
-          console.log(_this.cash);
-        }
-      })["catch"](function (error) {
-        console.log("error");
-      });
+    ivaRecalculate: function ivaRecalculate() {
+      var newIva = this.discountItem.iva / 100 + 1;
+      var oldIva = this.discountItem.oldIva / 100 + 1;
+      var auxPrice = Number(this.discountItem.price / oldIva * newIva);
+      this.discountItem.price = auxPrice.toFixed(2);
+      this.discountItem.oldIva = (newIva - 1) * 100;
+      console.log(this.shoppingCart);
     },
     refreshPurchase: function refreshPurchase() {
       this.purchase.total = _.sumBy(this.shoppingCart, function (item) {
@@ -4358,20 +4378,20 @@ __webpack_require__.r(__webpack_exports__);
       this.amount = this.purchase.toPay;
     },
     getFinancials: function getFinancials() {
-      var _this2 = this;
+      var _this = this;
 
       axios.get('get_financials').then(function (res) {
         if (res.data.data == '') {
-          _.map(_this2.financial, function (element) {
+          _.map(_this.financial, function (element) {
             _.each(element.fee, function (fee) {
               return fee.b_selected = 0;
             });
           });
         } else {
-          _this2.financial = res.data.data;
+          _this.financial = res.data.data;
         }
 
-        console.log(_this2.financials);
+        console.log(_this.financials);
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -4423,11 +4443,11 @@ __webpack_require__.r(__webpack_exports__);
       this.purchase.toPayExtra = this.purchase.toPay / 100 * this.purchase.toPayPorcentageExtra;
     },
     getStore: function getStore() {
-      var _this3 = this;
+      var _this2 = this;
 
       axios.get('get_store').then(function (res) {
         if (res.data.statusCode == 200) {
-          _this3.store = res.data.data;
+          _this2.store = res.data.data;
         } else {
           console.log("error get store"); //pendiente notificable y redirect
         }
@@ -4509,7 +4529,7 @@ __webpack_require__.r(__webpack_exports__);
       return toPay;
     },
     pay: function pay() {
-      var _this4 = this;
+      var _this3 = this;
 
       var products = [];
       this.shoppingCart.forEach(function (element) {
@@ -4530,7 +4550,7 @@ __webpack_require__.r(__webpack_exports__);
         products: products
       }).then(function (res) {
         if (res.data.statusCode == 200) {
-          window.location.href = _this4.uri + '/facturacion/' + res.data.id + '-ventas';
+          window.location.href = _this3.uri + '/facturacion/' + res.data.id + '-ventas';
         } else {
           console.log("La caja ya fue cerrada por otro usuario"); //pendiente notificable y redirect
         }
@@ -4567,18 +4587,18 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     getInventory: function getInventory() {
-      var _this5 = this;
+      var _this4 = this;
 
       axios.post('get_products').then(function (res) {
         if (res.data.statusCode == 200) {
-          _this5.inventory = res.data.data;
+          _this4.inventory = res.data.data;
 
-          _this5.initDataTables();
+          _this4.initDataTables();
 
-          _this5.b_loadingTable = false;
+          _this4.b_loadingTable = false;
         } else {
           console.log('error in methods getInventory');
-          _this5.err_msg_tableInventory = 'Error al cargar la tabla de Inventario';
+          _this4.err_msg_tableInventory = 'Error al cargar la tabla de Inventario';
         }
       })["catch"](function (error) {
         console.log("error getInventory");
@@ -4608,15 +4628,15 @@ __webpack_require__.r(__webpack_exports__);
       var pivotPrice = 0;
 
       if (this.gremio == 'true') {
-        pivotPrice = rowSelect.gremio * this.cash.dolar;
+        pivotPrice = (rowSelect.gremio + rowSelect.gremio / 100 * rowSelect.iva) * this.dolar;
       } else {
-        pivotPrice = rowSelect.unit_price * this.cash.dolar;
+        pivotPrice = (rowSelect.unit_price + rowSelect.unit_price / 100 * rowSelect.iva) * this.dolar;
       }
 
       row = Object.assign({
         productId: rowSelect.id,
         name: rowSelect.name,
-        price: pivotPrice,
+        price: pivotPrice.toFixed(2),
         provider: privder,
         discount: 0,
         iva: rowSelect.iva,
@@ -4681,12 +4701,12 @@ __webpack_require__.r(__webpack_exports__);
               productId: parseFloat(this.data()[1]),
               barCode: this.data()[5],
               name: this.data()[3],
-              price: parseFloat(price),
+              price: price,
+              iva: iva,
               provider: 0,
               discount: 0 //(parseFloat(price)/100)*(parseFloat(this.data()[2]) + parseFloat(iva)),
 
             });
-            console.log(row);
           });
           return row;
         }
@@ -4716,8 +4736,10 @@ __webpack_require__.r(__webpack_exports__);
         name: item.name,
         price: item.price,
         discount: item.discount,
+        //(item.discount /auxIva) * (_iva /100 + 1) ,
         porcentage: 0,
-        iva: _iva
+        iva: _iva,
+        oldIva: _iva
       });
       this.$modal.show('modal-discount');
     },
@@ -4759,27 +4781,29 @@ __webpack_require__.r(__webpack_exports__);
       this.refreshPurchase();
     },
     applyModalDiscount: function applyModalDiscount() {
-      var _this6 = this;
+      var _this5 = this;
 
       if (this.discountItem.discount == '') {
         this.discountItem.discount = 0;
       }
 
       var itemShoppingCart = this.shoppingCart.find(function (element, index) {
-        return index == _this6.discountItem.index;
+        return index == _this5.discountItem.index;
       });
       itemShoppingCart.discount = parseFloat(this.discountItem.discount);
+      itemShoppingCart.price = parseFloat(this.discountItem.price);
+      itemShoppingCart.iva = parseFloat(this.discountItem.iva);
       this.hideModal('modal-discount');
       this.refreshPurchase();
     },
     getCustomers: function getCustomers() {
-      var _this7 = this;
+      var _this6 = this;
 
       axios.post('get_persons', {
         'category': 1
       }).then(function (res) {
         if (res.data.statusCode == 200) {
-          _this7.clients = res.data.data;
+          _this6.clients = res.data.data;
         } else {
           console.log('error in methods getCustomers(): return error in controller');
         }
@@ -4802,6 +4826,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -5063,14 +5090,13 @@ __webpack_require__.r(__webpack_exports__);
         toPay = 0;
       }
 
-      return toPay;
+      return toPay.toFixed(2);
     },
     getDolarValue: function getDolarValue() {
       var _this = this;
 
       axios.get("https://www.dolarsi.com/api/api.php?type=valoresprincipales").then(function (res) {
         _this.dolar = Number(res.data[0].casa.compra.replace(",", "."));
-        console.log(_this.dolar);
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -5162,15 +5188,17 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get("get_billings/".concat(cashId)).then(function (res) {
         if (res.data.statusCode == 200) {
-          _this4.billings = res.data.data;
-          console.log(_this4.billings); //this.summation.cash_payment = _.sumBy(this.billings, 'cash_payment') /*+ this.getSumExtras()*/;
+          _this4.billings = res.data.data; //this.summation.cash_payment = _.sumBy(this.billings, 'cash_payment') /*+ this.getSumExtras()*/;
 
           _this4.summation.cash_payment = _.sumBy(_this4.billings, function (item) {
             return Number(item.cash_payment);
           });
-          _this4.summation.personal_account_payment = _.sumBy(_this4.billings, 'personal_account_payment');
-          _this4.summation.credit_payment = _.sumBy(_this4.billings, 'credit_payment');
-          console.log(_this4.summation);
+          _this4.summation.personal_account_payment = _.sumBy(_this4.billings, function (item) {
+            return Number(item.personal_account_payment);
+          });
+          _this4.summation.credit_payment = _.sumBy(_this4.billings, function (item) {
+            return Number(item.credit_payment);
+          });
         }
       })["catch"](function (error) {
         console.log(error.response);
@@ -99364,8 +99392,26 @@ var render = function() {
                                       _vm._v(
                                         "$" +
                                           _vm._s(
-                                            parseFloat(item.price).toFixed(2)
+                                            parseFloat(
+                                              item.price - item.ivaAmount
+                                            ).toFixed(2)
                                           )
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("td", { staticClass: "text-center" }, [
+                                      _vm._v(
+                                        "%" +
+                                          _vm._s(
+                                            parseFloat(item.iva).toFixed(2)
+                                          ) +
+                                          " ($" +
+                                          _vm._s(
+                                            parseFloat(item.ivaAmount).toFixed(
+                                              2
+                                            )
+                                          ) +
+                                          ")"
                                       )
                                     ]),
                                     _vm._v(" "),
@@ -99398,7 +99444,7 @@ var render = function() {
                                     "th",
                                     {
                                       staticClass: "text-right",
-                                      attrs: { colspan: "5" }
+                                      attrs: { colspan: "6" }
                                     },
                                     [_vm._v("subTotal:")]
                                   ),
@@ -99415,6 +99461,28 @@ var render = function() {
                                   ])
                                 ]),
                                 _vm._v(" "),
+                                _c("tr", { staticClass: "table-borderless" }, [
+                                  _c(
+                                    "th",
+                                    {
+                                      staticClass: "text-right",
+                                      attrs: { colspan: "6" }
+                                    },
+                                    [_vm._v("ivaTotal:")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("th", { staticClass: "text-center" }, [
+                                    _vm._v(
+                                      "$" +
+                                        _vm._s(
+                                          parseFloat(_vm.purchase.iva).toFixed(
+                                            2
+                                          )
+                                        )
+                                    )
+                                  ])
+                                ]),
+                                _vm._v(" "),
                                 _c(
                                   "tr",
                                   { staticClass: "table-borderless m-0" },
@@ -99423,9 +99491,13 @@ var render = function() {
                                       "th",
                                       {
                                         staticClass: "text-right",
-                                        attrs: { colspan: "5" }
+                                        attrs: { colspan: "6" }
                                       },
-                                      [_vm._v("extraTotal:")]
+                                      [
+                                        _vm._v(
+                                          "extraTotal(Individualmente y General ):"
+                                        )
+                                      ]
                                     ),
                                     _vm._v(" "),
                                     _c("th", { staticClass: "text-center" }, [
@@ -99932,6 +100004,8 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Precio Unitario")]),
         _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("IVA")]),
+        _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Extra")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Precio Final")])
@@ -99943,14 +100017,14 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", { staticClass: "table-borderless" }, [
-      _c("td", { attrs: { colspan: "6" } })
+      _c("td", { attrs: { colspan: "7" } })
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("th", { staticClass: "text-left", attrs: { colspan: "5" } }, [
+    return _c("th", { staticClass: "text-left", attrs: { colspan: "6" } }, [
       _c("b", { staticClass: "h5" }, [_vm._v("TOTAL FINAL:")])
     ])
   }
@@ -100158,7 +100232,10 @@ var render = function() {
                                       _vm._v(
                                         "$" +
                                           _vm._s(
-                                            cash.final_cash - cash.initial_cash
+                                            (
+                                              cash.final_cash -
+                                              cash.initial_cash
+                                            ).toFixed(2)
                                           )
                                       )
                                     ]),
@@ -100227,7 +100304,9 @@ var render = function() {
                         _vm._m(1),
                         _vm._v(" "),
                         _c("h5", [
-                          _c("b", [_vm._v("$" + _vm._s(_vm.summation.cash))])
+                          _c("b", [
+                            _vm._v("$" + _vm._s(_vm.summation.cash.toFixed(2)))
+                          ])
                         ])
                       ]),
                       _vm._v(" "),
@@ -100235,7 +100314,11 @@ var render = function() {
                         _vm._m(2),
                         _vm._v(" "),
                         _c("h5", [
-                          _c("b", [_vm._v("$" + _vm._s(_vm.summation.credit))])
+                          _c("b", [
+                            _vm._v(
+                              "$" + _vm._s(_vm.summation.credit.toFixed(2))
+                            )
+                          ])
                         ])
                       ]),
                       _vm._v(" "),
@@ -100243,7 +100326,9 @@ var render = function() {
                         _vm._m(3),
                         _vm._v(" "),
                         _c("h5", [
-                          _c("b", [_vm._v("$" + _vm._s(_vm.summation.debit))])
+                          _c("b", [
+                            _vm._v("$" + _vm._s(_vm.summation.debit.toFixed(2)))
+                          ])
                         ])
                       ])
                     ]),
@@ -100306,9 +100391,11 @@ var render = function() {
                               _vm._v(
                                 "$" +
                                   _vm._s(
-                                    this.cash.initial_cash +
-                                      this.summation.cash +
-                                      _vm.getSumExtras(_vm.cash.extras)
+                                    (
+                                      Number(this.cash.initial_cash) +
+                                      Number(this.summation.cash) +
+                                      Number(_vm.getSumExtras(_vm.cash.extras))
+                                    ).toFixed(2)
                                   )
                               )
                             ])
@@ -100332,7 +100419,12 @@ var render = function() {
                               "\n                            CIERRE DE CAJA = "
                             ),
                             _c("b", [
-                              _vm._v("$" + _vm._s(this.cash.final_cash))
+                              _vm._v(
+                                "$" +
+                                  _vm._s(
+                                    Number(this.cash.final_cash).toFixed(2)
+                                  )
+                              )
                             ])
                           ]
                         )
@@ -100349,7 +100441,9 @@ var render = function() {
                   _vm._v(" por "),
                   _c("b", [_vm._v(_vm._s(_vm.cash.initial_user.name))]),
                   _vm._v(" con "),
-                  _c("b", [_vm._v("$" + _vm._s(_vm.cash.initial_cash))]),
+                  _c("b", [
+                    _vm._v("$" + _vm._s(_vm.cash.initial_cash.toFixed(2)))
+                  ]),
                   _vm._v(
                     ", el dia " +
                       _vm._s(
@@ -100394,10 +100488,14 @@ var render = function() {
                                   _vm._v(
                                     "$ " +
                                       _vm._s(
-                                        item.credit_payment +
-                                          item.cash_payment +
-                                          item.personal_account_payment -
-                                          item.discount
+                                        (
+                                          Number(item.credit_payment) +
+                                          Number(item.cash_payment) +
+                                          Number(
+                                            item.personal_account_payment
+                                          ) -
+                                          Number(item.discount)
+                                        ).toFixed(2)
                                       ) +
                                       " "
                                   )
@@ -100405,7 +100503,12 @@ var render = function() {
                               ]),
                               _vm._v(" "),
                               _c("td", { staticClass: "text-center" }, [
-                                _c("h5", [_vm._v("$ " + _vm._s(item.discount))])
+                                _c("h5", [
+                                  _vm._v(
+                                    "$ " +
+                                      _vm._s(Number(item.discount).toFixed(2))
+                                  )
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("td", { staticClass: "text-left" }, [
@@ -100419,7 +100522,9 @@ var render = function() {
                                     [
                                       _vm._v(
                                         "\n                                            Efectivo $" +
-                                          _vm._s(item.cash_payment) +
+                                          _vm._s(
+                                            Number(item.cash_payment).toFixed(2)
+                                          ) +
                                           "\n                                        "
                                       )
                                     ]
@@ -100435,7 +100540,11 @@ var render = function() {
                                     [
                                       _vm._v(
                                         "\n                                            Credito $" +
-                                          _vm._s(item.credit_payment) +
+                                          _vm._s(
+                                            Number(item.credit_payment).toFixed(
+                                              2
+                                            )
+                                          ) +
                                           "\n                                        "
                                       )
                                     ]
@@ -100453,7 +100562,9 @@ var render = function() {
                                       _vm._v(
                                         "\n                                            Cuenta P. $" +
                                           _vm._s(
-                                            item.personal_account_payment
+                                            Number(
+                                              item.personal_account_payment
+                                            ).toFixed(2)
                                           ) +
                                           "\n                                        "
                                       )
@@ -100475,9 +100586,13 @@ var render = function() {
                                     _vm._v(
                                       "$ " +
                                         _vm._s(
-                                          item.credit_payment +
-                                            item.cash_payment +
-                                            item.personal_account_payment
+                                          (
+                                            Number(item.credit_payment) +
+                                            Number(item.cash_payment) +
+                                            Number(
+                                              item.personal_account_payment
+                                            )
+                                          ).toFixed(2)
                                         )
                                     )
                                   ])
@@ -100506,7 +100621,11 @@ var render = function() {
                       _vm._v(" por "),
                       _c("b", [_vm._v(_vm._s(_vm.cash.final_user.name))]),
                       _vm._v(" con "),
-                      _c("b", [_vm._v("$" + _vm._s(_vm.cash.final_cash))]),
+                      _c("b", [
+                        _vm._v(
+                          "$" + _vm._s(Number(_vm.cash.final_cash).toFixed(2))
+                        )
+                      ]),
                       _vm._v(
                         ", el " +
                           _vm._s(
@@ -100520,6 +100639,14 @@ var render = function() {
                     ])
                   : _vm._e()
               ])
+            ]),
+            _vm._v(" "),
+            _c("p", { staticClass: "red-store-text" }, [
+              _vm._v(
+                "\n            Precio dolar al momento de abrir la caja: $" +
+                  _vm._s(_vm.cash.dolar) +
+                  "\n        "
+              )
             ])
           ])
         : _vm._e(),
@@ -100528,7 +100655,7 @@ var render = function() {
         _c("div", { staticClass: "row" }, [
           _c("h4", { staticClass: "col-12 red-store-text" }, [
             _vm._v(
-              "Extras: Total $" + _vm._s(_vm.getSumExtras(_vm.cash.extras))
+              "Total Extras: $" + _vm._s(_vm.getSumExtras(_vm.cash.extras))
             )
           ]),
           _vm._v(" "),
@@ -100908,7 +101035,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "container" },
+    {},
     [
       _c("div", { staticClass: "card col-12" }, [
         _c("div", { staticClass: "row", attrs: { id: "pruebaff" } }, [
@@ -100934,11 +101061,15 @@ var render = function() {
                 })
               ]
             ),
-            _vm._v(
-              "\n                " +
-                _vm._s(this.cash.dolar) +
-                "\n\n                "
-            ),
+            _vm._v(" "),
+            _c("p", { staticClass: "text-right" }, [
+              _vm._v(
+                "\n                    Precio Dolar de caja $" +
+                  _vm._s(this.dolar) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
             _c(
               "table",
               { staticClass: "table table-sm ", attrs: { id: "_tInventory" } },
@@ -101003,18 +101134,27 @@ var render = function() {
                       _vm.gremio == "true"
                         ? _c("td", { staticClass: "text-right" }, [
                             _vm._v(
-                              "\n                                " +
+                              "\n                                $" +
                                 _vm._s(
-                                  Number(product.gremio * _vm.cash.dolar)
+                                  Number(
+                                    (product.gremio +
+                                      (product.gremio / 100) * product.iva) *
+                                      _vm.dolar
+                                  ).toFixed(2)
                                 ) +
                                 "\n                            "
                             )
                           ])
                         : _c("td", [
                             _vm._v(
-                              "\n                                " +
+                              "\n                                $" +
                                 _vm._s(
-                                  Number(product.unit_price * _vm.cash.dolar)
+                                  Number(
+                                    (product.unit_price +
+                                      (product.unit_price / 100) *
+                                        product.iva) *
+                                      _vm.dolar
+                                  ).toFixed(2)
                                 ) +
                                 "\n                            "
                             )
@@ -101081,16 +101221,12 @@ var render = function() {
                               "span",
                               {
                                 staticClass:
-                                  "badge red accent-4 accent-4 text-white w-100 py-1",
-                                attrs: {
-                                  title:
-                                    "%" + item.iva + " de IVA de Valor agregado"
-                                }
+                                  "badge red accent-4 accent-4 text-white w-100 py-1"
                               },
                               [
                                 _vm._v(
                                   "\n                                    $" +
-                                    _vm._s(item.discount) +
+                                    _vm._s(item.discount.toFixed(2)) +
                                     "\n                                "
                                 )
                               ]
@@ -101184,7 +101320,7 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "col-12 border-top pt-2 pb-2" }, [
               _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-3" }, [
+                _c("div", { staticClass: "col-12" }, [
                   _c(
                     "a",
                     {
@@ -101213,13 +101349,13 @@ var render = function() {
                 _vm._v(" "),
                 _vm._m(1),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-3" }, [
+                _c("div", { staticClass: "col-6" }, [
                   _c("p", { staticClass: "m-0" }, [
-                    _vm._v("$" + _vm._s(_vm.purchase.total))
+                    _vm._v("$" + _vm._s(_vm.purchase.total.toFixed(2)))
                   ]),
                   _vm._v(" "),
                   _c("p", { staticClass: "m-0" }, [
-                    _vm._v("$" + _vm._s(_vm.purchase.totalDiscount))
+                    _vm._v("$" + _vm._s(_vm.purchase.totalDiscount.toFixed(2)))
                   ])
                 ])
               ])
@@ -101229,9 +101365,11 @@ var render = function() {
               _c("div", { staticClass: "row red-store-text" }, [
                 _vm._m(2),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-3" }, [
+                _c("div", { staticClass: "col-6" }, [
                   _c("p", { staticClass: "m-0" }, [
-                    _c("b", [_vm._v("$" + _vm._s(_vm.purchase.totalFinal))])
+                    _c("b", [
+                      _vm._v("$" + _vm._s(_vm.purchase.totalFinal.toFixed(2)))
+                    ])
                   ])
                 ])
               ])
@@ -101479,7 +101617,7 @@ var render = function() {
                         attrs: {
                           type: "button",
                           disabled:
-                            this.purchase.toPay != 0 ||
+                            this.purchase.toPay > 0 ||
                             _vm.shoppingCart.length == 0 ||
                             ((_vm.client.name == "" ||
                               _vm.client.identification == "") &&
@@ -101533,7 +101671,7 @@ var render = function() {
                       staticClass: "text-left",
                       class: { "red-store-text": _vm.purchase.toPay > 0 }
                     },
-                    [_vm._v("$ " + _vm._s(_vm.purchase.toPay))]
+                    [_vm._v("$ " + _vm._s(_vm.purchase.toPay.toFixed(2)))]
                   ),
                   _vm._v(" "),
                   _c("th", [
@@ -102020,65 +102158,133 @@ var render = function() {
             _c("div", { staticClass: "card-body pt-0 row" }, [
               _c("div", { staticClass: "col-12" }, [
                 _vm._v("\n                    IVA: \n                    "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.discountItem.iva,
-                      expression: "discountItem.iva"
-                    }
-                  ],
-                  attrs: { type: "radio", id: "iva_21", value: "21" },
-                  domProps: { checked: _vm._q(_vm.discountItem.iva, "21") },
-                  on: {
-                    change: function($event) {
-                      return _vm.$set(_vm.discountItem, "iva", "21")
-                    }
-                  }
-                }),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "custom-control custom-radio custom-control-inline"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.discountItem.iva,
+                          expression: "discountItem.iva"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: { type: "radio", id: "iva_21", value: "21" },
+                      domProps: { checked: _vm._q(_vm.discountItem.iva, "21") },
+                      on: {
+                        change: [
+                          function($event) {
+                            return _vm.$set(_vm.discountItem, "iva", "21")
+                          },
+                          function($event) {
+                            return _vm.ivaRecalculate()
+                          }
+                        ]
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "iva_21" }
+                      },
+                      [_vm._v("%21")]
+                    )
+                  ]
+                ),
                 _vm._v(" "),
-                _c("label", { attrs: { for: "huey" } }, [_vm._v("%21")]),
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "custom-control custom-radio custom-control-inline"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.discountItem.iva,
+                          expression: "discountItem.iva"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: { type: "radio", id: "iva_10.5", value: "10.5" },
+                      domProps: {
+                        checked: _vm._q(_vm.discountItem.iva, "10.5")
+                      },
+                      on: {
+                        change: [
+                          function($event) {
+                            return _vm.$set(_vm.discountItem, "iva", "10.5")
+                          },
+                          function($event) {
+                            return _vm.ivaRecalculate()
+                          }
+                        ]
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "iva_10.5" }
+                      },
+                      [_vm._v("%10.5")]
+                    )
+                  ]
+                ),
                 _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.discountItem.iva,
-                      expression: "discountItem.iva"
-                    }
-                  ],
-                  attrs: { type: "radio", id: "iva_10.5", value: "10.5" },
-                  domProps: { checked: _vm._q(_vm.discountItem.iva, "10.5") },
-                  on: {
-                    change: function($event) {
-                      return _vm.$set(_vm.discountItem, "iva", "10.5")
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("label", { attrs: { for: "dewey" } }, [_vm._v("%10.5")]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.discountItem.iva,
-                      expression: "discountItem.iva"
-                    }
-                  ],
-                  attrs: { type: "radio", id: "iva_0", value: "0" },
-                  domProps: { checked: _vm._q(_vm.discountItem.iva, "0") },
-                  on: {
-                    change: function($event) {
-                      return _vm.$set(_vm.discountItem, "iva", "0")
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _c("label", { attrs: { for: "dewey" } }, [_vm._v("%0")])
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "custom-control custom-radio custom-control-inline"
+                  },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.discountItem.iva,
+                          expression: "discountItem.iva"
+                        }
+                      ],
+                      staticClass: "custom-control-input",
+                      attrs: { type: "radio", id: "iva_0", value: "0" },
+                      domProps: { checked: _vm._q(_vm.discountItem.iva, "0") },
+                      on: {
+                        change: [
+                          function($event) {
+                            return _vm.$set(_vm.discountItem, "iva", "0")
+                          },
+                          function($event) {
+                            return _vm.ivaRecalculate()
+                          }
+                        ]
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      {
+                        staticClass: "custom-control-label",
+                        attrs: { for: "iva_0" }
+                      },
+                      [_vm._v("%0")]
+                    )
+                  ]
+                )
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-6" }, [
@@ -102281,13 +102487,18 @@ var render = function() {
                     _vm._v(
                       ",\n                            Descuento/Recargo: "
                     ),
-                    _c("b", [_vm._v("$ " + _vm._s(_vm.discountItem.discount))]),
+                    _c("b", [
+                      _vm._v(
+                        "$ " + _vm._s(_vm.discountItem.discount.toFixed(2))
+                      )
+                    ]),
                     _vm._v(",\n                            Total: "),
                     _c("b", [
                       _vm._v(
                         "$ " +
                           _vm._s(
-                            _vm.discountItem.price + _vm.discountItem.discount
+                            Number(_vm.discountItem.price) +
+                              Number(_vm.discountItem.discount.toFixed(2))
                           )
                       )
                     ])
@@ -103878,7 +104089,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-9 text-right" }, [
+    return _c("div", { staticClass: "col-6 text-right" }, [
       _c("p", { staticClass: "m-0 h5" }, [_vm._v("TOTAL FINAL:")])
     ])
   },
@@ -104131,7 +104342,9 @@ var render = function() {
             _vm._m(1),
             _vm._v(" "),
             _c("h5", [
-              _c("b", [_vm._v("$" + _vm._s(_vm.summation.cash_payment))])
+              _c("b", [
+                _vm._v("$" + _vm._s(_vm.summation.cash_payment.toFixed(2)))
+              ])
             ])
           ]),
           _vm._v(" "),
@@ -104139,7 +104352,9 @@ var render = function() {
             _vm._m(2),
             _vm._v(" "),
             _c("h5", [
-              _c("b", [_vm._v("$" + _vm._s(_vm.summation.credit_payment))])
+              _c("b", [
+                _vm._v("$" + _vm._s(_vm.summation.credit_payment.toFixed(2)))
+              ])
             ])
           ]),
           _vm._v(" "),
@@ -104148,7 +104363,10 @@ var render = function() {
             _vm._v(" "),
             _c("h5", [
               _c("b", [
-                _vm._v("$" + _vm._s(_vm.summation.personal_account_payment))
+                _vm._v(
+                  "$" +
+                    _vm._s(_vm.summation.personal_account_payment.toFixed(2))
+                )
               ])
             ])
           ]),
@@ -104161,9 +104379,9 @@ var render = function() {
                 _vm._v(
                   "$" +
                     _vm._s(
-                      parseFloat(_vm.summation.cash_payment) +
-                        _vm.getSumExtras() +
-                        parseFloat(_vm.cash.initial_cash)
+                      Number(_vm.summation.cash_payment) +
+                        Number(_vm.getSumExtras()) +
+                        Number(_vm.cash.initial_cash)
                     )
                 )
               ])
@@ -104318,10 +104536,12 @@ var render = function() {
                               _vm._v(
                                 "$ " +
                                   _vm._s(
-                                    item.credit_payment +
-                                      item.cash_payment +
-                                      item.personal_account_payment -
-                                      item.discount
+                                    (
+                                      Number(item.credit_payment) +
+                                      Number(item.cash_payment) +
+                                      Number(item.personal_account_payment) -
+                                      Number(item.discount)
+                                    ).toFixed(2)
                                   ) +
                                   " "
                               )
@@ -104329,7 +104549,11 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("td", { staticClass: "text-center" }, [
-                            _c("h5", [_vm._v("$ " + _vm._s(item.discount))])
+                            _c("h5", [
+                              _vm._v(
+                                "$ " + _vm._s(Number(item.discount).toFixed(2))
+                              )
+                            ])
                           ]),
                           _vm._v(" "),
                           _c("td", { staticClass: "text-left" }, [
@@ -104343,7 +104567,9 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                                            Efectivo $" +
-                                      _vm._s(item.cash_payment) +
+                                      _vm._s(
+                                        Number(item.cash_payment).toFixed(2)
+                                      ) +
                                       "\n                                        "
                                   )
                                 ]
@@ -104358,7 +104584,9 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                                            Financiado $" +
-                                      _vm._s(item.credit_payment) +
+                                      _vm._s(
+                                        Number(item.credit_payment).toFixed(2)
+                                      ) +
                                       "\n                                        "
                                   )
                                 ]
@@ -104375,7 +104603,11 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                                            Cuenta P. $" +
-                                      _vm._s(item.personal_account_payment) +
+                                      _vm._s(
+                                        Number(
+                                          item.personal_account_payment
+                                        ).toFixed(2)
+                                      ) +
                                       "\n                                        "
                                   )
                                 ]
@@ -104395,9 +104627,11 @@ var render = function() {
                                 _vm._v(
                                   "$ " +
                                     _vm._s(
-                                      item.credit_payment +
-                                        item.cash_payment +
-                                        item.personal_account_payment
+                                      (
+                                        Number(item.credit_payment) +
+                                        Number(item.cash_payment) +
+                                        Number(item.personal_account_payment)
+                                      ).toFixed(2)
                                     )
                                 )
                               ])
@@ -104430,7 +104664,15 @@ var render = function() {
                   : _vm._e()
               ])
             ])
-          : _vm._e()
+          : _vm._e(),
+        _vm._v(" "),
+        _c("p", { staticClass: "red-store-text" }, [
+          _vm._v(
+            "\n            Precio dolar al momento de abrir la caja: $" +
+              _vm._s(this.cash.dolar) +
+              "\n        "
+          )
+        ])
       ]),
       _vm._v(" "),
       _vm.cash.status
@@ -104440,7 +104682,7 @@ var render = function() {
                 _c("div", { staticClass: "row" }, [
                   _c("div", { staticClass: "col-8" }, [
                     _vm._v(
-                      "\n                        Extras: Total $" +
+                      "\n                        Total Extras: $" +
                         _vm._s(_vm.getSumExtras()) +
                         "\n                    "
                     )
@@ -104478,7 +104720,7 @@ var render = function() {
                       _c("td", [_vm._v("$")]),
                       _vm._v(" "),
                       _c("td", { staticClass: "text-right" }, [
-                        _vm._v(_vm._s(item.amount))
+                        _vm._v(_vm._s(Number(item.amount).toFixed(2)))
                       ]),
                       _vm._v(" "),
                       _c("td", { staticClass: "text-right" }, [

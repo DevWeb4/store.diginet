@@ -10,8 +10,8 @@ class Cash extends Model
     protected $fillable = ['status', 'initial_cash', 'final_cash', 'initial_user_id','final_user_id', 'store_id', 'dolar'];
 
     protected $casts = [
-        'initial_cash' => 'integer',
-        'final_cash' => 'integer',
+        //'initial_cash' => 'integer',
+        //'final_cash' => 'integer',
     ];
 
     public function store(){

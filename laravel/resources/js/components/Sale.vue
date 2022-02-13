@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="">
         <div class="card col-12">
             <div class="row" id="pruebaff">
                 <div class="col-8 table-responsive">
@@ -13,7 +13,9 @@
                             placeholder="Codigo, Nombre del articulo o use el lector de barras"
                         >
                     </div>
-                    {{this.cash.dolar}}
+                    <p class="text-right">
+                        Precio Dolar de caja ${{this.dolar}}
+                    </p>
 
                     <table class="table table-sm " id="_tInventory">
                         <thead>
@@ -49,10 +51,10 @@
                                 <td>{{product.bar_code}}</td>
                                 <td class="text-center">{{product.stock}}</td>
                                 <td class="text-right" v-if="gremio == 'true' ">
-                                    {{Number(product.gremio * cash.dolar)}}
+                                    ${{Number((product.gremio + product.gremio /100 * product.iva)* dolar ).toFixed(2)}}
                                 </td>
                                 <td v-else>
-                                    {{Number(product.unit_price *  cash.dolar)}}
+                                    ${{Number((product.unit_price + product.unit_price /100 * product.iva) * dolar).toFixed(2)}}
                                 </td>
                                 <td class="text-center">
                                     <a v-on:click="addItem(product.id)" title="Añadir a la lista de compra."  >
@@ -80,8 +82,8 @@
                                 <td>{{ item.name | truncate(30) }}</td>
                                 <td class="text-right">${{item.price}}</td>
                                 <td><a v-on:click="showModalDiscount(item, i)">
-                                    <span class="badge red accent-4 accent-4 text-white w-100 py-1" :title="'%'+item.iva+' de IVA de Valor agregado'" >
-                                        ${{item.discount}}
+                                    <span class="badge red accent-4 accent-4 text-white w-100 py-1">
+                                        ${{item.discount.toFixed(2)}}
                                     </span>
                                 </a></td>
                                 <td><a v-on:click="deleteItem(i)" title="Eliminar del listado de compras." ><i class="red-store-text fas fa-backspace"></i></a></td>
@@ -114,7 +116,7 @@
                     </table>
                     <div class="col-12 border-top pt-2 pb-2">
                         <div class="row">
-                            <div class="col-3">
+                            <div class="col-12">
                                 <a v-on:click="showModalDiscountGeneral()">
                                     <span class="mt-4 badge red accent-4 accent-4 text-white w-100 py-1">
                                         Editar
@@ -125,19 +127,19 @@
                                 <p class="m-0">subTotal:</p>
                                 <p class="m-0">extrasTotal:</p>
                             </div>
-                            <div class="col-3">
-                                <p class="m-0">${{purchase.total}}</p>
-                                <p class="m-0">${{purchase.totalDiscount}}</p>
+                            <div class="col-6">
+                                <p class="m-0">${{purchase.total.toFixed(2)}}</p>
+                                <p class="m-0">${{purchase.totalDiscount.toFixed(2)}}</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 border-top pt-2 pb-1">
                         <div class="row red-store-text">
-                            <div class="col-9 text-right">
+                            <div class="col-6 text-right">
                                 <p class="m-0 h5">TOTAL FINAL:</p>
                             </div>
-                            <div class="col-3">
-                                <p class="m-0"><b>${{purchase.totalFinal}}</b></p>
+                            <div class="col-6">
+                                <p class="m-0"><b>${{purchase.totalFinal.toFixed(2)}}</b></p>
                             </div>
                         </div>
                     </div>
@@ -210,7 +212,7 @@
                                 v-on:click="pay()" 
                                 type="button" 
                                 class="btn-sm btn red accent-4 text-white btn-block mt-3" 
-                                :disabled="this.purchase.toPay != 0 || shoppingCart.length == 0 || (client.name == '' || client.identification == '') && getSumPayment('Cuenta P.') > 0"
+                                :disabled="this.purchase.toPay > 0 || shoppingCart.length == 0 || (client.name == '' || client.identification == '') && getSumPayment('Cuenta P.') > 0"
                             >
                                 Pagar
                             </button>
@@ -231,7 +233,7 @@
                         <thead>
                             <tr>
                                 <th>Resta por pagar</th>
-                                <th class="text-left" :class="{'red-store-text': purchase.toPay > 0, }">$ {{purchase.toPay}}</th>
+                                <th class="text-left" :class="{'red-store-text': purchase.toPay > 0, }">$ {{purchase.toPay.toFixed(2)}}</th>
                                 <th>
                                     <a v-on:click="showModalDiscountRemainsPaid()">
                                         <span class="badge red accent-4 accent-4 text-white w-100 py-1">
@@ -369,14 +371,18 @@
 
                     <div class="col-12">
                         IVA: 
-                        <input type="radio" id="iva_21" v-model="discountItem.iva" value="21">
-                        <label for="huey">%21</label>
-                    
-                        <input type="radio" id="iva_10.5" v-model="discountItem.iva" value="10.5">
-                        <label for="dewey">%10.5</label>
-
-                        <input type="radio" id="iva_0" v-model="discountItem.iva" value="0">
-                        <label for="dewey">%0</label>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" id="iva_21" v-model="discountItem.iva" value="21" v-on:change="ivaRecalculate()">
+                            <label class="custom-control-label" for="iva_21">%21</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" id="iva_10.5" v-model="discountItem.iva" value="10.5" v-on:change="ivaRecalculate()">
+                            <label class="custom-control-label" for="iva_10.5">%10.5</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input class="custom-control-input" type="radio" id="iva_0" v-model="discountItem.iva" value="0" v-on:change="ivaRecalculate()">
+                            <label class="custom-control-label" for="iva_0">%0</label>
+                        </div>
                     </div>
                     <div class="col-6">
                         <div class="md-form md-outline">
@@ -423,8 +429,8 @@
                         <p class="mt-3">
                             <i> 
                                 Precio:<b>$ {{discountItem.price}}</b>,
-                                Descuento/Recargo: <b>$ {{discountItem.discount}}</b>,
-                                Total: <b>$ {{discountItem.price + discountItem.discount}}</b>
+                                Descuento/Recargo: <b>$ {{discountItem.discount.toFixed(2)}}</b>,
+                                Total: <b>$ {{Number(discountItem.price) + Number(discountItem.discount.toFixed(2))}}</b>
                             </i>
                         </p>
                     </div>
@@ -806,7 +812,7 @@
 <script>
     import financial_ from "../jsons/financial";
     export default {
-        props: ['uri', 'gremio'],
+        props: ['uri', 'gremio', 'dolar'],
         data(){
             return{
                 radioType: 'Efectivo',
@@ -844,7 +850,9 @@
 
                 discountItem:{
                     name:'',
-                    porcentage:0
+                    porcentage:0,
+                    discount:0,
+                    price:0
                 },
 
                 purchase:{
@@ -864,9 +872,7 @@
                 amount: '',
 
                 picked: '24 hs',
-                cash:{
-                    dolar:100
-                },
+                //cash:cash,
             }
         },
 
@@ -900,19 +906,20 @@
                 console.log(event)
             });*/
 
-            this.lastCash()
         },
         methods:{
 
-            lastCash(){
-                axios.get('get_last_cash').then(res =>{
-                    if(res.data.statusCode == 200){
-                        this.cash = res.data.data[0]                       
-                        console.log(this.cash)
-                    }
-                }).catch(error => {
-                    console.log("error")
-                })
+            ivaRecalculate(){
+                var newIva = this.discountItem.iva / 100 +1
+                var oldIva = this.discountItem.oldIva / 100 +1
+
+
+                var auxPrice = Number((this.discountItem.price /oldIva) * newIva)
+
+                this.discountItem.price = auxPrice.toFixed(2)
+                this.discountItem.oldIva = (newIva-1)*100
+                
+                console.log(this.shoppingCart)
             },
 
             refreshPurchase(){
@@ -1168,14 +1175,14 @@
                 }
                 var pivotPrice = 0;
                 if(this.gremio == 'true'){
-                    pivotPrice = rowSelect.gremio * this.cash.dolar
+                    pivotPrice = (rowSelect.gremio + rowSelect.gremio /100 * rowSelect.iva) * this.dolar
                 }else{
-                    pivotPrice = rowSelect.unit_price * this.cash.dolar
+                    pivotPrice = (rowSelect.unit_price + rowSelect.unit_price /100 * rowSelect.iva) * this.dolar
                 }
                 row = Object.assign({
                     productId : rowSelect.id,
                     name : rowSelect.name,
-                    price : pivotPrice,
+                    price : pivotPrice.toFixed(2),
                     provider : privder,
                     discount : 0,
                     iva : rowSelect.iva,
@@ -1250,12 +1257,11 @@
                                 productId : parseFloat(this.data()[1]),
                                 barCode : this.data()[5],
                                 name : this.data()[3],
-                                price : parseFloat(price),
+                                price : price,
+                                iva: iva,
                                 provider : 0,
                                 discount : 0,//(parseFloat(price)/100)*(parseFloat(this.data()[2]) + parseFloat(iva)),
                             })
-
-                            console.log(row)
 
                         })
                         return row;
@@ -1273,19 +1279,22 @@
                 })
             },
             showModalDiscount(item, i) {
+                
                 let _iva
                 if(item.iva == undefined){
                     _iva = 21
                 }else{
                     _iva = item.iva
                 }
+
                 this.discountItem = Object.assign({
                     index: i,
                     name: item.name,
                     price: item.price,
-                    discount: item.discount,
+                    discount: item.discount,//(item.discount /auxIva) * (_iva /100 + 1) ,
                     porcentage: 0,
-                    iva: _iva
+                    iva: _iva,
+                    oldIva: _iva
                 });
 
                 this.$modal.show('modal-discount')
@@ -1333,8 +1342,10 @@
                 }
                 const itemShoppingCart = this.shoppingCart.find((element, index)=>index == this.discountItem.index);
                 itemShoppingCart.discount = parseFloat(this.discountItem.discount)
-                this.hideModal('modal-discount')
+                itemShoppingCart.price = parseFloat(this.discountItem.price)
+                itemShoppingCart.iva = parseFloat(this.discountItem.iva)
 
+                this.hideModal('modal-discount')
                 this.refreshPurchase()
             },
             getCustomers(){

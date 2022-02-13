@@ -20,7 +20,9 @@ class SaleController extends Controller
 {
     public function index()
     {
-        return view('sales.sale');
+        $lastCash = $this->lastCash();
+
+        return view('sales.sale', compact('lastCash'));
     }
 
     public function addExtra(Request $request)

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-12-2021 a las 17:10:33
--- Versión del servidor: 10.4.20-MariaDB
--- Versión de PHP: 8.0.9
+-- Tiempo de generación: 13-02-2022 a las 20:53:39
+-- Versión del servidor: 10.4.19-MariaDB
+-- Versión de PHP: 8.0.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -266,7 +266,45 @@ INSERT INTO `audits` (`id`, `user_type`, `user_id`, `event`, `auditable_type`, `
 (188, 'App\\User', 1, 'created', 'App\\Product', 112, '[]', '{\"bar_code\":\"DJI-BAT-MV2\",\"provider_id\":0,\"organization_id\":1,\"store_id\":1,\"name\":\"Bateria para Mavic 2 Dual Enterprise\",\"gremio\":\"00\",\"partner\":\"260\",\"unit_price\":\"260\",\"stock\":0,\"id\":112}', 'http://localhost/store.diginet/import_csv', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2021-12-20 15:26:19', '2021-12-20 15:26:19'),
 (189, 'App\\User', 1, 'updated', 'App\\Product', 108, '{\"iva\":21}', '{\"iva\":\"45\"}', 'http://localhost/store.diginet/import_csv', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2021-12-20 15:38:11', '2021-12-20 15:38:11'),
 (190, 'App\\User', 1, 'updated', 'App\\Product', 109, '{\"gremio\":0,\"iva\":21}', '{\"gremio\":\"00\",\"iva\":\"00\"}', 'http://localhost/store.diginet/import_csv', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2021-12-20 15:38:11', '2021-12-20 15:38:11'),
-(191, 'App\\User', 1, 'created', 'App\\Product', 113, '[]', '{\"bar_code\":\"DJI-BAT-MV2\",\"provider_id\":0,\"organization_id\":1,\"store_id\":1,\"name\":\"Bateria para Mavic 2 Dual Enterprise\",\"gremio\":\"00\",\"partner\":\"260\",\"unit_price\":\"260\",\"iva\":\"00\",\"stock\":0,\"id\":113}', 'http://localhost/store.diginet/import_csv', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2021-12-20 15:38:11', '2021-12-20 15:38:11');
+(191, 'App\\User', 1, 'created', 'App\\Product', 113, '[]', '{\"bar_code\":\"DJI-BAT-MV2\",\"provider_id\":0,\"organization_id\":1,\"store_id\":1,\"name\":\"Bateria para Mavic 2 Dual Enterprise\",\"gremio\":\"00\",\"partner\":\"260\",\"unit_price\":\"260\",\"iva\":\"00\",\"stock\":0,\"id\":113}', 'http://localhost/store.diginet/import_csv', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2021-12-20 15:38:11', '2021-12-20 15:38:11'),
+(192, 'App\\User', 1, 'updated', 'App\\Product', 108, '{\"unit_price\":2898}', '{\"unit_price\":\"3000\"}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-07 08:52:47', '2022-01-07 08:52:47'),
+(193, 'App\\User', 1, 'updated', 'App\\Product', 108, '{\"gremio\":45}', '{\"gremio\":\"450\"}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-07 08:52:53', '2022-01-07 08:52:53'),
+(194, 'App\\User', 1, 'updated', 'App\\Product', 108, '{\"partner\":2898}', '{\"partner\":\"3000\"}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-07 08:53:10', '2022-01-07 08:53:10'),
+(195, 'App\\User', 1, 'created', 'App\\Product', 114, '[]', '{\"bar_code\":\"123123\",\"provider_id\":0,\"name\":\"dd\",\"stock\":\"10\",\"unit_price\":\"500\",\"gremio\":\"500\",\"partner\":\"500\",\"organization_id\":1,\"store_id\":1,\"id\":114}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-07 08:53:34', '2022-01-07 08:53:34'),
+(196, 'App\\User', 1, 'updated', 'App\\Product', 108, '{\"iva\":45}', '{\"iva\":\"21\"}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-07 09:05:11', '2022-01-07 09:05:11'),
+(197, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"name\":\"Bateria para Mavic 2 Dual Enterprise\"}', '{\"name\":\"Bateria para Mavic 2 Dual Enterprise2\"}', 'http://localhost/store.diginet/productos/113', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-07 09:06:58', '2022-01-07 09:06:58'),
+(198, 'App\\User', 1, 'deleted', 'App\\Product', 108, '{\"id\":108,\"name\":\"Drone Mavic Enterprise 2 Dual 4k\\/Thermal Combo y valija\",\"bar_code\":\"DJI-MVC2D\",\"unit_price\":3000,\"partner\":3000,\"gremio\":450,\"provider_id\":0,\"organization_id\":1,\"store_id\":1,\"stock\":0,\"v_added\":30,\"iva\":21}', '[]', 'http://localhost/store.diginet/delete_productos/108', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-07 09:07:34', '2022-01-07 09:07:34'),
+(199, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":10}', '{\"stock\":9}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-07 10:23:51', '2022-01-07 10:23:51'),
+(200, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"stock\":0}', '{\"stock\":-1}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-07 10:23:51', '2022-01-07 10:23:51'),
+(201, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":9}', '{\"stock\":8}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 00:29:24', '2022-01-08 00:29:24'),
+(202, 'App\\User', 1, 'updated', 'App\\Product', 109, '{\"stock\":0}', '{\"stock\":-1}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:02:57', '2022-01-08 10:02:57'),
+(203, 'App\\User', 1, 'updated', 'App\\Product', 109, '{\"stock\":-1}', '{\"stock\":-2}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:05:08', '2022-01-08 10:05:08'),
+(204, 'App\\User', 1, 'updated', 'App\\Product', 109, '{\"stock\":-2}', '{\"stock\":-3}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:05:08', '2022-01-08 10:05:08'),
+(205, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":8}', '{\"stock\":7}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:48:35', '2022-01-08 10:48:35'),
+(206, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":7}', '{\"stock\":6}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:51:03', '2022-01-08 10:51:03'),
+(207, 'App\\User', 1, 'updated', 'App\\Product', 109, '{\"stock\":-3}', '{\"stock\":-4}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:51:03', '2022-01-08 10:51:03'),
+(208, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":6}', '{\"stock\":5}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:53:15', '2022-01-08 10:53:15'),
+(209, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":5}', '{\"stock\":4}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:53:34', '2022-01-08 10:53:34'),
+(210, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"stock\":-1}', '{\"stock\":-2}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:53:34', '2022-01-08 10:53:34'),
+(211, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"stock\":-2}', '{\"stock\":-3}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36', NULL, '2022-01-08 10:53:34', '2022-01-08 10:53:34'),
+(212, 'App\\User', 1, 'updated', 'App\\Product', 109, '{\"unit_price\":500,\"gremio\":200,\"v_added\":30}', '{\"unit_price\":\"200\",\"gremio\":\"100\",\"v_added\":100}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-11 18:12:13', '2022-02-11 18:12:13'),
+(213, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"unit_price\":500,\"gremio\":200,\"v_added\":30}', '{\"unit_price\":\"15\",\"gremio\":\"10\",\"v_added\":50}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-11 18:12:25', '2022-02-11 18:12:25'),
+(214, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"unit_price\":15,\"gremio\":10,\"v_added\":50,\"iva\":21}', '{\"unit_price\":\"100\",\"gremio\":\"50\",\"v_added\":900,\"iva\":\"10.5\"}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-11 18:17:00', '2022-02-11 18:17:00'),
+(215, 'App\\User', 1, 'updated', 'App\\Product', 109, '{\"unit_price\":200,\"v_added\":100}', '{\"unit_price\":\"100\",\"v_added\":0}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-11 18:17:07', '2022-02-11 18:17:07'),
+(216, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"iva\":11}', '{\"iva\":\"10.5\"}', 'http://localhost/store.diginet/productos', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-11 18:24:26', '2022-02-11 18:24:26'),
+(217, 'App\\User', 1, 'created', 'App\\Person', 4, '[]', '{\"identification\":34695832205,\"name\":\"gogo\",\"organization_id\":1,\"identification_type\":1,\"email\":null,\"phone\":null,\"address\":null,\"category\":1,\"id\":4}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 00:07:45', '2022-02-13 00:07:45'),
+(218, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":4}', '{\"stock\":3}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 00:07:45', '2022-02-13 00:07:45'),
+(219, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":3}', '{\"stock\":2}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 00:27:10', '2022-02-13 00:27:10'),
+(220, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"stock\":-3}', '{\"stock\":-4}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 00:27:10', '2022-02-13 00:27:10'),
+(221, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":2}', '{\"stock\":1}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 17:13:40', '2022-02-13 17:13:40'),
+(222, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":1}', '{\"stock\":0}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 17:16:39', '2022-02-13 17:16:39'),
+(223, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":0}', '{\"stock\":-1}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 18:26:44', '2022-02-13 18:26:44'),
+(224, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":-1}', '{\"stock\":-2}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 18:37:18', '2022-02-13 18:37:18'),
+(225, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":-2}', '{\"stock\":-3}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 18:48:41', '2022-02-13 18:48:41'),
+(226, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":-3}', '{\"stock\":-4}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 18:48:41', '2022-02-13 18:48:41'),
+(227, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"stock\":-4}', '{\"stock\":-5}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 19:17:02', '2022-02-13 19:17:02'),
+(228, 'App\\User', 1, 'updated', 'App\\Product', 113, '{\"stock\":-5}', '{\"stock\":-6}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 19:17:02', '2022-02-13 19:17:02'),
+(229, 'App\\User', 1, 'updated', 'App\\Product', 114, '{\"stock\":-4}', '{\"stock\":-5}', 'http://localhost/store.diginet/venta', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36', NULL, '2022-02-13 19:17:25', '2022-02-13 19:17:25');
 
 -- --------------------------------------------------------
 
@@ -303,16 +341,17 @@ CREATE TABLE `cashs` (
   `final_user_id` int(11) NOT NULL,
   `store_id` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `dolar` float NOT NULL DEFAULT 100
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `cashs`
 --
 
-INSERT INTO `cashs` (`id`, `status`, `initial_cash`, `final_cash`, `initial_user_id`, `final_user_id`, `store_id`, `created_at`, `updated_at`) VALUES
-(1, 0, 100.00, 500.00, 1, 1, 1, '2021-10-05 14:24:38', '2021-12-06 13:35:28'),
-(2, 1, 100.00, 0.00, 1, 0, 1, '2021-12-06 13:35:34', '2021-12-06 13:35:34');
+INSERT INTO `cashs` (`id`, `status`, `initial_cash`, `final_cash`, `initial_user_id`, `final_user_id`, `store_id`, `created_at`, `updated_at`, `dolar`) VALUES
+(3, 0, 100.00, 155498.25, 1, 1, 1, '2022-02-11 16:50:08', '2022-02-13 19:16:21', 105.61),
+(4, 1, 1000.00, 0.00, 1, 0, 1, '2022-02-13 19:16:38', '2022-02-13 19:16:38', 105.67);
 
 -- --------------------------------------------------------
 
@@ -343,10 +382,17 @@ CREATE TABLE `extras` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `cash_id` bigint(20) UNSIGNED NOT NULL,
   `client_id` bigint(20) UNSIGNED NOT NULL,
-  `amount` bigint(20) NOT NULL,
+  `amount` decimal(12,2) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `extras`
+--
+
+INSERT INTO `extras` (`id`, `description`, `user_id`, `cash_id`, `client_id`, `amount`, `created_at`, `updated_at`) VALUES
+(2, 'asdasd', 1, 3, 0, '105.50', '2022-02-13 18:59:44', '2022-02-13 18:59:44');
 
 -- --------------------------------------------------------
 
@@ -527,7 +573,8 @@ CREATE TABLE `persons` (
 INSERT INTO `persons` (`id`, `name`, `identification`, `identification_type`, `organization_id`, `email`, `phone`, `address`, `description`, `category`, `created_at`, `updated_at`) VALUES
 (1, 'daniel monte', 34695832, 1, 1, NULL, NULL, 'sdsd', NULL, 1, '2021-10-11 21:55:48', '2021-10-11 21:55:48'),
 (2, 'daniel monte', NULL, 1, 1, NULL, NULL, 'sdsd', NULL, 1, '2021-11-29 15:24:07', '2021-11-29 15:24:07'),
-(3, 'asdasd', 34695838, 1, 1, NULL, NULL, 'asdasd', NULL, 1, '2021-12-06 13:46:11', '2021-12-06 13:46:11');
+(3, 'asdasd', 34695838, 1, 1, NULL, NULL, 'asdasd', NULL, 1, '2021-12-06 13:46:11', '2021-12-06 13:46:11'),
+(4, 'gogo', 34695832205, 1, 1, NULL, NULL, NULL, NULL, 1, '2022-02-13 00:07:44', '2022-02-13 00:07:44');
 
 -- --------------------------------------------------------
 
@@ -549,7 +596,7 @@ CREATE TABLE `products` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `v_added` int(11) NOT NULL DEFAULT 30,
-  `iva` int(11) NOT NULL DEFAULT 21
+  `iva` float NOT NULL DEFAULT 21
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -557,9 +604,9 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `bar_code`, `unit_price`, `partner`, `gremio`, `provider_id`, `organization_id`, `store_id`, `stock`, `created_at`, `updated_at`, `v_added`, `iva`) VALUES
-(108, 'Drone Mavic Enterprise 2 Dual 4k/Thermal Combo y valija', 'DJI-MVC2D', 2898.00, 2898.00, 45.00, 0, 1, 1, 0, '2021-12-20 14:06:53', '2021-12-20 15:38:11', 30, 45),
-(109, 'Fly More Kit p/ Mavic 2 Enterprise', 'DJI-FLY-MORE', 550.00, 550.00, 0.00, 0, 1, 1, 0, '2021-12-20 14:06:53', '2021-12-20 15:38:11', 30, 0),
-(113, 'Bateria para Mavic 2 Dual Enterprise', 'DJI-BAT-MV2', 260.00, 260.00, 0.00, 0, 1, 1, 0, '2021-12-20 15:38:11', '2021-12-20 15:38:11', 30, 0);
+(109, 'Fly More Kit p/ Mavic 2 Enterprise', 'DJI-FLY-MORE', 100.00, 500.00, 100.00, 0, 1, 1, -4, '2021-12-20 14:06:53', '2022-02-11 18:17:07', 0, 21),
+(113, 'Bateria para Mavic 2 Dual Enterprise2', 'DJI-BAT-MV2', 100.00, 500.00, 50.00, 0, 1, 1, -6, '2021-12-20 15:38:11', '2022-02-13 19:17:02', 900, 10.5),
+(114, 'dd', '123123', 500.00, 500.00, 200.00, 0, 1, 1, -5, '2022-01-07 08:53:34', '2022-02-13 19:17:25', 30, 21);
 
 -- --------------------------------------------------------
 
@@ -620,10 +667,10 @@ CREATE TABLE `sales` (
   `cash_id` bigint(20) UNSIGNED DEFAULT NULL,
   `client_id` bigint(20) UNSIGNED DEFAULT NULL,
   `bill_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `cash_payment` bigint(20) NOT NULL DEFAULT 0,
-  `credit_payment` bigint(20) NOT NULL DEFAULT 0,
-  `personal_account_payment` bigint(20) NOT NULL DEFAULT 0,
-  `discount` bigint(20) NOT NULL,
+  `cash_payment` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `credit_payment` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `personal_account_payment` decimal(12,2) NOT NULL DEFAULT 0.00,
+  `discount` decimal(12,2) NOT NULL DEFAULT 0.00,
   `invoiced` int(11) NOT NULL DEFAULT 0,
   `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -635,11 +682,10 @@ CREATE TABLE `sales` (
 --
 
 INSERT INTO `sales` (`id`, `user_id`, `cash_id`, `client_id`, `bill_id`, `cash_payment`, `credit_payment`, `personal_account_payment`, `discount`, `invoiced`, `description`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, NULL, 0, 0, 100, 0, 0, '[{\"productId\":1,\"name\":\"d2\",\"price\":100,\"provider\":\"Inexistente\",\"discount\":0}]', '2021-10-11 21:55:48', '2021-10-11 21:55:48'),
-(2, 1, 1, 2, NULL, 0, 0, 99, 0, 0, '[{\"productId\":10,\"name\":\"Distribuidor/Repetidor HDCVI 1x3\",\"price\":99,\"provider\":null,\"discount\":0}]', '2021-11-29 15:24:07', '2021-11-29 15:24:07'),
-(3, 1, 1, 2, NULL, 0, 0, 207, 0, 0, '[{\"productId\":9,\"name\":\"HDCVI Distribuidor 16in 32out\",\"price\":207,\"provider\":null,\"discount\":0}]', '2021-11-29 15:24:54', '2021-11-29 15:24:54'),
-(4, 1, 1, 1, NULL, 0, 0, 99, 0, 0, '[{\"productId\":10,\"name\":\"Distribuidor/Repetidor HDCVI 1x3\",\"price\":99,\"provider\":null,\"discount\":0}]', '2021-11-29 15:25:36', '2021-11-29 15:25:36'),
-(5, 1, 2, 3, NULL, 200, 71, 0, -21, 0, '[{\"productId\":9,\"name\":\"HDCVI Distribuidor 16in 32out\",\"price\":207,\"provider\":\"Inexistente\",\"discount\":-20.7},{\"productId\":8,\"name\":\"HDMI to HDCVI converter\",\"price\":85,\"provider\":\"Inexistente\",\"discount\":0}]', '2021-12-06 13:46:12', '2021-12-06 13:46:12');
+(19, 1, 3, 0, NULL, '57504.65', '0.00', '0.00', '-6389.41', 0, '[{\"productId\":114,\"name\":\"dd\",\"price\":63894.05,\"provider\":null,\"discount\":-6389.405000000001,\"iva\":21,\"v_added\":0,\"barCode\":\"123123\"}]', '2022-02-13 18:37:18', '2022-02-13 18:37:18'),
+(20, 1, 3, 0, NULL, '97788.10', '0.00', '0.00', '-30000.00', 0, '[{\"productId\":114,\"barCode\":\"123123\",\"name\":\"dd\",\"price\":\"63894.05\",\"iva\":\"21\",\"provider\":0,\"discount\":0},{\"productId\":114,\"barCode\":\"123123\",\"name\":\"dd\",\"price\":63894.05,\"iva\":21,\"provider\":0,\"discount\":-10000}]', '2022-02-13 18:48:41', '2022-02-13 18:48:41'),
+(21, 1, 4, 0, NULL, '23353.06', '0.00', '0.00', '0.00', 0, '[{\"productId\":113,\"barCode\":\"DJI-BAT-MV2\",\"name\":\"Bateria para Mavic 2 Dual Enterprise2\",\"price\":\"11676.53\",\"iva\":\"10.5\",\"provider\":0,\"discount\":0},{\"productId\":113,\"name\":\"Bateria para Mavic 2 Dual Enterprise2\",\"price\":\"11676.53\",\"provider\":null,\"discount\":0,\"iva\":10.5,\"v_added\":0,\"barCode\":\"DJI-BAT-MV2\"}]', '2022-02-13 19:17:02', '2022-02-13 19:17:02'),
+(22, 1, 4, 0, NULL, '0.00', '63930.35', '0.00', '0.00', 0, '[{\"productId\":114,\"barCode\":\"123123\",\"name\":\"dd\",\"price\":\"63930.35\",\"iva\":\"21\",\"provider\":0,\"discount\":0}]', '2022-02-13 19:17:25', '2022-02-13 19:17:25');
 
 -- --------------------------------------------------------
 
@@ -662,7 +708,7 @@ CREATE TABLE `stores` (
 --
 
 INSERT INTO `stores` (`id`, `organization_id`, `name`, `address`, `contact`, `created_at`, `updated_at`) VALUES
-(1, 1, 'Smartcell', 'España 320, la Banda', 'Tel 1: 3854 89-7793, Tel 2: 3855 74-5285, Tel 3: 699 8995', '2021-09-07 16:00:39', '2021-09-07 16:00:39');
+(1, 1, 'DIGINET', 'España 320, la Banda', 'Tel 1: 3854 89-7793, Tel 2: 3855 74-5285, Tel 3: 699 8995', '2021-09-07 16:00:39', '2021-09-07 16:00:39');
 
 -- --------------------------------------------------------
 
@@ -852,7 +898,7 @@ ALTER TABLE `accounts`
 -- AUTO_INCREMENT de la tabla `audits`
 --
 ALTER TABLE `audits`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=192;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=230;
 
 --
 -- AUTO_INCREMENT de la tabla `bills`
@@ -864,7 +910,7 @@ ALTER TABLE `bills`
 -- AUTO_INCREMENT de la tabla `cashs`
 --
 ALTER TABLE `cashs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `credit_notes`
@@ -876,7 +922,7 @@ ALTER TABLE `credit_notes`
 -- AUTO_INCREMENT de la tabla `extras`
 --
 ALTER TABLE `extras`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
@@ -918,13 +964,13 @@ ALTER TABLE `permissions`
 -- AUTO_INCREMENT de la tabla `persons`
 --
 ALTER TABLE `persons`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- AUTO_INCREMENT de la tabla `providers`
@@ -942,7 +988,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `stores`

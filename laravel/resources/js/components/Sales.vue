@@ -30,21 +30,21 @@
             <div class="row text-center">
                 <div class="col-2 mt-4 mb-2">
                     <b><p class="mb-0">Total Efectivo:</p></b>
-                    <h5><b>${{summation.cash_payment}}</b></h5>
+                    <h5><b>${{summation.cash_payment.toFixed(2)}}</b></h5>
                 </div>
 
                 <div class="col-2 mt-4">
                     <b><p class="mb-0">Total Financiado:</p></b>
-                    <h5><b>${{summation.credit_payment}}</b></h5>
+                    <h5><b>${{summation.credit_payment.toFixed(2)}}</b></h5>
 
                 </div>
                 <div class="col-2 mt-4">
                     <b><p class="mb-0">Total Cuentas P.:</p></b>
-                    <h5><b>${{summation.personal_account_payment}}</b></h5>
+                    <h5><b>${{summation.personal_account_payment.toFixed(2)}}</b></h5>
                 </div>
                 <div class="col-6 mt-4 text-center" >
                     <b><p class="mb-0">Total Efectivo en Caja (Ventas en efectiov + Extras + Apertura de Caja)</p></b>
-                    <h5><b>${{parseFloat(summation.cash_payment) + getSumExtras() + parseFloat(cash.initial_cash)}}</b></h5>
+                    <h5><b>${{Number(summation.cash_payment) + Number(getSumExtras()) + Number(cash.initial_cash)}}</b></h5>
                 </div>
             </div>
         </div>
@@ -96,10 +96,10 @@
                                         </h5>
                                     </td>
                                     <td class="text-center">
-                                        <h5>$ {{item.credit_payment + item.cash_payment + item.personal_account_payment - item.discount}} </h5>
+                                        <h5>$ {{(Number(item.credit_payment) + Number(item.cash_payment) + Number(item.personal_account_payment) - Number(item.discount)).toFixed(2)}} </h5>
                                     </td>
                                     <td class="text-center">
-                                        <h5>$ {{item.discount}}</h5>
+                                        <h5>$ {{Number(item.discount).toFixed(2)}}</h5>
                                     </td>
                                     <td class="text-left">
                                         <h5>
@@ -107,21 +107,21 @@
                                                 :class="{'fade': item.cash_payment == 0 }"
                                                 class="badge badge-light w-25"
                                             >
-                                                Efectivo ${{item.cash_payment}}
+                                                Efectivo ${{Number(item.cash_payment).toFixed(2)}}
                                             </span>
                                             <span :class="{'fade': item.credit_payment == 0 }"
                                                 class="badge special-color-dark w-25"
                                             >
-                                                Financiado ${{item.credit_payment}}
+                                                Financiado ${{Number(item.credit_payment).toFixed(2)}}
                                             </span>
                                             <span 
                                                 :class="{'fade': item.personal_account_payment == 0 }"
                                                 class="badge grey darken-2 w-25"
                                             >
-                                                Cuenta P. ${{item.personal_account_payment}}
+                                                Cuenta P. ${{Number(item.personal_account_payment).toFixed(2)}}
                                             </span>
                                             <img v-if="item.invoiced == 1" class="m-1" width="50" :src="uri+'/images/logos/afip.png'" >
-                                            <span class="float-right">$ {{item.credit_payment + item.cash_payment + item.personal_account_payment}}</span>
+                                            <span class="float-right">$ {{(Number(item.credit_payment) + Number(item.cash_payment) + Number(item.personal_account_payment)).toFixed(2)}}</span>
                                         </h5>
                                     </td>
                                 </tr>
@@ -133,6 +133,9 @@
                     <i v-if="cash.status == 0">CAJA CERRADA con <b>${{cash.final_cash}}</b>, el {{new Date(cash.updated_at) | dateFormat('dddd D MMMM, HH:mm')}} Hs</i>
                 </div>
             </div>
+            <p class="red-store-text">
+                Precio dolar al momento de abrir la caja: ${{this.cash.dolar}}
+            </p>
         </div>
 
         <div class="container mt-3 px-4" v-if="cash.status">
@@ -140,7 +143,7 @@
                 <h4 class="col-12 red-store-text">
                     <div class="row">
                         <div class="col-8">
-                            Extras: Total ${{getSumExtras()}}
+                            Total Extras: ${{getSumExtras()}}
                         </div>
                         <div class="col-4">
                             <a v-on:click="$modal.show('extras-modal')" class="btn btn-outline-danger mb-2 btn-sm btn-block">Añadir Extras</a>
@@ -161,7 +164,7 @@
                         <tr v-for="(item, i)  in cash.extras" :key="i" >
                             <td class="text-left">{{item.description}}</td>
                             <td>$</td>
-                            <td class="text-right">{{item.amount}}</td>
+                            <td class="text-right">{{Number(item.amount).toFixed(2)}}</td>
                             <td class="text-right">{{ new Date(item.created_at) | dateFormat('DD/MM/YYYY hh:mm') }} </td>
                             <td>
                                 <a class="float-right" v-on:click="b_extra = item.id" data-toggle="modal" data-target="#modalConfirmDelete" title="Eliminar Extra." >
@@ -257,14 +260,12 @@
 
                 if( toPay == undefined){ toPay = 0 }
 
-                return toPay ;
+                return toPay.toFixed(2) ;
             },
 
             getDolarValue(){
                 axios.get(`https://www.dolarsi.com/api/api.php?type=valoresprincipales`).then(res =>{
                     this.dolar= Number(res.data[0].casa.compra.replace(",", "."))
-
-                    console.log(this.dolar)
                 }).catch(error => {
                     console.log(error.response)
                 })
@@ -351,17 +352,13 @@
                     if(res.data.statusCode == 200){
                         this.billings = res.data.data
 
-                        console.log(this.billings)
-
                         //this.summation.cash_payment = _.sumBy(this.billings, 'cash_payment') /*+ this.getSumExtras()*/;
 
                         this.summation.cash_payment = _.sumBy(this.billings, item => Number(item.cash_payment));
 
-                        this.summation.personal_account_payment = _.sumBy(this.billings, 'personal_account_payment');
-                        this.summation.credit_payment = _.sumBy(this.billings, 'credit_payment');
+                        this.summation.personal_account_payment = _.sumBy(this.billings, item => Number(item.personal_account_payment));
 
-                        console.log(this.summation)
-
+                        this.summation.credit_payment = _.sumBy(this.billings, item => Number(item.credit_payment));
                     }
                 }).catch(error => {
                     console.log(error.response)
