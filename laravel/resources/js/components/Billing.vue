@@ -317,33 +317,33 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="(item, i)  in items" :key="i" >
+                                            <tr v-for="(item, i)  in itemsOrdered" :key="i" >
                                                 <th class="grey lighten-3 text-center">{{i+1}}</th>
                                                 <td>{{item.name}}</td>
-                                                <td class="text-center">1</td>
-                                                <td class="text-center">${{parseFloat(item.price - item.ivaAmount).toFixed(2)}}</td>
-                                                <td class="text-center">%{{parseFloat(item.iva).toFixed(2)}} (${{parseFloat(item.ivaAmount).toFixed(2)}})</td>
-                                                <td class="text-center">${{parseFloat(item.discount).toFixed(2)}}</td>
-                                                <td class="text-center">${{parseFloat((item.price)+item.discount).toFixed(2)}}</td>
+                                                <td class="text-center">{{item.count}}</td>
+                                                <td class="text-center">{{currencyFormat(item.price - item.ivaAmount)}}</td>
+                                                <td class="text-center">%{{parseFloat(item.iva).toFixed(2)}} ({{currencyFormat(item.ivaAmount)}})</td>
+                                                <td class="text-center">{{currencyFormat(item.totalV_Added)}}</td>
+                                                <td class="text-center">{{currencyFormat((item.totalPrice)+Number(item.totalV_Added))}}</td>
                                             </tr>
                                             <tr class="table-borderless">
                                                 <td colspan="7"></td>
                                             </tr>
                                             <tr class="table-borderless">
                                                 <th colspan="6" class="text-right">subTotal:</th>
-                                                <th class="text-center">${{parseFloat(purchase.total).toFixed(2)}}</th>
+                                                <th class="text-center">{{currencyFormat(Number(purchase.total))}}</th>
                                             </tr>
                                             <tr class="table-borderless">
                                                 <th colspan="6" class="text-right">ivaTotal:</th>
-                                                <th class="text-center">${{parseFloat(purchase.iva).toFixed(2)}}</th>
+                                                <th class="text-center">{{currencyFormat(Number(purchase.iva))}}</th>
                                             </tr>
                                             <tr class="table-borderless m-0">
                                                 <th colspan="6" class="text-right">extraTotal(Individualmente y General ):</th>
-                                                <th class="text-center">${{parseFloat(purchase.totalDiscount).toFixed(2)}}</th>
+                                                <th class="text-center">{{currencyFormat(Number(purchase.totalDiscount))}}</th>
                                             </tr>
                                             <tr>
                                                 <th colspan="6" class="text-left"><b class="h5">TOTAL FINAL:</b></th>
-                                                <th class="text-center grey lighten-3"><b class="h5">${{parseFloat(purchase.totalFinal).toFixed(2)}}</b></th>
+                                                <th class="text-center grey lighten-3"><b class="h5">{{currencyFormat(Number(purchase.totalFinal))}}</b></th>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -416,6 +416,7 @@
         data(){
             return{
                 items :[],
+                itemsOrdered : [],
                 clients:[],
                 client:{
                     name: '',
@@ -598,20 +599,57 @@
             init(){
                 this.items = JSON.parse(this.myBilling.description)
 
+                const itemsGroupByCode = this.items.reduce((accumulator, currentValue) => {
+                    (accumulator[currentValue.name] = accumulator[currentValue.name] || []).push(currentValue)
+                    return accumulator
+                }, {})
+
+
                 this.purchase.totalFinal = Number(this.myBilling.cash_payment) + Number(this.myBilling.credit_payment) + Number(this.myBilling.personal_account_payment)
                 this.purchase.totalDiscount = this.myBilling.discount
 
                 this.purchase.iva = 0
-                //console.log(this.items)
 
                 this.items.forEach(element => {
 
                     element.ivaAmount = element.price -(element.price / (element.iva /100 + 1))
                     this.purchase.iva += element.ivaAmount
                     
-                });
+                })
 
                 this.purchase.total = (this.purchase.totalFinal - this.purchase.totalDiscount)  - this.purchase.iva
+
+                Object.getOwnPropertyNames(itemsGroupByCode).forEach(propertyName => {
+
+                    console.log(itemsGroupByCode[propertyName][0])
+
+                    let aux = {
+                        name: propertyName,
+                        barCode: itemsGroupByCode[propertyName][0].barCode,
+                        iva: itemsGroupByCode[propertyName][0].iva,
+                        ivaAmount: itemsGroupByCode[propertyName][0].ivaAmount,
+                        price: itemsGroupByCode[propertyName][0].price,
+                        productId: itemsGroupByCode[propertyName][0].productId,
+                        v_added: itemsGroupByCode[propertyName][0].v_added,
+
+                        count:0,
+                        totalPrice: 0,
+                        totalIvaAmount: 0,
+                        totalV_Added: 0,
+                    }
+
+                    itemsGroupByCode[propertyName].forEach(item => {
+
+                        aux.count ++
+                        aux.totalPrice += Number(item.price)
+                        aux.totalIvaAmount += Number(item.ivaAmount)
+                        aux.totalV_Added += Number(item.v_added)
+                    })
+
+                    this.itemsOrdered.push(aux)
+                })
+
+                console.log(this.itemsOrdered)
             },
 
             getCustomers(){
@@ -625,6 +663,14 @@
                     console.log(error.response['data']['message'])
                 });
             },
+
+            currencyFormat(currency) {
+                return currency.toLocaleString('en-US',{
+                    style: 'currency',
+                    currency: 'USD'
+                })
+            }
+
         }
     }
 </script>

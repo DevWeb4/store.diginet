@@ -144,9 +144,6 @@
             this.getRol()
         },
         methods:{
-
-            
-
             calculateValInStock(type){
                 var val = 0
                 this.products.forEach(product => {
@@ -158,7 +155,6 @@
 
             importCSV(){
                 axios.post('import_csv', this.csv).then(res=>{
-                    //console.log(res.data.data)
                     if(res.data.statusCode == 200){
                         this.$notify({
                             group: 'warning',
@@ -182,10 +178,14 @@
             },
 
             csvJSON(csvDATA){
+                //csvDATA = csvDATA.replace(",", ".")
+
+                csvDATA = csvDATA.replace(/,/g, ".")
+
                 const reg = /\;/g
                 var csvSTR= csvDATA.replace(reg, ",");
 
-                console.log(csvSTR)
+                //console.log(csvSTR)
 
                 const csv=require('csvtojson')
                 csv({
@@ -196,8 +196,6 @@
                 .fromString(csvSTR)
                 .then((obj)=>{ 
                     this.csv = obj;
-
-                    //console.log(this.csv)
                 })
             },
 

@@ -29,12 +29,12 @@ class ProductController extends Controller
             $aux['store_id'] = $store_id;
 
             
-            $auxKeyName = $this->detectKeyInArray($product,'Descripcion','descripcion');
+            /*$auxKeyName = $this->detectKeyInArray($product,'Descripcion','Descripci�n');
             if ($auxKeyName != 'Undefined') {
                 $aux['name'] = $product[$auxKeyName];
             }else {
                 $save = false;
-            } 
+            } */
 
             $auxKeyName = $this->detectKeyInArray($product,'Gremio','gremio');
             if ($auxKeyName != 'Undefined') {
@@ -57,7 +57,7 @@ class ProductController extends Controller
                 $save = false;
             } 
 
-            $auxKeyName = $this->detectKeyInArray($product,'IVA','iva');
+            $auxKeyName = $this->detectKeyInArray($product,'IVA','IVA %');
             if ($auxKeyName != 'Undefined') {
                 $aux['iva'] = $product[$auxKeyName];
             }else {
@@ -67,7 +67,7 @@ class ProductController extends Controller
             $aux['provider_id'] = 0;
             //$aux['stock'] = 0;
 
-            $auxKeyName = $this->detectKeyInArray($product,'Codigo','codigo');
+            $auxKeyName = $this->detectKeyInArray($product,'Codigo','C�digo');
             if ($auxKeyName != 'Undefined') {
                 $aux['bar_code'] = $product[$auxKeyName];
             }else {
@@ -75,8 +75,10 @@ class ProductController extends Controller
             }
 
             if ($save) {
-                $condition = ["bar_code" => $aux['bar_code'], 'provider_id' => $aux['provider_id']];
-                Product::updateOrCreate($condition,$aux);
+                //$condition = ["bar_code" => $aux['bar_code'], 'provider_id' => $aux['provider_id']];
+                //Product::updateOrCreate($condition,$aux);
+
+                Product::where('bar_code', $aux['bar_code'])->update($aux);
             }
             
         }
