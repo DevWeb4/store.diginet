@@ -1244,6 +1244,7 @@
                             var rowItem = getRow([])
                             if(rowItem.productId != undefined){
                                 shoppingCart.push(rowItem)
+                                $('#inputSearch').val("")
                             }
                         }
                     })

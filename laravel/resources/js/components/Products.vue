@@ -199,7 +199,7 @@
                                     <div class="col-6">
                                         <div class="md-form md-outline input-with-post-icon mt-0">
                                             <i class="fas fa-dollar-sign input-prefix"></i>
-                                            <input required v-model="product.unit_price" v-on:keyup="calculatePorcentage()" id="inputUnitPrice" step="1" type="number" class="form-control">
+                                            <input required v-model="product.unit_price" v-on:keyup="calculatePorcentage()" id="inputUnitPrice" step="0.01" type="number" class="form-control">
                                             <label for="inputUnitPrice">Publico</label>
                                         </div>
                                     </div>
@@ -210,14 +210,13 @@
                                     <div class="col-6">
                                         <div class="md-form md-outline input-with-post-icon mt-0">
                                             <i class="fas fa-dollar-sign input-prefix"></i>
-                                            <input required v-model="product.gremio" id="inputGremio" step="1" type="number" class="form-control">
+                                            <input required v-model="product.gremio" id="inputGremio" step="0.01" type="number" class="form-control">
                                             <label for="inputGremio">Gremio</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="md-form md-outline input-with-post-icon mt-0">
-                                            <i class="fas fa-dollar-sign input-prefix"></i>
-                                            <input required v-on:keyup="calculateUnitPrice()" v-model="product.v_added" id="inputVAdded" step="1" type="number" class="form-control">
+                                            <input required v-on:keyup="calculateUnitPrice()" v-model="product.v_added" id="inputVAdded" step="0.01" type="number" class="form-control">
                                             <label for="inputVAdded">Valor Agregado %</label>
                                         </div>
                                     </div>
@@ -228,7 +227,7 @@
                                     <div class="col-6">
                                         <div class="md-form md-outline input-with-post-icon mt-0">
                                             <i class="fas fa-dollar-sign input-prefix"></i>
-                                            <input required v-model="product.partner" id="inputPartner" step="1" type="number" class="form-control">
+                                            <input required v-model="product.partner" id="inputPartner" step="0.01" type="number" class="form-control">
                                             <label for="inputPartner">Partner</label>
                                         </div>
                                     </div>
@@ -251,7 +250,10 @@
                                                 <span class="spinner-border fast spinner-border-sm"></span> 
                                                 <b>Guardando</b>
                                             </div>
-                                            <div v-else ><b>Guardar</b></div>
+                                            <div v-else >
+                                                <b v-if="b_SelectProduct == null">Guardar</b>                                            
+                                                <b v-else >Editar</b>                                            
+                                            </div>
                                         </button>
                                     </div>
                                 </div>
@@ -311,11 +313,16 @@
         methods:{
 
             calculatePorcentage(){
-                this.product.v_added = (100*this.product.unit_price)/(this.product.gremio)-100
+                //this.product.v_added = (100* Number(this.product.unit_price))/(Number(this.product.gremio))-100
+
+                //console.log(this.product.v_added)
+                //this.product.v_added = (100* Number(this.product.unit_price))/(Number(this.product.gremio))-100
+
+                //this.product.v_added = 10
             },
 
             calculateUnitPrice(){
-                this.product.unit_price = this.product.gremio + (this.product.gremio / 100 * this.product.v_added)
+                this.product.unit_price = Number(this.product.gremio) + Number((this.product.gremio / 100 * this.product.v_added))
             },
             
             enterProvider(){
