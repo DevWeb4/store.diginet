@@ -103,7 +103,10 @@
                                         </div>
                                     </div>
                                     <div class="col-4 pt-4 text-right">
-
+                                        <label class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" v-model="b_edit_barcode">
+                                            <span class="custom-control-label pt-1">Modo borrar codigo de barra</span>
+                                        </label>
                                     </div>
                                 </div>
                                 
@@ -289,6 +292,7 @@
                 err_msg_tableProducts: '',
 
                 b_edit: false,
+                b_edit_barcode: true,
                 b_LoadingSubmit:false,
                 b_SelectProduct: null,
                 b_delete: null,
@@ -562,8 +566,10 @@
                 this.product = Object.assign({}, 
                     this.products[index]
                 )
-                this.product.bar_code = '';
-                this.$refs.inputBarCode.focus();
+                if(this.b_edit_barcode){
+                    this.product.bar_code = '';
+                    this.$refs.inputBarCode.focus();
+                }
 
                 if (this.product.provider == null) {
                     this.emptyProvider(true)
