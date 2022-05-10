@@ -49,6 +49,8 @@ Route::get('get_financials','FinancialController@getFinancials');
 
 Route::get('inventario','ProductController@inventory')->middleware('auth');
 
+Route::put('inventario/{id}','ProductController@updateInventory')->middleware('auth');
+
 Route::get('get_inventory_grouped','ProductController@getInventoryGrouped');
 
 Route::delete('delete_inventory_grouped/{barCode}','ProductController@destroyInventoryGrouped')->middleware('auth');

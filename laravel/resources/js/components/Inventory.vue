@@ -25,13 +25,7 @@
                             </a>
                         </div>
                         <div class="col-6">
-                            <button 
-                                class="btn btn-outline-danger btn-md btn-block mt-3 text-white btn-sm" 
-                                v-on:click="b_delete='product'"
-                                :disabled="b_selectRow === null" type="button" data-toggle="modal" data-target="#confirmDeleteModal">
-                                <b>Eliminar Producto</b>
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+
                         </div>
                     
                     </div>
@@ -67,11 +61,107 @@
                             <td v-on:click="selectRow(i)">{{product.gremio}}</td>
                             <td v-on:click="selectRow(i)">{{product.unit_price}}</td>
                             <td v-on:click="selectRow(i)">{{product.iva}}</td>
-                            <td v-on:click="selectRow(i)">{{product.stock}}</td>
+                            <td v-on:click="selectRow(i)" >
+                                <span v-if="product.stock < 6 && product.stock > 1" class="text-danger">
+                                    {{product.stock}}
+                                </span>
+                                <span v-else >
+                                    {{product.stock}}
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="border">
+                            <form @submit.prevent="submitProduct" class="col-12">
+                                <div class="row pt-3">
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-12">                                
+                                                <div class="md-form md-outline input-with-post-icon mb-0 pb-0">
+                                                    <i class="fas fa-signature input-prefix"></i>
+                                                    <input ref="inputName" required v-model="product.name" id="inputName" type="text" class="form-control">
+                                                    <label for="inputName">Nombre</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="md-form md-outline input-with-post-icon mt-0">
+                                                    <i class="fas fa-dollar-sign input-prefix"></i>
+                                                    <input required v-model="publicPrice" id="inputUnitPrice" step="0.01" type="number" class="form-control">
+                                                    <label for="inputUnitPrice">Publico</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="md-form md-outline input-with-post-icon mt-0">
+                                                    <i class="fas fa-dollar-sign input-prefix"></i>
+                                                    <input required v-model="product.gremio" id="inputGremio" step="0.01" type="number" class="form-control">
+                                                    <label for="inputGremio">Gremio</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="md-form md-outline input-with-post-icon mt-0">
+                                                    <input v-model="product.v_added" id="inputVAdded" step="0.01" type="number" class="form-control" v-on:keyup="calculateUnitPrice($event)">
+                                                    <label for="inputVAdded">Valor Agregado %</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="md-form md-outline input-with-post-icon mt-0">
+                                                    <i class="fas fa-dollar-sign input-prefix"></i>
+                                                    <input required v-model="product.partner" id="inputPartner" step="0.01" type="number" class="form-control">
+                                                    <label for="inputPartner">Partner</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div>
+                                                    <input type="radio" id="iva_21" v-model="product.iva" value="21">
+                                                    <label for="huey">%21</label>
+                                            
+                                                    <input type="radio" id="iva_10.5" v-model="product.iva" value="10.5">
+                                                    <label for="dewey">%10.5</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <button class="btn red accent-4 btn-md btn-block mb-3 text-white btn-sm" type="submit">
+                                                    <div v-if="b_LoadingSubmit">
+                                                        <span class="spinner-border fast spinner-border-sm"></span> 
+                                                        <b>Guardando</b>
+                                                    </div>
+                                                    <div v-else >
+                                                        <b v-if="b_selectRow == null">Guardar</b>                                            
+                                                        <b v-else >Editar</b>                                            
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>                    
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -137,6 +227,11 @@
                 csv : [],
                 myRol:{id:0, name:''},
 
+                prueba: false,
+                publicPrice: 0,
+
+                b_LoadingSubmit:false,
+
             }
         },
         mounted() {
@@ -144,6 +239,43 @@
             this.getRol()
         },
         methods:{
+
+            submitProduct(){
+                console.log(this.product)
+
+                axios.put(`inventario/${this.product.id}`, this.product).then(res=>{   
+                    this.b_LoadingSubmit = false
+                    this.emptyForm()
+                    this.resetDatatables()
+
+                    console.log(res.data)
+
+                }).catch(error => {
+                    console.log(error.response)
+                    this.b_LoadingSubmit = false
+                })
+            },
+
+            emptyForm()
+            {
+                this.b_selectRow = null
+                this.product = Object.assign({provider_id:0})
+                this.publicPrice = 0
+
+                $('#inputName').siblings('label').removeClass('active');
+                $('#inputGremio').siblings('label').removeClass('active');
+                $('#inputPartner').siblings('label').removeClass('active');
+                $('#inputVAdded').siblings('label').addClass('active');                    
+                $('#inputIVA').siblings('label').addClass('active');                    
+            },
+
+            calculateUnitPrice(e){
+                let publicValue = Number(this.product.gremio) + Number((this.product.gremio / 100 * e.target.value))
+
+                this.publicPrice = this.product.unit_price = publicValue;
+                console.log(this.product.unit_price)
+            },
+
             calculateValInStock(type){
                 var val = 0
                 this.products.forEach(product => {
@@ -201,8 +333,11 @@
 
             selectRow(index)
             {
+
+                
                 if(this.b_selectRow == index)
                 {
+                    this.emptyForm()
                     this.b_selectRow = null
                     return
                 }
@@ -213,7 +348,15 @@
             printSelectedRow(index){
                 this.b_selectRow = index
                 this.product = Object.assign({}, this.products[index])
+
+                $('#inputName').siblings('label').addClass('active');
+                $('#inputUnitPrice').siblings('label').addClass('active');
+                $('#inputGremio').siblings('label').addClass('active');                
+                $('#inputPartner').siblings('label').addClass('active');    
+                $('#inputVAdded').siblings('label').addClass('active');                    
+                $('#inputIVA').siblings('label').addClass('active');  
             },
+
             resetDatatables()
             {
                 $('#_tInventory').dataTable().fnDestroy()
@@ -245,9 +388,7 @@
                     this.resetDatatables()
 
                 }).catch(error => {
-                    if(error.response.status == 403){
-                        alert("Usted no tiene los permisos suficientes para efectuar esta accion")
-                    }
+                    console.log(error)
                 })
             },
 

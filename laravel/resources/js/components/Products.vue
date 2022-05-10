@@ -44,7 +44,6 @@
                             <th>Codigo</th>
                             <th>Marca</th>
                             <th>Publico</th>
-                            <th>Multi Edit</th>
                             <th>Stock</th>
                         </tr>
                     </thead>
@@ -52,27 +51,21 @@
                         <tr v-for="(product, i)  in products" :key="i"
                             :class="{'red accent-1 font-weight-bold': i === b_SelectProduct }"
                             class="text-center"
+                            v-on:click="selectProduct(i)"
                         >
-                            <th v-on:click="selectProduct(i)">{{product.bar_code}}</th>
-                            <td v-on:click="selectProduct(i)"><a class="text-danger" :href="'audit_product/'+product.id">#{{product.id}}</a></td>
-                            <td v-on:click="selectProduct(i)">{{product.name}}</td>
+                            <th>{{product.bar_code}}</th>
+                            <td><a class="text-danger" :href="'audit_product/'+product.id">#{{product.id}}</a></td>
+                            <td>{{product.name}}</td>
+                            <td>{{product.bar_code}}</td>
 
-                            <td v-on:click="selectProduct(i)">{{product.bar_code}}</td>
-
-                            <td v-on:click="selectProduct(i)">
+                            <td>
                                 <span v-if="product.provider">{{product.provider.name}}</span>
                                 <span v-else> Inexistente </span>
                             </td>
-                            <td v-on:click="selectProduct(i)" class="text-right">
+                            <td  class="text-right">
                                <span class="pr-5">${{Number(product.unit_price)}}</span>
                             </td>
-                            <td class="text-center">
-                                <label class="custom-control custom-checkbox">
-                                    <input type="checkbox" v-on:click="printSelected(i)" class="custom-control-input" :value="product.id" v-model="multiUpdate">
-                                    <span class="custom-control-label"></span>
-                                </label>
-                            </td>
-                            <td v-on:click="selectProduct(i)">{{product.stock}}</td>
+                            <td >{{product.stock}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -110,16 +103,13 @@
                                         </div>
                                     </div>
                                     <div class="col-4 pt-4 text-right">
-                                        <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" class="custom-control-input" v-model="b_edit">
-                                            <span class="custom-control-label pt-1">Editar Nombre</span>
-                                        </label>
+
                                     </div>
                                 </div>
                                 
                                 <div class="md-form md-outline input-with-post-icon">
                                     <i class="fas fa-barcode input-prefix"></i>
-                                    <input required v-model="product.bar_code" id="inputBarCode" type="text" class="form-control">
+                                    <input ref="inputBarCode" required v-model="product.bar_code" id="inputBarCode" type="text" class="form-control">
                                     <label for="inputBarCode">Código de Barras</label>
                                 </div>
 
@@ -199,7 +189,7 @@
                                     <div class="col-6">
                                         <div class="md-form md-outline input-with-post-icon mt-0">
                                             <i class="fas fa-dollar-sign input-prefix"></i>
-                                            <input required v-model="product.unit_price" v-on:keyup="calculatePorcentage()" id="inputUnitPrice" step="0.01" type="number" class="form-control">
+                                            <input required v-model="publicPrice" id="inputUnitPrice" step="0.01" type="number" class="form-control">
                                             <label for="inputUnitPrice">Publico</label>
                                         </div>
                                     </div>
@@ -216,7 +206,7 @@
                                     </div>
                                     <div class="col-6">
                                         <div class="md-form md-outline input-with-post-icon mt-0">
-                                            <input required v-on:keyup="calculateUnitPrice()" v-model="product.v_added" id="inputVAdded" step="0.01" type="number" class="form-control">
+                                            <input required v-model="product.v_added" id="inputVAdded" step="0.01" type="number" class="form-control" v-on:keyup="calculateUnitPrice($event)">
                                             <label for="inputVAdded">Valor Agregado %</label>
                                         </div>
                                     </div>
@@ -292,7 +282,7 @@
         data(){
             return{
                 products:[],
-                product:{provider_id:0},
+                product:{provider_id:0, stock:1},
                 providers:[],
                 provider:{id:0, name:''},
                 
@@ -304,6 +294,8 @@
                 b_delete: null,
 
                 multiUpdate: [],
+
+                publicPrice: 0,
             }
         },
         mounted(){
@@ -321,8 +313,11 @@
                 //this.product.v_added = 10
             },
 
-            calculateUnitPrice(){
-                this.product.unit_price = Number(this.product.gremio) + Number((this.product.gremio / 100 * this.product.v_added))
+            calculateUnitPrice(e){
+                let publicValue = Number(this.product.gremio) + Number((this.product.gremio / 100 * e.target.value))
+
+                this.publicPrice = this.product.unit_price = publicValue;
+                console.log(this.product.unit_price)
             },
             
             enterProvider(){
@@ -563,7 +558,12 @@
             },
             printSelected(index){
                 this.b_SelectProduct = index
-                this.product = Object.assign({}, this.products[index])
+                
+                this.product = Object.assign({}, 
+                    this.products[index]
+                )
+                this.product.bar_code = '';
+                this.$refs.inputBarCode.focus();
 
                 if (this.product.provider == null) {
                     this.emptyProvider(true)
@@ -588,7 +588,6 @@
 
             selectProduct(index)
             {
-                console.log(index)
                 if(this.b_SelectProduct == index)
                 {
                     this.b_SelectProduct = null
@@ -597,6 +596,8 @@
                 }
 
                 this.printSelected(index)
+
+                this.publicPrice = this.product.unit_price;
             
             },
             emptyForm()
@@ -604,10 +605,10 @@
                 this.b_SelectProduct = null
                 this.product = Object.assign({provider_id:0})
                 this.emptyProvider(true)
+                this.publicPrice = 0
 
                 $('#inputName').siblings('label').removeClass('active');
                 $('#inputBarCode').siblings('label').removeClass('active');
-                $('#inputUnitPrice').siblings('label').removeClass('active');
                 $('#inputStock').siblings('label').removeClass('active');
                 $('#inputGremio').siblings('label').removeClass('active');
                 $('#inputPartner').siblings('label').removeClass('active');

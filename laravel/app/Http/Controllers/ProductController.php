@@ -110,6 +110,8 @@ class ProductController extends Controller
     public function inventoryGrouped(){
         return Product::selectRaw('sum(stock) as stock, 
             name,
+            max(id) as id,
+            max(v_added) as v_added,
             max(bar_code) as bar_code,
             max(unit_price) as unit_price, 
             max(partner) as partner, 
@@ -122,6 +124,27 @@ class ProductController extends Controller
 
     public function getInventoryGrouped(){
         return response()->json(['statusCode' => 200, 'data' => $this->inventoryGrouped()]);
+    }
+
+    public function updateInventory(Request $request, $id){
+        $input = $request->all();
+        $product = Product::find($id);
+
+        $products = Product::where('name', '=', $product->name)->get();
+
+        foreach ($products as $key => $p) {
+            $p->update([
+                'name' => $input['name'],
+                'unit_price' => $input['unit_price'],
+                'gremio' => $input['gremio'],
+                'partner' => $input['partner'],
+                'iva' => $input['iva'],
+                'v_added' => $input['v_added']
+            ]);
+
+        }
+
+        return 200;
     }
 
     public function destroyInventoryGrouped($barCode){
