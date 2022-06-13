@@ -233,7 +233,7 @@
                         <thead>
                             <tr>
                                 <th>Resta por pagar</th>
-                                <th class="text-left" :class="{'red-store-text': purchase.toPay > 0, }">$ {{purchase.toPay.toFixed(2)}}</th>
+                                <th class="text-left" :class="{'red-store-text': purchase.toPay > 0, }"><a v-on:click="addToPay()" >$ {{purchase.toPay.toFixed(2)}}</a></th>
                                 <th>
                                     <a v-on:click="showModalDiscountRemainsPaid()">
                                         <span class="badge red accent-4 accent-4 text-white w-100 py-1">
@@ -908,6 +908,10 @@
 
         },
         methods:{
+            addToPay(){
+                this.$refs.inputPay.value = this.purchase.toPay.toFixed(2);
+                //purchase.toPay.toFixed(2)
+            },
 
             ivaRecalculate(){
                 var newIva = this.discountItem.iva / 100 +1
