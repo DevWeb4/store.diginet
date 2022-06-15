@@ -2996,7 +2996,7 @@ __webpack_require__.r(__webpack_exports__);
       });
       this.purchase.total = this.purchase.totalFinal - this.purchase.totalDiscount - this.purchase.iva;
       Object.getOwnPropertyNames(itemsGroupByCode).forEach(function (propertyName) {
-        console.log(itemsGroupByCode[propertyName][0]);
+        //console.log(itemsGroupByCode[propertyName][0].v_added)
         var aux = {
           name: propertyName,
           barCode: itemsGroupByCode[propertyName][0].barCode,
@@ -3014,12 +3014,11 @@ __webpack_require__.r(__webpack_exports__);
           aux.count++;
           aux.totalPrice += Number(item.price);
           aux.totalIvaAmount += Number(item.ivaAmount);
-          aux.totalV_Added += Number(item.v_added);
+          aux.totalV_Added += Number(item.discount);
         });
 
         _this4.itemsOrdered.push(aux);
       });
-      console.log(this.itemsOrdered);
     },
     getCustomers: function getCustomers() {
       var _this5 = this;
@@ -5135,7 +5134,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get("https://www.dolarsi.com/api/api.php?type=valoresprincipales").then(function (res) {
-        _this.dolar = Number(res.data[0].casa.compra.replace(",", "."));
+        _this.dolar = Number(res.data[0].casa.venta.replace(",", "."));
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -101648,7 +101647,7 @@ var render = function() {
                         attrs: {
                           type: "button",
                           disabled:
-                            this.purchase.toPay > 0 ||
+                            this.purchase.toPay > 0.01 ||
                             _vm.shoppingCart.length == 0 ||
                             ((_vm.client.name == "" ||
                               _vm.client.identification == "") &&
@@ -102540,8 +102539,10 @@ var render = function() {
                       _vm._v(
                         "$ " +
                           _vm._s(
-                            Number(_vm.discountItem.price) +
-                              Number(_vm.discountItem.discount.toFixed(2))
+                            (
+                              Number(_vm.discountItem.price) +
+                              Number(_vm.discountItem.discount)
+                            ).toFixed(2)
                           )
                       )
                     ])

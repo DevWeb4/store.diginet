@@ -621,7 +621,7 @@
 
                 Object.getOwnPropertyNames(itemsGroupByCode).forEach(propertyName => {
 
-                    console.log(itemsGroupByCode[propertyName][0])
+                    //console.log(itemsGroupByCode[propertyName][0].v_added)
 
                     let aux = {
                         name: propertyName,
@@ -639,17 +639,14 @@
                     }
 
                     itemsGroupByCode[propertyName].forEach(item => {
-
                         aux.count ++
                         aux.totalPrice += Number(item.price)
                         aux.totalIvaAmount += Number(item.ivaAmount)
-                        aux.totalV_Added += Number(item.v_added)
+                        aux.totalV_Added += Number(item.discount)
                     })
 
                     this.itemsOrdered.push(aux)
                 })
-
-                console.log(this.itemsOrdered)
             },
 
             getCustomers(){

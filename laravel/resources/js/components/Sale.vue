@@ -212,7 +212,7 @@
                                 v-on:click="pay()" 
                                 type="button" 
                                 class="btn-sm btn red accent-4 text-white btn-block mt-3" 
-                                :disabled="this.purchase.toPay > 0 || shoppingCart.length == 0 || (client.name == '' || client.identification == '') && getSumPayment('Cuenta P.') > 0"
+                                :disabled="this.purchase.toPay > 0.01 || shoppingCart.length == 0 || (client.name == '' || client.identification == '') && getSumPayment('Cuenta P.') > 0"
                             >
                                 Pagar
                             </button>
@@ -430,7 +430,7 @@
                             <i> 
                                 Precio:<b>$ {{discountItem.price}}</b>,
                                 Descuento/Recargo: <b>$ {{discountItem.discount.toFixed(2)}}</b>,
-                                Total: <b>$ {{Number(discountItem.price) + Number(discountItem.discount.toFixed(2))}}</b>
+                                Total: <b>$ {{(Number(discountItem.price) + Number(discountItem.discount)).toFixed(2)}}</b>
                             </i>
                         </p>
                     </div>

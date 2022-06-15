@@ -265,7 +265,7 @@
 
             getDolarValue(){
                 axios.get(`https://www.dolarsi.com/api/api.php?type=valoresprincipales`).then(res =>{
-                    this.dolar= Number(res.data[0].casa.compra.replace(",", "."))
+                    this.dolar= Number(res.data[0].casa.venta.replace(",", "."))
                 }).catch(error => {
                     console.log(error.response)
                 })

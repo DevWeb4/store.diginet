@@ -1,5 +1,9 @@
 @extends('layouts.home')
 
+<style>
+    .dataTables_filter, .dataTables_info { display: none; }
+</style>
+
 @push('app')
     <script src="{{ asset('js/appSales.js') }}" ></script>
 @endpush
@@ -22,7 +26,18 @@
         <h1>Historial de ventas</h1>
         <div class="card">
 
+
             <div class="card-body">
+                <div class="md-form md-outline input-with-post-icon">
+                    <i class="fas fa-search red-store-text input-prefix"></i>
+                    <input 
+                        ref="inputSearch" 
+                        id="inputSearch"
+                        value="" type="text" 
+                        class="form-control" 
+                        placeholder="Codigo, Nombre del articulo o use el lector de barras"
+                    >
+                </div>
                 <table id="t_record" class="table">
                     <thead>
                         <tr class="text-center">
@@ -57,12 +72,20 @@
 <script>
 
     $(document).ready( function () {
-        $('#t_record').DataTable({
+        var dataTableInventory = $('#t_record').DataTable({
             'order': [[0, 'desc']],
+            //bFilter: false, 
+            //bInfo: false,
             'language': {
                 'url': 'http://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json'
             },
-        });
-    });
 
+        });
+
+        $('#inputSearch').on('keyup', function(e){
+            dataTableInventory.search(this.value).draw();
+        })
+        
+        $('#inputSearch').focus()
+    });
 </script>
