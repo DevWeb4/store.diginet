@@ -128,8 +128,8 @@
                                 <p class="m-0">extrasTotal:</p>
                             </div>
                             <div class="col-6">
-                                <p class="m-0">${{purchase.total.toFixed(2)}}</p>
-                                <p class="m-0">${{purchase.totalDiscount.toFixed(2)}}</p>
+                                <p class="m-0">${{currencyFormat(purchase.total.toFixed(2))}}</p>
+                                <p class="m-0">${{currencyFormat(purchase.totalDiscount.toFixed(2))}}</p>
                             </div>
                         </div>
                     </div>
@@ -155,7 +155,7 @@
                 </div>
                 <div class="col-4"></div>
                 <div class="col-4 mt-2">
-                    <a class="btn btn-sm btn-outline-danger btn-block" data-toggle="modal" data-target="#exampleModal">
+                    <a class="btn btn-sm btn-outline-danger btn-block" data-toggle="modal" data-target="#exampleModal" v-on:click="pooledBudget()">
                         Presupuesto
                     </a>
                 </div>
@@ -632,35 +632,35 @@
                                                     <tr class="grey lighten-3 text-center">
                                                         <th class="text-center">#</th>
                                                         <th scope="col" class="text-left" >Descripción</th>
-                                                        <th scope="col">Cantidad</th>
+                                                        <th scope="col">Cant.</th>
                                                         <th scope="col">Precio Unitario</th>
                                                         <th scope="col">Extra</th>
                                                         <th scope="col">Precio Final</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr v-for="(item, i)  in shoppingCart" :key="i" >
+                                                    <tr v-for="(item, i)  in shoppingCartGrouped" :key="i" >
                                                         <th class="grey lighten-3 text-center">{{i+1}}</th>
                                                         <td>{{item.name}}</td>
-                                                        <td class="text-center"></td>
-                                                        <td class="text-center">${{item.price}}</td>
-                                                        <td class="text-center">${{item.discount}}</td>
-                                                        <td class="text-center">${{(item.price)+item.discount}}</td>
+                                                        <td class="text-center">{{item.count}}</td>
+                                                        <td class="text-center">{{currencyFormat(item.price)}}</td>
+                                                        <td class="text-center">{{currencyFormat(item.totalV_Added)}}</td>
+                                                        <td class="text-center">{{currencyFormat(item.totalPrice +item.totalV_Added)}}</td>
                                                     </tr>
                                                     <tr class="table-borderless">
                                                         <td colspan="6"></td>
                                                     </tr>
                                                     <tr class="table-borderless">
                                                         <th colspan="5" class="text-right">subTotal:</th>
-                                                        <th class="text-center">${{purchase.total}}</th>
+                                                        <th class="text-center">{{currencyFormat(purchase.total)}}</th>
                                                     </tr>
                                                     <tr class="table-borderless m-0">
                                                         <th colspan="5" class="text-right">extrasTotal:</th>
-                                                        <th class="text-center">${{purchase.totalDiscount}}</th>
+                                                        <th class="text-center">{{currencyFormat(purchase.totalDiscount)}}</th>
                                                     </tr>
                                                     <tr>
                                                         <th colspan="5" class="text-left"><b class="h5">TOTAL FINAL:</b></th>
-                                                        <th class="text-center grey lighten-3"><b class="h5">${{purchase.totalFinal}}</b></th>
+                                                        <th class="text-center grey lighten-3"><b class="h5">{{currencyFormat(purchase.totalFinal)}}</b></th>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -717,7 +717,7 @@
                             <a  v-on:click="$htmlToPaper('printMe')" class="btn btn-sm red accent-4 white-text btn-block"><i class="fa fa-print left"></i> Imprimir Presupuesto</a>
                         </div>
                         <div class="col-12 mt-4">
-                            <p class="text-right">Total Final: $<b>{{purchase.totalFinal}}</b></p>
+                            <p class="text-right">Total Final: <b>{{currencyFormat(purchase.totalFinal)}}</b></p>
 
                             <ul class="list-group" v-for="(withFinancial, i)  in financialBudget" :key="i">
                                 <p class="mb-0 pb-0"><b class="font-weight-bold">${{withFinancial.financialQuantitative}}</b> Financiados Con <b class="font-weight-bold">{{withFinancial.financialName}}</b></p>
@@ -775,15 +775,15 @@
                                         </tr>
                                         <tr class="table-borderless">
                                             <th colspan="5" class="text-right">subTotal:</th>
-                                            <th class="text-center">${{purchase.total}}</th>
+                                            <th class="text-center">{{currencyFormat(purchase.total)}}</th>
                                         </tr>
                                         <tr class="table-borderless m-0">
                                             <th colspan="5" class="text-right">extrasTotal:</th>
-                                            <th class="text-center">${{purchase.totalDiscount}}</th>
+                                            <th class="text-center">{{currencyFormat(purchase.totalDiscount)}}</th>
                                         </tr>
                                         <tr>
                                             <th colspan="5" class="text-left"><b class="h5">TOTAL FINAL:</b></th>
-                                            <th class="text-center grey lighten-3"><b class="h5">${{purchase.totalFinal}}</b></th>
+                                            <th class="text-center grey lighten-3"><b class="h5">{{currencyFormat(purchase.totalFinal)}}</b></th>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -847,6 +847,8 @@
                     address: '',
                     email: ''
                 },
+                
+                shoppingCartGrouped: [],
 
                 discountItem:{
                     name:'',
@@ -908,6 +910,44 @@
 
         },
         methods:{
+            currencyFormat(currency) {
+                return currency.toLocaleString('en-US',{
+                    style: 'currency',
+                    currency: 'USD'
+                })
+            },
+            pooledBudget(){
+                const itemsGroupByCode = this.shoppingCart.reduce((accumulator, currentValue) => {
+                    (accumulator[currentValue.name] = accumulator[currentValue.name] || []).push(currentValue)
+                    return accumulator
+                }, {})
+
+                Object.getOwnPropertyNames(itemsGroupByCode).forEach(propertyName => {
+
+                    //console.log(itemsGroupByCode[propertyName][0].v_added)
+
+                    let aux = {
+                        name: propertyName,
+                        barCode: itemsGroupByCode[propertyName][0].barCode,
+                        iva: Number(itemsGroupByCode[propertyName][0].iva),
+                        price: Number(itemsGroupByCode[propertyName][0].price),
+                        productId: itemsGroupByCode[propertyName][0].productId,
+
+                        count:0,
+                        totalPrice: 0,
+                        totalV_Added: 0,
+                    }
+
+                    itemsGroupByCode[propertyName].forEach(item => {
+                        aux.count ++
+                        aux.totalPrice += Number(item.price)
+                        aux.totalV_Added += Number(item.discount)
+                    })
+
+                    this.shoppingCartGrouped.push(aux)
+                })
+            }, 
+
             addToPay(){
                 this.$refs.inputPay.value = this.purchase.toPay.toFixed(2);
                 //purchase.toPay.toFixed(2)
@@ -922,8 +962,6 @@
 
                 this.discountItem.price = auxPrice.toFixed(2)
                 this.discountItem.oldIva = (newIva-1)*100
-                
-                console.log(this.shoppingCart)
             },
 
             refreshPurchase(){
@@ -934,7 +972,6 @@
                 this.purchase.toPay = this.purchase.totalFinal - _.sumBy(this.payments,  item => Number(item.mount)) + this.purchase.toPayExtra
 
                 this.amount = this.purchase.toPay
-
             },
             
             getFinancials(){
